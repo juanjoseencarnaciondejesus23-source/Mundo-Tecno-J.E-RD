@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso Bloqueado — Mundo Tecno J.E</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    min-height:100vh;
+    background:#0a0f1e;
+    display:flex;align-items:center;justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    padding:2rem;
+  }
+  .card{
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:20px;
+    padding:3rem 2.5rem;
+    max-width:480px;
+    width:100%;
+    text-align:center;
+  }
+  .icon{
+    width:80px;height:80px;
+    background:#1f0a0a;
+    border:2px solid #7f1d1d;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 1.5rem;
+    font-size:36px;
+  }
+  h1{color:#f87171;font-size:1.6rem;font-weight:700;margin-bottom:.75rem;}
+  p{color:#6b7280;font-size:.95rem;line-height:1.6;margin-bottom:1rem;}
+  .ip-box{
+    background:#0f172a;border:1px solid #1e293b;
+    border-radius:10px;padding:.75rem 1.25rem;
+    font-family:monospace;font-size:1rem;
+    color:#94a3b8;margin:1.25rem 0 1.75rem;
+    display:inline-block;
+  }
+  .ip-label{font-size:.7rem;color:#4b5563;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.25rem;}
+  .contact{
+    background:#0f172a;border:1px solid #1e293b;
+    border-radius:12px;padding:1rem 1.25rem;
+    color:#94a3b8;font-size:.85rem;line-height:1.6;
+  }
+  .contact a{color:#60a5fa;text-decoration:none;}
+  .contact a:hover{text-decoration:underline;}
+  .logo{
+    display:flex;align-items:center;justify-content:center;gap:.5rem;
+    margin-bottom:2rem;color:#374151;font-size:.8rem;font-weight:600;
+    letter-spacing:.05em;text-transform:uppercase;
+  }
+  .logo-dot{width:8px;height:8px;border-radius:50%;background:#1d4ed8;}
+  .countdown{color:#4b5563;font-size:.8rem;margin-top:1.25rem;}
+  .countdown span{color:#f87171;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Mundo Tecno J.E
+  </div>
+
+  <div class="icon">🚫</div>
+
+  <h1>Acceso Bloqueado</h1>
+  <p>Tu dirección IP ha sido bloqueada por el administrador del sitio debido a actividad sospechosa o violación de las políticas de uso.</p>
+
+  <div class="ip-box">
+    <span class="ip-label">Tu dirección IP</span>
+    <span id="ip-display">obteniendo...</span>
+  </div>
+
+  <div class="contact">
+    Si crees que esto es un error, puedes contactarnos:<br>
+    <a href="https://wa.me/18099937908" target="_blank">📱 WhatsApp</a> &nbsp;·&nbsp;
+    <a href="mailto:contacto@mundotecno.com">✉️ Email</a>
+  </div>
+
+  <p class="countdown" id="countdown" style="display:none;">
+    Redirigiendo en <span id="secs">10</span>s...
+  </p>
+</div>
+
+<script>
+// Mostrar la IP del visitante
+(async function(){
+  try {
+    var r = await fetch('https://api.ipify.org?format=json');
+    if(r.ok){ var d=await r.json(); document.getElementById('ip-display').textContent = d.ip||'desconocida'; }
+  } catch(e) { document.getElementById('ip-display').textContent = 'desconocida'; }
+})();
+
+// Verificar si fue desbloqueado cada 10s (auto-redirige si lo desbloquean)
+var firebaseConfig = {
+  apiKey: "AIzaSyDMQMpUN7cvW0nlD9d8yuPm951kNJBG6N0",
+  authDomain: "mundo-tecno-4d55e.firebaseapp.com",
+  projectId: "mundo-tecno-4d55e",
+  storageBucket: "mundo-tecno-4d55e.firebasestorage.app",
+  messagingSenderId: "1099455813080",
+  appId: "1:1099455813080:web:9390be79c44c10a0f04ead"
+};
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+(async function(){
+  try {
+    var app = firebase.initializeApp(firebaseConfig);
+    var db  = firebase.firestore();
+
+    // Obtener IP propia
+    var myIp = '';
+    try {
+      var r = await fetch('https://api.ipify.org?format=json');
+      if(r.ok){ var d=await r.json(); myIp=d.ip||''; }
+    } catch(e){}
+
+    if (!myIp) return;
+
+    // Escuchar en tiempo real: si el admin desbloquea, regresar al sitio
+    var _firstSnap = true;
+    db.collection('config').doc('ips_bloqueadas').onSnapshot(function(doc){
+      if (_firstSnap) { _firstSnap = false; return; } // ignorar carga inicial
+      if (!doc.exists) { window.location.replace('https://juanjoseencarnaciondejesus23-source.github.io/Mundo-Tecno-J.E-RD/'); return; }
+      var lista = doc.data().lista || [];
+      if (lista.indexOf(myIp) === -1) {
+        // Ya no está bloqueado — regresar al sitio
+        window.location.replace('https://juanjoseencarnaciondejesus23-source.github.io/Mundo-Tecno-J.E-RD/');
+      }
+    });
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>
