@@ -42,6 +42,7 @@
                     https://ipapi.co
                     https://api.ipify.org
                     https://*.tile.openstreetmap.org
+                    https://*.basemaps.cartocdn.com
                     https://nominatim.openstreetmap.org
                     https://server.arcgisonline.com
                     https://api.anthropic.com
@@ -71,6 +72,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+/* Mosaicos del mapa: se usa Esri World Street Map (no requiere API key ni referer).
+   Si fallan los mosaicos, cambia solo a OpenStreetMap (que funciona cuando la página
+   está publicada en un dominio real). */
+function mtjeStreetLayer() {
+    var primary  = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+    var fallback = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var layer = L.tileLayer(primary, {
+        maxZoom: 19,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, HERE, Garmin, OpenStreetMap contributors'
+    });
+    var errors = 0, swapped = false;
+    layer.on('tileerror', function () {
+        errors++;
+        if (!swapped && errors >= 3) {
+            swapped = true;
+            layer.options.attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+            layer.setUrl(fallback);
+        }
+    });
+    return layer;
+}
+</script>
     <!-- Generación de facturas en PDF al confirmar un pedido -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -3047,6 +3071,7 @@
                 <a href="#inicio" class="nav-link transition">Inicio</a>
                 <a href="#catalogo" class="nav-link transition">Catálogo</a>
                 <a href="#cotizador" class="nav-link transition">Arma tu PC</a>
+                <a href="#diagnostico" class="nav-link transition">Diagnóstico</a>
                 <a href="#servicios" class="nav-link transition">Servicios</a>
                 <a href="#nosotros" class="nav-link transition">Nosotros</a>
                 <a href="#contacto" class="nav-link transition">Ubicación</a>
@@ -3070,6 +3095,7 @@
                 <a href="#inicio" onclick="closeMobileNav()" class="py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition">🏠 Inicio</a>
                 <a href="#catalogo" onclick="closeMobileNav()" class="py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition">🛍️ Catálogo</a>
                 <a href="#cotizador" onclick="closeMobileNav()" class="py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition">🖥️ Arma tu PC</a>
+                <a href="#diagnostico" onclick="closeMobileNav()" class="py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition">🩺 Diagnóstico</a>
                 <a href="#servicios" onclick="closeMobileNav()" class="py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition">🔧 Servicios</a>
                 <a href="#nosotros" onclick="closeMobileNav()" class="py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition">ℹ️ Nosotros</a>
                 <a href="#contacto" onclick="closeMobileNav()" class="py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition">📍 Ubicación</a>
@@ -3337,6 +3363,23 @@
                     <i class="fa-brands fa-whatsapp text-2xl"></i> Solicitar Análisis por WhatsApp
                 </button>
             </div>
+        </div>
+    </section>
+
+    <!-- ===== DIAGNÓSTICO EXPRESS ===== -->
+    <section id="diagnostico" class="py-24 bg-gradient-to-b from-emerald-50/70 to-white dark:from-slate-900 dark:to-slate-800/40 transition-colors">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase">🩺 Test de tu equipo — Tecno Bot</span>
+                <h2 class="text-3xl md:text-5xl font-black mt-3">Diagnóstico Express</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-2xl mx-auto">Cuéntale tu problema a Tecno Bot y te guía <b>paso a paso</b> para solucionarlo tú mismo. Si no se resuelve, te conectamos con un técnico por WhatsApp con el resumen de lo que ya probaste.</p>
+            </div>
+            <div class="max-w-2xl mx-auto mb-10 flex gap-2">
+                <input id="dg-site-input" type="text" maxlength="200" placeholder="Ej: mi laptop no enciende, va muy lenta, no tengo internet…" onkeydown="if(event.key==='Enter'){dgSiteSend()}" class="flex-1 px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                <button type="button" onclick="dgSiteSend()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 rounded-xl transition shadow-lg shadow-emerald-600/20 whitespace-nowrap">Diagnosticar</button>
+            </div>
+            <div id="dg-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            <p class="text-center text-xs text-slate-500 dark:text-slate-400 mt-8">⚠️ Estos pasos son seguros y no borran tus datos. Si no te sientes cómodo haciendo alguno, para ahí y escríbenos: un técnico te ayuda.</p>
         </div>
     </section>
 
@@ -4467,11 +4510,41 @@ function toggleCartMenu() {
     // Actualizar el contenido del carrito cada vez que se abre
     if (!open) { renderCart(); updateCartCount(); }
 }
+// Sonido de "agregado al carrito" (sintetizado con Web Audio: no necesita archivos)
+let _cartAudioCtx = null;
+function playAddCartSound() {
+    try {
+        if (localStorage.getItem('mtje_sound') === 'off') return;   // para silenciar: localStorage.setItem('mtje_sound','off')
+    } catch (e) {}
+    try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        if (!_cartAudioCtx) _cartAudioCtx = new AC();
+        const ctx = _cartAudioCtx;
+        if (ctx.state === 'suspended') ctx.resume();
+        const t0 = ctx.currentTime;
+        const master = ctx.createGain();
+        master.gain.value = 0.22;
+        master.connect(ctx.destination);
+        // "ding-ding" ascendente + pequeño "pop" inicial
+        [[784, 0, 0.14], [1175, 0.09, 0.34], [1568, 0.09, 0.2]].forEach(([freq, delay, dur], i) => {
+            const osc = ctx.createOscillator(), g = ctx.createGain();
+            osc.type = i === 2 ? 'triangle' : 'sine';
+            osc.frequency.setValueAtTime(freq, t0 + delay);
+            g.gain.setValueAtTime(0.0001, t0 + delay);
+            g.gain.exponentialRampToValueAtTime(i === 2 ? 0.25 : 0.9, t0 + delay + 0.012);
+            g.gain.exponentialRampToValueAtTime(0.0001, t0 + delay + dur);
+            osc.connect(g); g.connect(master);
+            osc.start(t0 + delay); osc.stop(t0 + delay + dur + 0.02);
+        });
+    } catch (e) { /* si el navegador bloquea el audio, simplemente no suena */ }
+}
 function addToCart(id) {
     const p = productos.find(x=>x.id===id); if(!p) return;
     const ex = carrito.find(x=>x.id===id);
     if(ex) ex.cantidad++; else carrito.push({...p, cantidad:1});
     renderCart(); updateCartCount();
+    playAddCartSound();
 }
 function removeFromCart(id) { carrito = carrito.filter(x=>x.id!==id); renderCart(); updateCartCount(); }
 function updateCartCount() {
@@ -4553,10 +4626,7 @@ function initDeliveryMap() {
     if (_deliveryMap) { _deliveryMap.invalidateSize(); return; }
     _deliveryMap = L.map('delivery-leaflet-map', { zoomControl: true, scrollWheelZoom: false })
         .setView([18.486, -69.931], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 19
-    }).addTo(_deliveryMap);
+    mtjeStreetLayer().addTo(_deliveryMap);
     _deliveryMap.on('click', function(e) {
         if (_deliveryMarker) _deliveryMap.removeLayer(_deliveryMarker);
         _deliveryMarker = L.marker(e.latlng, { draggable: true }).addTo(_deliveryMap);
@@ -4673,6 +4743,11 @@ function checkoutCart() {
         clienteCiudad: window.CLIENT_CITY || '',
         dispositivo: navigator.userAgent.match(/(Mobile|Tablet)/i) ? 'Móvil' : 'Escritorio'
     };
+
+    // ── Datos de la factura (el panel "Facturas" del admin los lee) ──────
+    pedido.facturaNumero = 'MTJE-' + String(pedido.id).slice(-6);   // mismo número que muestra el PDF
+    pedido.facturaFecha  = new Date().toISOString();
+    pedido.facturaEstado = 'pendiente';                              // pendiente → procesado → atendido
 
     // ── PASO 1: Actualizar estado local e UI INMEDIATAMENTE ───────────────
     // El usuario ve la confirmación al instante, sin esperar a Firestore.
@@ -5057,13 +5132,11 @@ function initApptMap() {
     if (_apptMap) { _apptMap.invalidateSize(); return; }
     _apptMap = L.map('appt-leaflet-map', { zoomControl: true, scrollWheelZoom: false, tap: true })
         .setView([18.486, -69.931], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap', maxZoom: 19
-    }).addTo(_apptMap);
+    mtjeStreetLayer().addTo(_apptMap);
 
     // Capa satélite opcional
     const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
-    L.control.layers({ '🗺️ Mapa': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}), '🛰️ Satélite': sat }, {}, { position: 'topright' }).addTo(_apptMap);
+    L.control.layers({ '🗺️ Mapa': mtjeStreetLayer(), '🛰️ Satélite': sat }, {}, { position: 'topright' }).addTo(_apptMap);
 
     _apptMap.on('click', function(e) {
         placeApptMarker(e.latlng.lat, e.latlng.lng);
@@ -6787,19 +6860,21 @@ let _tchatOpen = false;
 let _tchatTyping = false;
 let _tchatGreeted = false;
 
+// Chips de respuesta rápida: cada uno ejecuta su acción real (lista, citas, delivery, etc.)
 const TECNO_QUICK = [
-    '💻 ¿Qué laptops tienen?',
-    '💰 ¿Cuál es el más barato?',
-    '🔧 ¿Hacen reparaciones?',
-    '🚴 ¿Tienen delivery?',
-    '💳 ¿Qué formas de pago?',
-    '📍 ¿Dónde están ubicados?',
-    '🖥️ ¿Arman PCs a medida?',
-    '⏰ ¿Cuál es el horario?',
-    '🎮 ¿Tienen equipos gaming?',
-    '🔒 ¿Tienen garantía?',
-    '📦 ¿Qué tienen en stock?',
-    '📱 ¿Cómo los contacto?'
+    { label: '💻 ¿Qué laptops tienen?',   q: '¿Qué laptops tienen?' },
+    { label: '💰 ¿Cuál es el más barato?', q: '¿Cuál es el más barato?' },
+    { label: '🔧 ¿Hacen reparaciones?',   q: '¿Hacen reparaciones?' },
+    { label: '🚴 ¿Tienen delivery?',      q: '¿Tienen delivery?' },
+    { label: '🩺 Diagnosticar mi equipo', q: 'Quiero diagnosticar mi equipo' },
+    { label: '💳 ¿Qué formas de pago?',   q: '¿Qué formas de pago?' },
+    { label: '📍 ¿Dónde están ubicados?', q: '¿Dónde están ubicados?' },
+    { label: '🖥️ ¿Arman PCs a medida?',   q: '¿Arman PCs a medida?' },
+    { label: '⏰ ¿Cuál es el horario?',   q: '¿Cuál es el horario?' },
+    { label: '🎮 ¿Tienen equipos gaming?', q: '¿Tienen equipos gaming?' },
+    { label: '🔒 ¿Tienen garantía?',      q: '¿Tienen garantía?' },
+    { label: '📦 ¿Qué tienen en stock?',  q: '¿Qué tienen en stock?' },
+    { label: '📱 ¿Cómo los contacto?',    q: '¿Cómo los contacto?' }
 ];
 
 function _tchatSystemPrompt() {
@@ -6874,7 +6949,7 @@ function openTecnoChat() {
             '¡Epa! 🤖 <b>Tecno Bot</b> en línea. Soy el asistente oficial de <b>Mundo Tecno J.E</b> y conozco cada producto, precio y servicio de la tienda. ¿En qué te puedo ayudar hoy?'
         ];
         const pick = arr => arr[Math.floor(Math.random()*arr.length)];
-        _tchatAddMessage('bot', pick(greetings));
+        _tchatAddMessage('bot', pick(greetings) + _tBtns([{ label: '🩺 Diagnosticar mi equipo', a: 'dg-menu', p: true }, { label: '🛍️ Ver productos', a: 'overview' }]));
         _tchatRenderQuickReplies();
     }
     setTimeout(() => document.getElementById('tecno-chat-input').focus(), 200);
@@ -6888,6 +6963,8 @@ function closeTecnoChat() {
 function clearTecnoChat() {
     _tchatHistory = [];
     _tchatGreeted = false;
+    _dgReset();
+    _tchatCtx = { list: [], rest: [], last: null, cat: null, listMode: 'pick', quickShown: [], unknown: [] };
     document.getElementById('tecno-chat-messages').innerHTML = '';
     document.getElementById('tecno-quick-replies').innerHTML = '';
     openTecnoChat();
@@ -6901,7 +6978,7 @@ function _tchatAddMessage(role, html, animate) {
     const now = new Date().toLocaleTimeString('es-DO', {hour:'2-digit', minute:'2-digit'});
     bubble.innerHTML = isBot
         ? `<div style="width:28px;height:28px;background:linear-gradient(135deg,#1a2b4a,#1D9E75);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-robot" style="color:#fff;font-size:12px;"></i></div>
-           <div style="max-width:82%;background:#fff;border:1px solid #e2e8f0;border-radius:16px 16px 16px 4px;padding:10px 13px;font-size:13px;line-height:1.55;color:#1e293b;box-shadow:0 2px 6px rgba(0,0,0,0.06);">${html}<div style="font-size:10px;color:#94a3b8;margin-top:5px;text-align:right;">${now}</div></div>`
+           <div style="max-width:${/tc-wide/.test(html) ? '96%' : '82%'};background:#fff;border:1px solid #e2e8f0;border-radius:16px 16px 16px 4px;padding:10px 13px;font-size:13px;line-height:1.55;color:#1e293b;box-shadow:0 2px 6px rgba(0,0,0,0.06);">${html}<div style="font-size:10px;color:#94a3b8;margin-top:5px;text-align:right;">${now}</div></div>`
         : `<div style="max-width:82%;background:linear-gradient(135deg,#2563eb,#1D9E75);border-radius:16px 16px 4px 16px;padding:10px 13px;font-size:13px;line-height:1.55;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,0.25);">${html}<div style="font-size:10px;color:rgba(255,255,255,0.6);margin-top:5px;">${now}</div></div>`;
     cont.appendChild(bubble);
     cont.scrollTop = cont.scrollHeight;
@@ -6927,358 +7004,1177 @@ function _tchatHideTyping() {
     if(t) t.remove();
 }
 
+// ============================================================
+// TECNO BOT 2.0 — motor de catálogo dinámico
+// Lee SIEMPRE el arreglo `productos` en vivo: cualquier producto o
+// categoría nueva que agregues desde el panel admin el bot lo entiende
+// al instante (nombre, categoría, etiqueta, descripción y precio).
+// ============================================================
+let _tchatCtx = { list: [], rest: [], last: null, cat: null, listMode: 'pick', quickShown: [], unknown: [] };
+let _tchatChips = [];
+let _ultimaRespuestaBot = '';
+
+// ── Utilidades ───────────────────────────────────────────────
+const _tn = s => String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const _tmoney = v => 'RD$ ' + Math.round(Number(v) || 0).toLocaleString('es-DO');
+const _tesc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const _tpick = arr => arr[Math.floor(Math.random() * arr.length)];
+const _tMobile = () => window.innerWidth < 640;
+function _tphone() {
+    let n = '';
+    try { n = (typeof cargarNumeroAdmin === 'function' && cargarNumeroAdmin()) || ''; } catch (e) {}
+    n = String(n).replace(/[^0-9]/g, '');
+    return n || '18099937908';
+}
+const _twa = text => 'https://wa.me/' + _tphone() + '?text=' + encodeURIComponent(text || 'Hola, vengo del chat de Mundo Tecno J.E');
+function _tOpenNow() {
+    const d = new Date(), day = d.getDay(), h = d.getHours() + d.getMinutes() / 60;
+    if (day >= 1 && day <= 5) return h >= 8 && h < 18;
+    if (day === 6) return h >= 9 && h < 15;
+    return false;
+}
+function _tCatEmoji(c) {
+    const k = _tn(c || '');
+    const map = { laptop: '💻', portatil: '💻', torre: '🖥️', 'pc ': '🖥️', monitor: '🖥️', impresora: '🖨️', teclado: '⌨️', mouse: '🖱️', raton: '🖱️', audifono: '🎧', auricular: '🎧', celular: '📱', telefono: '📱', tablet: '📱', camara: '📷', router: '📡', red: '📡', disco: '💾', memoria: '💾', bocina: '🔊', parlante: '🔊', silla: '🪑', cable: '🔌', cargador: '🔌' };
+    for (const key in map) if (k.includes(key)) return map[key];
+    return '🛍️';
+}
+
+const _T_STOP = new Set(('el la los las un una unos unas de del al a en y o u que es son hay tienen tiene tienes tengo quiero quisiera necesito busco buscando me mi mis tu su por para con sin sobre cual cuales cuanto cuesta vale precio precios costo algo alguna alguno algun ese esa eso esos esas este esta esto estos estas lo le les se si no ya mas muy pero como donde cuando quien tipo tipos modelo modelos opciones opcion favor porfa dame dime muestrame muestra mostrar ver ensename dar decirme saber informacion info puedes pueden podria podrian ando estoy soy eres ser estar tener tienda ustedes usted vende venden vendes manejan manejas disponible disponibles disponibilidad existencia stock hola buenas gracias entonces tambien ademas solo unicamente otro otra otros otras tal vez quizas esta estan').split(' ').map(_tn));
+
+const _T_SYN = {
+    portatil: ['laptop'], portatiles: ['laptop'], notebook: ['laptop'], notebooks: ['laptop'],
+    computadora: ['laptop', 'pc', 'torre'], computadoras: ['laptop', 'pc', 'torre'], computador: ['laptop', 'pc', 'torre'],
+    ordenador: ['laptop', 'pc', 'torre'], compu: ['laptop', 'pc', 'torre'], compus: ['laptop', 'pc', 'torre'],
+    pc: ['pc', 'torre'], pcs: ['pc', 'torre'], desktop: ['torre'], escritorio: ['torre'], cpu: ['torre'], tower: ['torre'],
+    pantalla: ['monitor'], pantallas: ['monitor'], display: ['monitor'],
+    mac: ['macbook'], apple: ['macbook'],
+    imprimir: ['impresora'], impresion: ['impresora'], tinta: ['impresora'], toner: ['impresora'], fotocopiadora: ['impresora'],
+    keyboard: ['teclado'], teclas: ['teclado'],
+    raton: ['mouse'], ratones: ['mouse'], mause: ['mouse'],
+    audifono: ['audifonos'], auriculares: ['audifonos'], headset: ['audifonos'], cascos: ['audifonos'],
+    disco: ['ssd'], almacenamiento: ['ssd'], memoria: ['ram'], grafica: ['rtx'], procesador: ['intel', 'ryzen', 'core', 'amd']
+};
+
+const _T_USE = [
+    { key: 'gaming', label: 'gaming', emoji: '🎮',
+      re: /\b(gam\w*|jugar\w*|juego\w*|fortnite|warzone|valorant|gta|minecraft|fps|esport\w*|free fire|call of duty|streaming)\b/,
+      pred: t => /gaming|gamer|rtx|\brog\b|165hz|144hz|ultragear|extrema|competencia|bestia|esport|mecanic|rgb|macro|switch/.test(t) },
+    { key: 'trabajo', label: 'trabajo y oficina', emoji: '💼',
+      re: /\b(trabaj\w*|oficina|empresa\w*|negocio\w*|excel|word|corporat\w*|contabilidad|facturacion|facturar)\b/,
+      pred: t => /corporat|workstation|oficina|laser|productiv|profesional|i5|empresa/.test(t) },
+    { key: 'estudio', label: 'estudio', emoji: '📚',
+      re: /\b(estudi\w*|escuela|colegio|universidad|tarea\w*|clases?|zoom|teams|classroom)\b/,
+      pred: t => /estudiant|econom|basica|entrada|celeron|athlon|8gb/.test(t) },
+    { key: 'edicion', label: 'edición y diseño', emoji: '🎨',
+      re: /\b(edit\w*|photoshop|premiere|after effects|diseno|disenar|render\w*|illustrator|davinci|adobe|video|fotografia|animacion|3d)\b/,
+      pred: t => /oled|m2|rtx|i7|i9|ryzen 7|32gb|16gb|premium|qhd|2k|srgb|fidelidad|alta/.test(t) }
+];
+
+// ── Coincidencia de palabras (singular/plural, prefijos y errores de tipeo) ──
+function _tst(w) {
+    if (w.length > 4 && w.endsWith('es')) return w.slice(0, -2);
+    if (w.length > 3 && w.endsWith('s')) return w.slice(0, -1);
+    return w;
+}
+function _tlev(a, b) {
+    if (Math.abs(a.length - b.length) > 2) return 9;
+    const dp = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+    for (let j = 1; j <= b.length; j++) dp[0][j] = j;
+    for (let i = 1; i <= a.length; i++)
+        for (let j = 1; j <= b.length; j++)
+            dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    return dp[a.length][b.length];
+}
+function _twm(a, b) {
+    if (a === b) return 2;
+    const sa = _tst(a), sb = _tst(b);
+    if (sa === sb) return 2;
+    if (sa.length >= 4 && sb.length >= 4 && (sa.startsWith(sb) || sb.startsWith(sa))) return 1.6;
+    if (sa.length >= 5 && sb.length >= 5 && _tlev(sa, sb) <= (sa.length >= 8 ? 2 : 1)) return 1.2;
+    return 0;
+}
+function _ttokens(txt, budget) {
+    const raw = _tn(txt).replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+    const out = [];
+    raw.forEach(w => {
+        if (w.length < 2 && !/\d/.test(w)) return;
+        if (_T_STOP.has(w)) return;
+        if (budget && /^\d+$/.test(w) && parseInt(w, 10) === budget) return;   // el monto del presupuesto no es una palabra de búsqueda
+        if (!out.includes(w)) out.push(w);
+        (_T_SYN[w] || []).forEach(s => { if (!out.includes(s)) out.push(s); });
+    });
+    return out;
+}
+function _tidx(p) {
+    const words = s => _tn(s).replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 2);
+    return { p, name: words(p.nombre), cat: words(p.categoria), tag: words(p.tag || ''), desc: words(p.desc || ''), full: _tn(p.nombre) };
+}
+function _tscore(ix, tokens, qn) {
+    let s = 0, hits = 0;
+    tokens.forEach(t => {
+        const m = (arr, w) => arr.reduce((mx, x) => Math.max(mx, _twm(t, x)), 0) * w;
+        const best = Math.max(m(ix.name, 3), m(ix.cat, 2.4), m(ix.tag, 2), m(ix.desc, 1.2));
+        if (best > 0) { s += best; hits++; }
+    });
+    if (ix.full.length > 3 && qn.includes(ix.full)) s += 25;
+    return { s, hits };
+}
+
+// ── Presupuesto: "tengo 20000", "hasta 50 mil", "menos de 30,000", "RD$ 25.000" ──
+function _tBudget(ql) {
+    const hint = /(tengo|presupuesto|menos de|menor a|hasta|maximo|no pase|debajo de|por debajo|alrededor|aproximadamente|aprox|unos|gastar|invertir|pagar|cuento con|manejo|dispongo|\bde \d|rd\$?\s*\d)/.test(ql);
+    const re = /(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(mil|k|pesos|rd)?/g;
+    let m, best = null;
+    while ((m = re.exec(ql))) {
+        const before = ql.slice(Math.max(0, m.index - 8), m.index);
+        if (/(rtx|gtx|rx|ryzen|core i|ddr|serie|series|m)\s*$/.test(before)) continue;
+        const raw = m[1], unit = m[2] || '';
+        let num = /^\d{1,3}([.,]\d{3})+$/.test(raw) ? parseFloat(raw.replace(/[.,]/g, '')) : parseFloat(raw.replace(',', '.'));
+        if (isNaN(num)) continue;
+        if (unit === 'mil' || unit === 'k') num *= 1000;
+        if (unit === 'k' && !hint) continue;
+        const okUnit = unit === 'mil' || unit === 'pesos' || unit === 'rd';
+        if (num >= 1000 && (hint || okUnit)) best = Math.max(best || 0, num);
+    }
+    return best;
+}
+
+// ── Núcleo de búsqueda: entiende categoría, uso, presupuesto, orden y palabras sueltas ──
+function _tQuery(ql) {
+    const prods = (typeof productos !== 'undefined' ? productos : []).filter(p => p && p.nombre);
+    if (!prods.length) return null;
+    const budget = _tBudget(ql);
+    const cheap = /(barat|economic|accesible|menor precio|mas bajo|bajo presupuesto|que menos cuest|menos cuest|basic[oa])/.test(ql);
+    const exp = /(\bcar[oa]s?\b|costos[oa]|\bmejor(es)?\b|potente|premium|tope de gama|lo maximo|extrem|\btop\b|bestia|gama alta|alta gama)/.test(ql);
+    const use = _T_USE.find(u => u.re.test(ql)) || null;
+
+    let clean = ql.replace(/(barat\w*|economic\w*|accesible\w*|\bcar[oa]s?\b|costos[oa]\w*|mejor\w*|potente\w*|premium|extrem\w*|\btop\b|bestia|basic[oa]s?)/g, ' ');
+    _T_USE.forEach(u => { clean = clean.replace(new RegExp(u.re.source, 'g'), ' '); });
+    clean = clean.replace(/\b(rd\$?|pesos|mil)\b/g, ' ');
+    const tokens = _ttokens(clean, budget);
+
+    const idx = prods.map(_tidx);
+    const cats = [...new Set(prods.map(p => p.categoria).filter(Boolean))];
+    const cw = c => _tn(c).split(/[^a-z0-9]+/).filter(w => w.length >= 2);
+    let catHit = cats.filter(c => tokens.some(t => cw(c).some(w => _twm(t, w) >= 1.6)));
+    const isCatTok = t => catHit.some(c => cw(c).some(w => _twm(t, w) >= 1.6));
+    const spec = tokens.filter(t => !isCatTok(t));
+    const known = spec.filter(t => idx.some(ix => [ix.name, ix.cat, ix.tag, ix.desc].some(arr => arr.some(w => _twm(t, w) > 0))));
+    _tchatCtx.unknown = spec.filter(t => !known.includes(t) && !_T_SYN[t]);
+
+    const hasIntent = !!(use || budget || cheap || exp);
+    let pool = prods, ctxCat = false;
+    if (catHit.length) pool = prods.filter(p => catHit.includes(p.categoria));
+    else if (!known.length) {
+        if (!hasIntent) return null;
+        if (_tchatCtx.cat && /^(y |pero |entonces |o |algo |alguno |alguna )|\b(esos|esas|ahi|de ahi|ese grupo)\b/.test(ql)) {
+            pool = prods.filter(p => p.categoria === _tchatCtx.cat); ctxCat = true;
+        }
+    }
+
+    let list, scoredTop = null;
+    if (known.length) {
+        let matched = pool.map(p => { const ix = _tidx(p); return { p, ix, ..._tscore(ix, known, ql) }; }).filter(x => x.hits > 0);
+        if (!matched.length && catHit.length) matched = pool.map(p => ({ p, s: 0, hits: 0, ix: _tidx(p) }));   // el término no aplica a esta categoría: mostrar la categoría completa
+        // Números/especificaciones (16gb, 4060, 165hz): si algún producto los cumple todos, solo esos
+        const numT = known.filter(t => /\d/.test(t));
+        if (numT.length) {
+            const strict = matched.filter(x => numT.every(t => [x.ix.name, x.ix.cat, x.ix.tag, x.ix.desc].some(arr => arr.some(w => _twm(t, w) >= 1.6))));
+            if (strict.length) matched = strict;
+        }
+        matched.sort((a, b) => b.s - a.s);
+        const top = matched[0] ? matched[0].s : 0;
+        matched = matched.filter(x => x.s >= top * 0.45);
+        scoredTop = matched;
+        list = matched.map(x => x.p);
+    } else list = pool.slice();
+
+    let useMiss = false;
+    if (use) {
+        const f = list.filter(p => use.pred(_tn([p.nombre, p.desc, p.tag, p.categoria].join(' '))));
+        if (f.length) list = f; else useMiss = true;
+    }
+    let overBudget = false;
+    if (budget) {
+        const f = list.filter(p => p.precio <= budget * 1.05);
+        if (f.length) list = f;
+        else { overBudget = true; list = list.slice().sort((a, b) => a.precio - b.precio).slice(0, 3); }
+    }
+    const explicitSort = cheap || exp || !!budget;
+    if (cheap) list = list.slice().sort((a, b) => a.precio - b.precio);
+    else if (exp || budget) list = list.slice().sort((a, b) => b.precio - a.precio);
+    else if (!known.length) list = list.slice().sort((a, b) => a.precio - b.precio);
+
+    let detail = false;
+    if (list.length === 1) detail = true;
+    else if (known.length && scoredTop && scoredTop.length > 1 && !explicitSort && !use) {
+        const [a, b] = scoredTop;
+        if (a.s >= 6 && a.s >= b.s * 1.8) { detail = true; list = [a.p]; }
+    }
+    return { list, cats: catHit, use, budget, cheap, exp, known, detail, useMiss, overBudget, ctxCat };
+}
+
+// ── Piezas visuales ──────────────────────────────────────────
+const _TB  = 'background:#fff;border:1.5px solid #1D9E75;color:#0F6E56;border-radius:20px;padding:6px 11px;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s;';
+const _TBP = 'background:linear-gradient(135deg,#1a2b4a,#1D9E75);border:1.5px solid transparent;color:#fff;border-radius:20px;padding:6px 12px;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s;';
+function _tBtns(arr) {
+    return '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;">' + arr.map(b =>
+        `<button type="button" data-a="${_tesc(b.a)}" data-v="${_tesc(b.v == null ? '' : b.v)}" onclick="tchatAct(this)" style="${b.p ? _TBP : _TB}" onmouseover="this.style.filter='brightness(1.08)'" onmouseout="this.style.filter='none'">${_tesc(b.label)}</button>`
+    ).join('') + '</div>';
+}
+function _tOffer(p) {
+    if (typeof _pdHasOffer === 'function' && _pdHasOffer(p.id)) {
+        const pct = _pdOfferPct(p.id);
+        return { pct, old: Math.round(p.precio / (1 - pct / 100)) };
+    }
+    return null;
+}
+function _tRow(p, i, act, badge) {
+    const of = _tOffer(p);
+    return `<button type="button" data-a="${act}" data-v="${p.id}" onclick="tchatAct(this)" onmouseover="this.style.borderColor='#1D9E75';this.style.background='#ecfdf5'" onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc'"
+        style="display:flex;gap:9px;align-items:center;width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:8px 10px;margin-top:7px;cursor:pointer;font-family:inherit;text-align:left;color:#1e293b;transition:.15s;">
+        <span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1a2b4a,#1D9E75);color:#fff;font-weight:800;font-size:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">${i + 1}</span>
+        <span style="flex:1;min-width:0;">
+            ${badge ? `<span style="display:inline-block;font-size:9.5px;font-weight:800;color:#b45309;background:#fef3c7;border-radius:6px;padding:1px 6px;margin-bottom:2px;">${badge}</span><br>` : ''}
+            <b style="font-size:12.5px;line-height:1.25;display:block;">${_tesc(p.nombre)}</b>
+            <span style="font-size:10.5px;color:#64748b;line-height:1.3;display:block;">${_tesc(p.desc || '')}</span>
+        </span>
+        <span style="text-align:right;flex-shrink:0;"><b style="font-size:12px;color:#0F6E56;white-space:nowrap;">${_tmoney(p.precio)}</b>${of ? `<br><s style="font-size:10px;color:#94a3b8;white-space:nowrap;">${_tmoney(of.old)}</s>` : ''}</span>
+    </button>`;
+}
+function _tList(items, o) {
+    o = o || {};
+    const act = o.act || 'pick', cap = o.cap || 6;
+    const shown = items.slice(0, cap), rest = items.slice(cap);
+    _tchatCtx.list = shown.map(p => p.id);
+    _tchatCtx.rest = rest.map(p => p.id);
+    _tchatCtx.last = null;
+    _tchatCtx.listMode = act;
+    const cs = [...new Set(items.map(p => p.categoria))];
+    _tchatCtx.cat = cs.length === 1 ? cs[0] : null;
+    let h = `<div class="tc-wide">${o.intro || ''}`;
+    shown.forEach((p, i) => { h += _tRow(p, i, act, i === 0 ? (o.badge || '') : ''); });
+    if (rest.length) h += _tBtns([{ label: `➕ Ver ${rest.length} más`, a: 'more' }]);
+    h += `<div style="font-size:11px;color:#64748b;margin-top:9px;">${act === 'add' ? '👆 Toca la que quieres agregar al carrito.' : '👆 Toca una opción (o escribe su número) y te muestro <b>todas sus características</b>.'}</div>`;
+    h += _tBtns([{ label: '🛍️ Ver en el catálogo', a: 'catalog', v: _tchatCtx.cat || 'Todos' }]);
+    return h + '</div>';
+}
+function _tListFromQuery(a) {
+    const catLabel = a.cats.length ? a.cats.join(' y ') : '';
+    const emoji = a.use ? a.use.emoji : a.cheap ? '💸' : a.exp ? '👑' : a.budget ? '💰' : _tCatEmoji(a.cats[0]);
+    let intro = `${emoji} <b>${_tesc(catLabel || (a.cheap || a.exp ? 'Productos' : 'Opciones'))}</b>`;
+    if (a.use) intro += ` para <b>${a.use.label}</b>`;
+    if (a.budget) intro += a.overBudget ? ` — con <b>${_tmoney(a.budget)}</b> está ajustado; lo más cercano es:` : ` hasta <b>${_tmoney(a.budget)}</b>`;
+    if (a.cheap) intro += ', de la más económica a la más cara';
+    else if (a.exp) intro += ', lo más top primero';
+    intro += ` (${a.list.length} ${a.list.length === 1 ? 'opción' : 'opciones'}):`;
+    if (a.useMiss) intro += '<br><small style="color:#64748b">No tengo algo específico para eso, estas son las más cercanas.</small>';
+    return _tList(a.list, { intro, cap: a.cheap || a.exp ? 5 : 6, badge: a.cheap ? '🏆 Más económico' : a.exp ? '👑 Más top' : '' });
+}
+function _tCard(p) {
+    _tchatCtx.last = p.id; _tchatCtx.cat = p.categoria; _tchatCtx.list = []; _tchatCtx.rest = [];
+    const of = _tOffer(p);
+    const rating = typeof _pdStars === 'function' ? _pdStars(p.id) : null;
+    const rev = typeof _pdRevs === 'function' ? _pdRevs(p.id) : null;
+    const specs = String(p.desc || '').split(/[,;]|\.(?=\s|$)|\s-\s/).map(s => s.trim()).filter(s => s.length > 2);
+    const img = p.img ? `<img src="${_tesc(p.img)}" alt="" onerror="this.style.display='none'" style="width:100%;height:118px;object-fit:cover;border-radius:10px;margin-bottom:8px;background:#e2e8f0;">` : '';
+    return `<div class="tc-wide">${img}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px;">
+            <span style="font-size:10px;font-weight:800;color:#0F6E56;background:#d1fae5;border-radius:6px;padding:2px 7px;">${_tCatEmoji(p.categoria)} ${_tesc(p.categoria)}</span>
+            ${p.tag ? `<span style="font-size:10px;font-weight:800;color:#1d4ed8;background:#dbeafe;border-radius:6px;padding:2px 7px;">${_tesc(p.tag)}</span>` : ''}
+            ${of ? `<span style="font-size:10px;font-weight:800;color:#be123c;background:#ffe4e6;border-radius:6px;padding:2px 7px;">-${of.pct}% OFERTA</span>` : ''}
+        </div>
+        <b style="font-size:14px;line-height:1.25;display:block;">${_tesc(p.nombre)}</b>
+        <div style="margin:5px 0 2px;"><span style="font-size:19px;font-weight:900;color:#0F6E56;">${_tmoney(p.precio)}</span>
+            ${of ? `<s style="font-size:12px;color:#94a3b8;margin-left:6px;">${_tmoney(of.old)}</s> <span style="font-size:11px;color:#be123c;font-weight:700;">Ahorras ${_tmoney(of.old - p.precio)}</span>` : ''}</div>
+        <div style="font-size:11px;color:#64748b;margin-bottom:7px;">${rating ? `⭐ ${rating.toFixed(1)} (${Number(rev).toLocaleString('es-DO')} reseñas) · ` : ''}<span style="color:#059669;font-weight:700;">✅ En existencia</span></div>
+        <div style="font-size:11px;font-weight:800;color:#334155;margin-bottom:3px;">Características:</div>
+        ${specs.map(s => `<div style="font-size:12px;color:#1e293b;line-height:1.5;">✔️ ${_tesc(s)}</div>`).join('') || '<div style="font-size:12px;color:#64748b;">Pregúntanos por WhatsApp los detalles de este equipo.</div>'}
+        ${_tBtns([
+            { label: '🛒 Agregar al carrito', a: 'add', v: p.id, p: true },
+            { label: '🔍 Ver detalles completos', a: 'details', v: p.id },
+            { label: '🔁 Ver similares', a: 'similar', v: p.id },
+            { label: '💬 Preguntar por WhatsApp', a: 'wa', v: 'Hola, me interesa: ' + p.nombre + ' (' + _tmoney(p.precio) + '). ¿Está disponible?' }
+        ])}</div>`;
+}
+function _tSimilar(p) {
+    const same = productos.filter(x => x.id !== p.id && x.categoria === p.categoria).sort((a, b) => Math.abs(a.precio - p.precio) - Math.abs(b.precio - p.precio));
+    if (!same.length) return `🤷 La <b>${_tesc(p.nombre)}</b> es la única de <b>${_tesc(p.categoria)}</b> que tenemos ahora mismo. ¿Quieres ver otras categorías?` + _tBtns([{ label: '📦 Ver categorías', a: 'overview', p: true }]);
+    return _tList(same, { intro: `🔁 Opciones parecidas a la <b>${_tesc(p.nombre)}</b> (por precio):` });
+}
+function _tOverview() {
+    const cats = [...new Set(productos.filter(p => p && p.categoria).map(p => p.categoria))];
+    _tchatCtx.list = []; _tchatCtx.rest = []; _tchatCtx.last = null; _tchatCtx.cat = null;
+    const offers = typeof _pdHasOffer === 'function' ? productos.filter(p => _pdHasOffer(p.id)).length : 0;
+    let h = `📦 Tenemos <b>${productos.length} productos</b> en <b>${cats.length} categorías</b>. Toca la que te interese:`;
+    h += '<div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">' + cats.map(c => {
+        const n = productos.filter(p => p.categoria === c).length;
+        const min = Math.min(...productos.filter(p => p.categoria === c).map(p => p.precio));
+        return `<button type="button" data-a="cat" data-v="${_tesc(c)}" onclick="tchatAct(this)" style="display:flex;justify-content:space-between;align-items:center;gap:8px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:8px 11px;cursor:pointer;font-family:inherit;font-size:12.5px;color:#1e293b;" onmouseover="this.style.borderColor='#1D9E75';this.style.background='#ecfdf5'" onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc'"><b>${_tCatEmoji(c)} ${_tesc(c)}</b><span style="font-size:11px;color:#64748b;">${n} · desde ${_tmoney(min)}</span></button>`;
+    }).join('') + '</div>';
+    const extra = [{ label: '🛍️ Ver todo el catálogo', a: 'catalog', v: 'Todos', p: true }];
+    if (offers) extra.push({ label: `🔥 Ofertas (${offers})`, a: 'ask', v: 'ofertas' });
+    return h + _tBtns(extra);
+}
+
+// ── Carrito ──────────────────────────────────────────────────
+function _tAddReply(p) {
+    addToCart(p.id);
+    _tchatCtx.last = p.id;
+    let items = 0, total = 0;
+    try { (carrito || []).forEach(i => { items += i.cantidad; total += i.precio * i.cantidad; }); } catch (e) {}
+    return `🛒 ¡Listo! Agregué <b>${_tesc(p.nombre)}</b> (${_tmoney(p.precio)}) a tu carrito.` +
+        (items ? `<br>Llevas <b>${items}</b> artículo${items === 1 ? '' : 's'} · total <b>${_tmoney(total)}</b>.` : '') +
+        _tBtns([{ label: '🧾 Ver carrito y pagar', a: 'cart', p: true }, { label: '🔁 Seguir viendo', a: 'overview' }, { label: '➕ Agregar otro igual', a: 'add', v: p.id }]);
+}
+function _tCartIntent(ql) {
+    if (!/(agreg|anad|al carrito|lo quiero|la quiero|me lo llevo|me la llevo|me llevo|ponlo|ponla|lo tomo|la tomo|dame ese|dame esa|comprar|compro|apartar|separar|pedir|ordenar|lo llevo|la llevo)/.test(ql)) return null;
+    if (/(como (puedo |hago para )?(comprar|pedir|ordenar)|donde compro|como hago (un )?pedido)/.test(ql))
+        return '🛍️ ¡Comprar es facilito!<br><br>1️⃣ Escoge tu producto en el <b>Catálogo</b> (o pídemelo aquí)<br>2️⃣ Toca <b>Agregar al carrito</b><br>3️⃣ Abre el carrito, pon tu nombre y elige <b>delivery o retiro</b><br>4️⃣ Paga por transferencia, PayPal o efectivo<br><br>O dime qué quieres y yo lo agrego por ti. 😉' +
+            _tBtns([{ label: '🛍️ Ir al catálogo', a: 'catalog', v: 'Todos', p: true }, { label: '📦 Ver categorías', a: 'overview' }]);
+    const cleaned = ql.replace(/(agreg\w*|anad\w*|ponl[oa]|al carrito|carrito|comprar\w*|compro|apart\w*|separ\w*|pedir|ordenar|me lo llevo|me la llevo|me llevo|lo llevo|la llevo|lo tomo|la tomo|lo quiero|la quiero|dame (ese|esa))/g, ' ').replace(/\s+/g, ' ').trim();
+    const nm = cleaned.match(/^(?:la |el |lo |opcion |numero )*(\d{1,2})$/);
+    if (nm && _tchatCtx.list.length) {
+        const p = productos.find(x => x.id === _tchatCtx.list[parseInt(nm[1], 10) - 1]);
+        if (p) return _tAddReply(p);
+    }
+    const a = cleaned ? _tQuery(cleaned) : null;
+    if (a && a.list.length) {
+        if (a.detail || a.list.length === 1) return _tAddReply(a.list[0]);
+        return _tList(a.list, { act: 'add', intro: '🛒 Encontré varias opciones. ¿Cuál quieres agregar?' });
+    }
+    if (_tchatCtx.last) { const p = productos.find(x => x.id === _tchatCtx.last); if (p) return _tAddReply(p); }
+    return '🛒 ¿Cuál producto quieres agregar? Dime el nombre o elige una categoría:' + _tOverviewButtonsOnly();
+}
+function _tOverviewButtonsOnly() {
+    const cats = [...new Set(productos.filter(p => p && p.categoria).map(p => p.categoria))];
+    return _tBtns(cats.map(c => ({ label: _tCatEmoji(c) + ' ' + c, a: 'cat', v: c })));
+}
+
+// ── Ordinales: "1", "la segunda", "el último" ────────────────
+function _tOrdinal(ql) {
+    if (!_tchatCtx.list.length) return null;
+    const m = ql.match(/^(?:quiero |dame |ver |muestrame |ensename |la |el |lo |opcion |numero |no |#|el numero |la opcion )*\s*(\d{1,2}|primer\w*|segund\w*|tercer\w*|cuart\w*|quint\w*|sext\w*|septim\w*|octav\w*|ultim\w*)\s*(?:opcion|por favor|porfa|pls)?\.*$/);
+    if (!m) return null;
+    const w = m[1], map = { primer: 1, segund: 2, tercer: 3, cuart: 4, quint: 5, sext: 6, septim: 7, octav: 8 };
+    let n;
+    if (/^\d/.test(w)) n = parseInt(w, 10);
+    else if (w.startsWith('ultim')) n = _tchatCtx.list.length;
+    else { const k = Object.keys(map).find(k => w.startsWith(k)); n = k ? map[k] : 0; }
+    if (n < 1 || n > _tchatCtx.list.length)
+        return `🤔 Esa opción no está en la lista. Elige un número del <b>1</b> al <b>${_tchatCtx.list.length}</b> o toca uno de los botones. 👆`;
+    const p = productos.find(x => x.id === _tchatCtx.list[n - 1]);
+    if (!p) return null;
+    return _tchatCtx.listMode === 'add' ? _tAddReply(p) : _tCard(p);
+}
+
+// ── Comparaciones ────────────────────────────────────────────
+function _tCompare(ql) {
+    if (!/(compar|diferencia entre|\bvs\b|versus|contra|cual es mejor|que es mejor)/.test(ql)) return null;
+    const body = ql.replace(/^(.*?)(compara\w*|diferencia entre|cual es mejor|que es mejor|entre)\s+/, '').replace(/\b(cual|es|mejor|la|el)\b/g, ' ');
+    const parts = body.split(/\s+(?:y|vs|versus|contra|o|con)\s+/).map(s => s.trim()).filter(Boolean);
+    if (parts.length < 2) return null;
+    const found = [];
+    parts.forEach(part => {
+        const a = _tQuery(part);
+        if (a && a.list.length && a.known.length) { const p = a.list[0]; if (!found.some(f => f.id === p.id)) found.push(p); }
+    });
+    if (found.length < 2) return null;
+    const [A, B] = found;
+    const col = p => `<div style="flex:1;min-width:0;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:8px;">
+        <b style="font-size:12px;line-height:1.25;display:block;">${_tesc(p.nombre)}</b>
+        <div style="font-size:14px;font-weight:900;color:#0F6E56;margin:3px 0;">${_tmoney(p.precio)}</div>
+        <div style="font-size:10.5px;color:#64748b;margin-bottom:3px;">${_tesc(p.categoria)}${p.tag ? ' · ' + _tesc(p.tag) : ''}</div>
+        <div style="font-size:11px;line-height:1.45;">${_tesc(p.desc || '')}</div></div>`;
+    const diff = Math.abs(A.precio - B.precio), cheaper = A.precio <= B.precio ? A : B;
+    return `<div class="tc-wide">⚖️ <b>Comparación</b><div style="display:flex;gap:7px;margin-top:8px;">${col(A)}${col(B)}</div>
+        <div style="font-size:12px;margin-top:8px;">💰 La <b>${_tesc(cheaper.nombre)}</b> es <b>${_tmoney(diff)}</b> más económica.</div>
+        <div style="font-size:11.5px;color:#475569;margin-top:4px;">Si me dices para qué la usarás (gaming, trabajo, estudio, edición), te digo cuál te conviene más. 🎯</div>
+        ${_tBtns([{ label: '🔍 Ver ' + A.nombre.split(' ').slice(0, 2).join(' '), a: 'pick', v: A.id }, { label: '🔍 Ver ' + B.nombre.split(' ').slice(0, 2).join(' '), a: 'pick', v: B.id }])}</div>`;
+}
+
+// ── Glosario técnico ─────────────────────────────────────────
+const _T_GLOSS = [
+    { re: /\b(ssd|hdd|nvme|disco duro|disco solido)\b/, s: 'ssd', sl: 'Ver equipos con SSD',
+      html: '⚡ <b>SSD vs HDD:</b> el SSD no tiene partes móviles, arranca Windows en segundos y abre programas muchísimo más rápido. El HDD es más barato por GB pero lento y frágil. Hoy lo ideal es un <b>SSD (mejor si es NVMe)</b> como disco principal.' },
+    { re: /\b(ram|memoria)\b/, s: '16gb', sl: 'Ver equipos con 16GB',
+      html: '🧠 <b>¿Cuánta RAM?</b><br>• <b>8 GB</b>: navegar, Office, clases.<br>• <b>16 GB</b>: el punto ideal para multitarea, gaming y diseño ligero.<br>• <b>32 GB o más</b>: edición de video, 3D y trabajo pesado.' },
+    { re: /\b(ddr4|ddr5|ddr3)\b/, html: '🧠 <b>DDR4 vs DDR5:</b> DDR5 es más rápida y eficiente, pero más cara y necesita placa compatible. Para gaming y edición pesada vale la pena; para uso normal, DDR4 rinde de sobra.' },
+    { re: /\b(ryzen|intel|amd|procesador|cpu|core i\d|i3|i5|i7|i9)\b/, html: '🔧 <b>Intel vs AMD Ryzen:</b> ambos son excelentes. Ryzen suele dar mejor rendimiento por precio y eficiencia; Intel brilla en software optimizado y portátiles ligeras. En números: <b>i3/Ryzen 3</b> básico, <b>i5/Ryzen 5</b> uso diario fuerte, <b>i7/Ryzen 7</b> gaming y edición, <b>i9/Ryzen 9</b> nivel extremo.' },
+    { re: /\b(rtx|gtx|nvidia|grafica|gpu|tarjeta de video|tarjeta grafica)\b/, s: 'rtx', sl: 'Ver equipos con RTX',
+      html: '🎮 <b>Tarjeta gráfica (GPU):</b> es la que mueve los juegos y acelera render y edición. Las <b>RTX</b> de NVIDIA añaden ray tracing y DLSS. Como guía: RTX 4060 = 1080p fluido en ultra, RTX 4070 Ti = 1440p/2K sin sudar, RTX serie 40 alta = 4K.' },
+    { re: /\b(hz|hertz|refresco|frecuencia)\b/, s: '165hz', sl: 'Ver monitores y laptops 165Hz',
+      html: '🖥️ <b>Hz:</b> es cuántas veces por segundo se actualiza la pantalla. 60Hz es lo normal; <b>144–165Hz</b> se ve mucho más fluido en juegos competitivos (Fortnite, Valorant, Warzone).' },
+    { re: /\b(oled|ips|qhd|2k|4k|resolucion)\b/, html: '🎨 <b>OLED vs IPS:</b> OLED da negros perfectos, colores explosivos y contraste brutal (ideal para diseño y películas). IPS es más económico, muy preciso en color y no sufre de "quemado". <b>QHD/2K</b> es más nítido que Full HD.' },
+    { re: /\b(tinta|laser|ecotank|toner|cartucho)\b/, s: 'impresora', sl: 'Ver impresoras',
+      html: '🖨️ <b>Tinta vs Láser:</b> el sistema de <b>tinta continua (EcoTank)</b> es baratísimo por página y bueno para fotos y hogar. La <b>láser</b> imprime más rápido, no se seca y es ideal para oficina con mucho volumen en blanco y negro.' },
+    { re: /\b(mecanico|membrana|switch|switches)\b/, s: 'teclado', sl: 'Ver teclados',
+      html: '⌨️ <b>Mecánico vs membrana:</b> el mecánico responde más rápido, dura años, se puede personalizar y se siente mucho mejor al escribir/jugar. La membrana es más silenciosa y económica.' },
+    { re: /\b(m1|m2|m3|apple silicon|macos)\b/, s: 'macbook', sl: 'Ver MacBook',
+      html: '🍎 <b>Chip M2 de Apple:</b> combina CPU, GPU y memoria en un solo chip. Resultado: rendimiento brutal, laptop silenciosa y baterías que duran todo el día.' },
+    { re: /\b(wifi|wi-fi|red|router)\b/, html: '📡 Para temas de <b>redes y Wi-Fi</b> hacemos instalación y configuración profesional. Agenda tu servicio y lo resolvemos.' }
+];
+function _tGlossary(ql) {
+    if (!/(que es|que son|que significa|para que sirve|como funciona|diferencia|\bvs\b|versus|cual es mejor|que me conviene|cuanta? ram|cuanto ram|cuanta memoria|que tan buen|vale la pena|conviene)/.test(ql)) return null;
+    const g = _T_GLOSS.find(x => x.re.test(ql));
+    if (!g) return null;
+    const b = [];
+    if (g.s) b.push({ label: '🔎 ' + g.sl, a: 'search', v: g.s, p: true });
+    b.push({ label: '🎯 Recomiéndame uno', a: 'ask', v: '¿Cuál me recomiendas?' });
+    return g.html + _tBtns(b);
+}
+
+// ── Información de la tienda (con botones de acción) ─────────
+function _tRepairs(ql) {
+    let svc = 'Reparación de Hardware', lbl = 'Agendar reparación';
+    if (/(virus|malware|formate|reinstal|windows|linux|sistema operativo|instalar|programa|driver)/.test(ql)) { svc = 'Instalación de Software y OS'; lbl = 'Agendar instalación / limpieza de virus'; }
+    else if (/(datos|archivos|fotos|recuperar|disco danado|disco dano)/.test(ql)) { svc = 'Recuperación de Datos'; lbl = 'Agendar recuperación de datos'; }
+    else if (/(\bred\b|redes|wifi|wi-fi|internet|router)/.test(ql)) { svc = 'Instalación de Redes'; lbl = 'Agendar instalación de red'; }
+    else if (/(upgrade|actualiz|mas ram|ampliar|cambiar disco|poner ssd)/.test(ql)) { svc = 'Actualización y Upgrades'; lbl = 'Agendar upgrade'; }
+    else if (/(lent[oa]|calienta|limpieza|polvo|ventilador|mantenimiento|pasta termica)/.test(ql)) { svc = 'Mantenimiento Preventivo'; lbl = 'Agendar mantenimiento'; }
+    else if (/(domicilio|a mi casa|que vengan|vengan)/.test(ql)) { svc = 'Servicio Técnico a Domicilio'; lbl = 'Agendar técnico a domicilio'; }
+    const lenta = /(lent[oa]|tarda|se traba|se congela)/.test(ql);
+    const intro = lenta
+        ? '😅 Una compu lenta casi siempre es por <b>virus, disco lleno o dañado, polvo acumulado o Windows desactualizado</b>. Le hacemos chequeo completo y la dejamos como nueva.'
+        : _tpick(['🔧 ¡Claro que reparamos! Nuestro técnico es un crack.', '🛠️ ¡Sí! Reparamos y damos soporte técnico.']);
+    return `${intro}<br><br>🖥️ Laptops y PCs · 📺 Pantallas y teclados · 🔋 Baterías<br>🦠 Virus y formateo · 🧹 Mantenimiento · 🌐 Redes · 💾 Recuperación de datos<br><br>Toca para agendar tu cita (¡recogemos en tu casa también!):` +
+        _tBtns([
+            { label: '🩺 Diagnosticar mi equipo gratis', a: 'dg-menu', p: true },
+            { label: '📅 ' + lbl, a: 'cita', v: svc },
+            { label: '🏠 Técnico a domicilio', a: 'cita', v: 'Servicio Técnico a Domicilio' },
+            { label: '🧰 Ver todos los servicios', a: 'goto', v: 'servicios' },
+            { label: '💬 Consultar por WhatsApp', a: 'wa', v: 'Hola, necesito reparación/soporte técnico. Mi problema es: ' }
+        ]);
+}
+function _tDelivery() {
+    return _tpick([
+        '🚴 ¡Sí hacemos <b>delivery</b>! Cubrimos Santo Domingo y zonas cercanas.',
+        '🏍️ ¡Dale! Llevamos tu pedido hasta la puerta de tu casa en Santo Domingo y zonas aledañas.'
+    ]) + '<br><br>📦 Agrega tus productos al carrito y en el pedido eliges <b>delivery</b>, o retira gratis en tienda: <b>Cruce de Manoguayabo #137, Plaza A & R</b>.' +
+        _tBtns([
+            { label: '🛍️ Ver catálogo', a: 'catalog', v: 'Todos', p: true },
+            { label: '🧾 Mi carrito', a: 'cart' },
+            { label: '💬 Coordinar delivery', a: 'wa', v: 'Hola, quiero coordinar un delivery. Mi dirección es: ' }
+        ]);
+}
+function _tPayment() {
+    return '💳 Aceptamos estas formas de pago:<br><br>💵 <b>Efectivo</b> — en tienda o al recibir tu delivery<br>🏦 <b>Transferencia bancaria</b><br>&nbsp;&nbsp;→ Banco Popular: <b>837-272020</b><br>&nbsp;&nbsp;→ Banreservas: <b>960-7237498</b><br>&nbsp;&nbsp;→ Titular: Juan José Encarnación<br>💻 <b>PayPal</b> — para pagos online<br><br>❌ No aceptamos tarjetas de crédito en tienda.' +
+        _tBtns([
+            { label: '📋 Copiar Banco Popular', a: 'copy', v: '837-272020' },
+            { label: '📋 Copiar Banreservas', a: 'copy', v: '960-7237498' },
+            { label: '🧾 Ir al carrito', a: 'cart', p: true }
+        ]);
+}
+function _tWarranty() {
+    return '✅ ¡Todos nuestros productos tienen <b>garantía</b>! Si llega con defecto de fábrica, lo resolvemos. Para condiciones exactas de un equipo en específico, consúltanos y te confirmamos.' +
+        _tBtns([{ label: '💬 Consultar garantía', a: 'wa', v: 'Hola, quiero consultar la garantía de: ', p: true }, { label: '🛍️ Ver catálogo', a: 'catalog', v: 'Todos' }]);
+}
+function _tLocation() {
+    return '📍 <b>Cruce de Manoguayabo #137, Plaza A & R</b><br>Santo Domingo, República Dominicana 🇩🇴<br><br>Te esperamos en nuestro laboratorio. ¿Te abro la ruta?' +
+        _tBtns([
+            { label: '🗺️ Abrir en Google Maps', a: 'link', v: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Cruce de Manoguayabo 137 Plaza A & R Santo Domingo'), p: true },
+            { label: '📍 Ver sección Ubicación', a: 'goto', v: 'contacto' },
+            { label: '⏰ Horario', a: 'ask', v: '¿Cuál es el horario?' }
+        ]);
+}
+function _tHours() {
+    const open = _tOpenNow();
+    return `⏰ <b>Horario de atención:</b><br><br>📅 Lun–Vie: <b>8:00 AM – 6:00 PM</b><br>📅 Sábado: <b>9:00 AM – 3:00 PM</b><br>❌ Domingo y feriados: cerrado<br><br>${open ? '🟢 <b>Ahora mismo estamos abiertos.</b> ¡Ven cuando quieras!' : '🔴 <b>Ahorita estamos cerrados</b>, pero escríbenos y te respondemos en cuanto abramos.'}` +
+        _tBtns([{ label: '📍 ¿Dónde están?', a: 'ask', v: '¿Dónde están ubicados?' }, { label: '💬 Escribir por WhatsApp', a: 'wa', v: '', p: true }]);
+}
+function _tContact() {
+    const n = _tphone();
+    return '📱 Puedes contactarnos por:<br><br>💬 <b>WhatsApp:</b> ' + _tesc(n.length === 11 ? n.slice(1, 4) + '-' + n.slice(4, 7) + '-' + n.slice(7) : n) + '<br>📧 <b>Email:</b> mundotecnoje@gmail.com<br>🤖 <b>Chat:</b> aquí mismo, para lo que necesites.<br><br>¡Respondemos rápido! 🚀' +
+        _tBtns([
+            { label: '💬 Abrir WhatsApp', a: 'wa', v: '', p: true },
+            { label: '📧 Enviar correo', a: 'link', v: 'mailto:mundotecnoje@gmail.com' },
+            { label: '📞 Llamar', a: 'link', v: 'tel:+' + n }
+        ]);
+}
+function _tBuild() {
+    const pcs = productos.filter(p => /torre|^pc/.test(_tn(p.categoria)));
+    return '🔩 ¡Eso es lo nuestro! Armamos PCs a medida para cualquier uso.<br><br>1️⃣ Usa el <b>Cotizador / Setup Builder</b>: diseñas tu PC y ves el precio al instante.<br>2️⃣ O pide asesoría directa y te la armamos.' +
+        _tBtns([
+            { label: '🧩 Abrir Setup Builder', a: 'goto', v: 'cotizador', p: true },
+            ...(pcs.length ? [{ label: '🖥️ Ver PCs listas', a: 'cat', v: pcs[0].categoria }] : []),
+            { label: '💬 Pedir asesoría', a: 'wa', v: 'Hola, quiero armar una PC a medida. Mi presupuesto es: ' }
+        ]);
+}
+function _tOffers() {
+    const offers = typeof _pdHasOffer === 'function' ? productos.filter(p => _pdHasOffer(p.id)) : [];
+    if (!offers.length) return '🔥 Ahora mismo no tengo ofertas marcadas, pero revisa el catálogo: ¡los precios están brutales!' + _tBtns([{ label: '🛍️ Ver catálogo', a: 'catalog', v: 'Todos', p: true }]);
+    return _tList(offers.sort((a, b) => a.precio - b.precio), { intro: `🔥 <b>Ofertas activas</b> (${offers.length}):`, badge: '🔥 Mejor precio' });
+}
+function _tHelp() {
+    return '🤖 Te puedo ayudar con esto:<br><br>🛍️ Ver productos, precios y <b>todas sus características</b><br>💰 Buscar por presupuesto (“tengo 30 mil”)<br>🎮 Recomendarte según el uso<br>⚖️ Comparar dos productos<br>🛒 Agregar al carrito<br>🔧 Agendar reparaciones<br>🚴 Delivery, pagos, horario y ubicación' +
+        _tBtns([
+            { label: '📦 Ver productos', a: 'overview', p: true },
+            { label: '🎯 Recomiéndame uno', a: 'ask', v: '¿Cuál me recomiendas?' },
+            { label: '🔥 Ofertas', a: 'ask', v: 'ofertas' }
+        ]);
+}
+function _tRecommendAsk() {
+    return '🤔 ¡Para recomendarte lo ideal dime <b>para qué lo usarás</b> (y si puedes, tu presupuesto):' +
+        _tBtns([
+            { label: '🎮 Gaming', a: 'ask', v: 'equipos para gaming' },
+            { label: '💼 Trabajo', a: 'ask', v: 'equipos para trabajo y oficina' },
+            { label: '📚 Estudio', a: 'ask', v: 'laptops para estudiar' },
+            { label: '🎨 Edición', a: 'ask', v: 'equipos para edición y diseño' }
+        ]) + '<div style="font-size:11px;color:#64748b;margin-top:8px;">También puedes escribir: “tengo 40 mil para una laptop”.</div>';
+}
+function _tNotFound(words) {
+    const w = (words || []).filter(x => x.length > 2).slice(0, 2).join(' ');
+    return (w ? `🔎 No tengo <b>${_tesc(w)}</b> en el catálogo ahora mismo, pero lo podemos conseguir <b>por pedido especial</b>. 📲` : '🤔 No encontré eso en el catálogo, pero puedo ayudarte por pedido especial. 📲') +
+        _tBtns([{ label: '💬 Pedirlo por WhatsApp', a: 'wa', v: 'Hola, quiero consultar si pueden conseguirme: ' + (w || ''), p: true }, { label: '📦 Ver lo que sí tenemos', a: 'overview' }]);
+}
+
+// ── Cerebro principal ────────────────────────────────────────
+function _tchatResponder(q) {
+    let ql = _tn(q).replace(/[¿?¡!,;:]/g, ' ').replace(/\s+/g, ' ').replace(/\.+$/, '').trim();
+
+    // Saludo (si trae pregunta después, se sigue con la pregunta)
+    const g = ql.match(/^(hola+|buenas|hey|epa|alo|saludos|buen dia|buenos dias|buenas tardes|buenas noches|que lo que|q lo q|que tal|klk)\b\s*(.*)$/);
+    if (g) {
+        if (g[2].trim().length < 4)
+            return _tpick([
+                '¡Epa! 👋 Bienvenido a <b>Mundo Tecno J.E</b>, la tienda tech más brutal de Manoguayabo. ¿Qué equipo andas buscando hoy?',
+                '¡Qué lo que! 🔥 Soy <b>Tecno Bot</b>, aquí pa\' lo que necesites. ¿Laptop, PC, accesorios o reparación?',
+                '¡Buenas! 🙌 Tengo info de todos los productos, precios y servicios. ¿Cómo te ayudo?'
+            ]) + _tBtns([{ label: '📦 Ver productos', a: 'overview', p: true }, { label: '🔧 Reparaciones', a: 'ask', v: '¿Hacen reparaciones?' }]);
+        ql = g[2].trim();
+    }
+    const nWords = ql.split(' ').length;
+
+    // Diagnóstico abierto: los mensajes del cliente se interpretan como respuesta al paso actual
+    if (_dg.active) { const dr = _dgHandle(ql); if (dr) return dr; }
+
+    // 0. Selección por número / ordinal de la lista anterior
+    const ord = _tOrdinal(ql); if (ord) return ord;
+
+    // 1. Comprar / agregar al carrito
+    const cartR = _tCartIntent(ql); if (cartR) return cartR;
+
+    // 2. Conversación básica
+    if (/^(gracias|muchas gracias|mil gracias|thanks|thank you|dale|ok|okay|listo|perfecto|genial|brutal|chevere|excelente|super|buenisimo|vale|entendido|de acuerdo|bien|nice)\b/.test(ql) && nWords <= 4)
+        return _tpick(['¡Con mucho gusto! 🙌 ¿Algo más en lo que te pueda ayudar?', '¡Dale! 😎 Cualquier otra cosa, aquí estoy.', '¡Figura! 😄 ¿Te ayudo con algo más?']) + _tBtns([{ label: '📦 Ver productos', a: 'overview' }, { label: '🛒 Mi carrito', a: 'cart' }]);
+    if (/^(adios|bye|hasta luego|nos vemos|chao|ciao|hasta pronto)\b/.test(ql))
+        return '¡Hasta luego! 👋 Fue un placer ayudarte. ¡Que tengas un día brutal! 🔥';
+    if (/(quien eres|que eres|como te llamas|eres (ia|robot|humano|chatgpt|claude|gpt|inteligencia|real))/.test(ql))
+        return '🤖 Soy <b>Tecno Bot</b>, el asistente oficial de <b>Mundo Tecno J.E</b>. Conozco cada producto, precio y servicio de la tienda y te ayudo a elegir lo ideal. ¿Qué necesitas?';
+    if (/(como estas|como andas|como tas|que hay de nuevo|todo bien)/.test(ql))
+        return '¡Full energía! ⚡ Listo pa\' ayudarte a encontrar el equipo perfecto. ¿Qué andas buscando?';
+    if (/(ayuda|que puedes hacer|que haces|como funcionas|en que me ayudas|menu|opciones del chat)/.test(ql) && nWords <= 6) return _tHelp();
+
+    // 2b. Problemas del equipo -> diagnóstico paso a paso
+    const dgR = _dgDetect(ql); if (dgR) return dgR;
+
+    // 3. Comparaciones y glosario técnico
+    const cmp = _tCompare(ql); if (cmp) return cmp;
+    const gl = _tGlossary(ql); if (gl) return gl;
+
+    // 4. Ofertas
+    if (/(oferta|descuento|promo|rebaja|ahorr|liquidacion)/.test(ql)) return _tOffers();
+
+    // 5. Servicios e información de la tienda
+    if (/(repar|arregl|tecnico|diagnostic|soldadura|no (enciende|prende|carga|funciona|arranca|da video)|se (dano|mojo|cayo|apaga|traba|congela|calienta)|pantalla (rota|quebrada)|formate|reinstal|virus|malware|mantenimiento|recuperar (datos|archivos|fotos)|\blent[oa]\b|tarda mucho|soporte)/.test(ql)) return _tRepairs(ql);
+    if (/\b(delivery|envio|envios|envian|enviar|entrega|entregan|domicilio|llevan|despacho|a mi casa|mandan)\b/.test(ql)) return _tDelivery();
+    if (/(\bpago\b|\bpagos\b|\bpagar\b|transferencia|paypal|efectivo|tarjeta de credito|credito|debito|banreservas|banco popular|numero de cuenta|cuenta bancaria|metodos? de pago|formas? de pago)/.test(ql)) return _tPayment();
+    if (/\b(garantia|garantias|devolucion|devolver|reembolso|defecto|viene malo|salio malo)\b/.test(ql)) return _tWarranty();
+    if (/(ubicacion|ubicados|ubicada|donde (estan|queda|quedan|es la tienda|los encuentro)|direccion|como llego|como llegar|mapa|donde esta)/.test(ql)) return _tLocation();
+    if (/\b(horario|horarios|abren|abre|cierran|cierra|abierto|abiertos|a que hora|hasta que hora|dias de atencion|atienden)\b/.test(ql)) return _tHours();
+    if (/(whatsapp|wasap|contacto|contactar|contacto|llamar|telefono|celular de la tienda|numero de (tel|whats|contact|la tienda)|correo|email|hablar con|comunicar)/.test(ql)) return _tContact();
+    if (/(armar|ensamblar|arman|ensamblan|a medida|personalizad|cotiz|setup|build|pc propia|mi propia pc|configurar (una )?pc)/.test(ql)) return _tBuild();
+
+    // 6. Recomendación sin datos
+    if (/(cual (es )?mejor|cual recomiendas|me recomiendas|que recomiendas|cual compro|cual me conviene|me aconsejas|ayudame a (elegir|escoger)|que me conviene|no se cual)/.test(ql) && !_tQuery(ql)?.list?.length) return _tRecommendAsk();
+    if (/(recomiend|aconsej)/.test(ql) && nWords <= 4 && !_tQuery(ql)) return _tRecommendAsk();
+
+    // 7. Seguimientos sobre el último producto visto ("cuánto cuesta", "características", "similares")
+    if (_tchatCtx.last) {
+        const lp = productos.find(x => x.id === _tchatCtx.last);
+        const named = _tQuery(ql);
+        const fresh = !!(named && named.list.length && (named.cats.length || named.use || named.budget || named.known.length));
+        if (lp && !fresh) {
+            if (/(similar|parecid|otras? opcion|alternativa|otro modelo|algo mas|otros)/.test(ql)) return _tSimilar(lp);
+            if (/(caracteristic|especificac|specs?|detalle|que (trae|tiene|incluye|lleva)|ficha|todo (sobre|de)|mas info|informacion|descripcion|cuentame|hablame)/.test(ql)) return _tCard(lp);
+            if (/(cuanto (cuesta|vale|es|sale)|precio|costo|cuesta)/.test(ql))
+                return `💰 La <b>${_tesc(lp.nombre)}</b> está en <b>${_tmoney(lp.precio)}</b>.` + _tBtns([{ label: '🛒 Agregar al carrito', a: 'add', v: lp.id, p: true }, { label: '📋 Ver características', a: 'pick', v: lp.id }]);
+            if (/(hay|tienen|disponible|existencia|en stock|queda)/.test(ql) && nWords <= 6)
+                return `✅ Sí, la <b>${_tesc(lp.nombre)}</b> está <b>en existencia</b>.` + _tBtns([{ label: '🛒 Agregar al carrito', a: 'add', v: lp.id, p: true }, { label: '💬 Confirmar por WhatsApp', a: 'wa', v: 'Hola, quiero confirmar disponibilidad de: ' + lp.nombre }]);
+        }
+    }
+
+    // 8. Búsqueda inteligente en el catálogo
+    const a = _tQuery(ql);
+    if (a && a.list.length) return a.detail ? _tCard(a.list[0]) : _tListFromQuery(a);
+
+    // 9. Preguntas generales de inventario
+    if (/(que (tienen|venden|manejan|hay|vende|productos|articulos|equipos)|catalogo|inventario|stock|existencia|disponible|productos|articulos|todo lo que|que mas tienen|que otras cosas)/.test(ql)) return _tOverview();
+
+    // 10. Pregunta por algo que no existe en el catálogo
+    if (_tchatCtx.unknown.length && (nWords <= 3 || /(tienen|tiene|venden|hay|manejan|busco|quiero|necesito|consigue|conseguir|tendran)/.test(ql))) return _tNotFound(_tchatCtx.unknown);
+
+    // 11. Pregunta técnica general sin patrón
+    if (/(que es|como funciona|diferencia|que significa|para que sirve)/.test(ql))
+        return '💡 Buena pregunta técnica. Para una respuesta detallada con tu caso, nuestro equipo te ayuda por WhatsApp. Mientras, ¿quieres que te recomiende algo del catálogo?' +
+            _tBtns([{ label: '🎯 Recomiéndame uno', a: 'ask', v: '¿Cuál me recomiendas?', p: true }, { label: '💬 Preguntar al equipo', a: 'wa', v: 'Hola, tengo una pregunta técnica: ' + q }]);
+
+    // 12. Por defecto
+    return _tpick(['🤔 Mmm, no te entendí del todo, pero te muestro por dónde puedo ayudarte:', '🙌 Para eso no tengo respuesta exacta, ¡pero mira lo que sí puedo hacer!']) +
+        _tOverviewButtonsOnly() + _tBtns([{ label: '🔧 Reparaciones', a: 'ask', v: '¿Hacen reparaciones?' }, { label: '💬 Hablar con el equipo', a: 'wa', v: 'Hola, tengo una consulta: ' + q, p: true }]);
+}
+function _tchatLocalFallbackUnused() {}
+
+// ── Respuestas del chat y acciones de botones ────────────────
+async function _tchatSay(userText, getHtml) {
+    if (_tchatTyping) return;
+    document.getElementById('tecno-quick-replies').innerHTML = '';
+    if (userText) _tchatAddMessage('user', _tesc(userText));
+    _tchatTyping = true; _tchatShowTyping();
+    await new Promise(r => setTimeout(r, 300 + Math.random() * 300));
+    _tchatHideTyping(); _tchatTyping = false;
+    let html = '';
+    try { html = typeof getHtml === 'function' ? getHtml() : getHtml; }
+    catch (e) { console.error('Tecno Bot:', e); html = '😅 Se me enredó algo. ¿Me lo repites o prefieres hablar con el equipo por WhatsApp?' + _tBtns([{ label: '💬 WhatsApp', a: 'wa', v: '', p: true }]); }
+    if (html) { _ultimaRespuestaBot = html; _tchatAddMessage('bot', html); }
+    setTimeout(_tchatRenderQuickReplies, 300);
+}
+
+function tchatAct(el, echo) {
+    const a = el.dataset.a, v = el.dataset.v || '';
+    if (a && a.indexOf('dg-') === 0) return _dgAct(a, v, echo);
+    const prod = () => productos.find(p => String(p.id) === String(v));
+    const say = (def, fn) => _tchatSay(echo !== undefined ? echo : def, fn);
+    const toSection = id => { const s = document.getElementById(id); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+    switch (a) {
+        case 'pick': { const p = prod(); return say(p ? p.nombre : '', () => p ? _tCard(p) : '😅 Ese producto ya no está disponible.' + _tBtns([{ label: '📦 Ver categorías', a: 'overview' }])); }
+        case 'add': { const p = prod(); return say(p ? '🛒 Agregar ' + p.nombre : '', () => p ? _tAddReply(p) : '😅 Ese producto ya no está disponible.'); }
+        case 'details': { const p = prod(); if (!p) return; if (_tMobile()) closeTecnoChat(); if (typeof openProductDetail === 'function') openProductDetail(p.id); return; }
+        case 'similar': { const p = prod(); return say('Ver similares', () => p ? _tSimilar(p) : _tOverview()); }
+        case 'cat': return say(v, () => { const items = productos.filter(p => p.categoria === v).sort((x, y) => x.precio - y.precio); return items.length ? _tList(items, { intro: `${_tCatEmoji(v)} <b>${_tesc(v)}</b> (${items.length} ${items.length === 1 ? 'opción' : 'opciones'}):` }) : _tOverview(); });
+        case 'overview': return say('Ver categorías', () => _tOverview());
+        case 'more': return say('Ver más opciones', () => { const items = _tchatCtx.rest.map(id => productos.find(p => p.id === id)).filter(Boolean); return items.length ? _tList(items, { intro: '➕ Más opciones:' }) : _tOverview(); });
+        case 'sort': return say(v === 'asc' ? 'Más barato primero' : 'Más caro primero', () => {
+            const items = _tchatCtx.list.concat(_tchatCtx.rest).map(id => productos.find(p => p.id === id)).filter(Boolean).sort((x, y) => v === 'asc' ? x.precio - y.precio : y.precio - x.precio);
+            return items.length ? _tList(items, { intro: v === 'asc' ? '💸 De la más económica a la más cara:' : '👑 De la más cara a la más económica:', badge: v === 'asc' ? '🏆 Más económico' : '👑 Más top' }) : _tOverview();
+        });
+        case 'ask': return _sendTecnoMessageWithText(v);
+        case 'search': return say('Ver: ' + v, () => { const r = _tchatProductosSafe(v); return r || _tNotFound([v]); });
+        case 'cita': if (typeof openAppointmentModal === 'function') { closeTecnoChat(); openAppointmentModal(v); } return;
+        case 'goto': if (_tMobile()) closeTecnoChat(); return toSection(v);
+        case 'catalog': if (_tMobile()) closeTecnoChat(); if (typeof filterCategory === 'function') { try { filterCategory(v || 'Todos'); } catch (e) {} } return toSection('catalogo');
+        case 'cart': { if (_tMobile()) closeTecnoChat(); const s = document.getElementById('cart-sidebar'); if (s && s.classList.contains('translate-x-full') && typeof toggleCartMenu === 'function') toggleCartMenu(); return; }
+        case 'wa': window.open(_twa(v), '_blank', 'noopener'); return;
+        case 'link': window.open(v, v.startsWith('http') ? '_blank' : '_self', 'noopener'); return;
+        case 'copy': {
+            const done = () => _tchatSay('', '✅ Copiado: <b>' + _tesc(v) + '</b>. Ya puedes pegarlo en tu app del banco. 🏦');
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done).catch(() => _tchatSay('', '📋 No pude copiarlo automáticamente. El número es: <b>' + _tesc(v) + '</b>'));
+            else _tchatSay('', '📋 El número es: <b>' + _tesc(v) + '</b>');
+            return;
+        }
+    }
+}
+function _tchatProductosSafe(txt) {
+    const ql = _tn(txt).replace(/[¿?¡!,;:]/g, ' ').replace(/\s+/g, ' ').trim();
+    const a = _tQuery(ql);
+    if (!a || !a.list.length) return null;
+    return a.detail ? _tCard(a.list[0]) : _tListFromQuery(a);
+}
+
+// ── Chips de respuesta rápida: contextuales y rotativos ──────
 function _tchatRenderQuickReplies() {
     const qr = document.getElementById('tecno-quick-replies');
-    if(!qr) return;
-    qr.innerHTML = TECNO_QUICK.slice(0,4).map(q =>
-        `<button onclick="sendTecnoQuick(${JSON.stringify(q)})"
+    if (!qr) return;
+    const chips = [];
+    if (_dg.active) {
+        chips.push({ label: '✅ Ya funcionó', act: 'dg-ok' }, { label: '❌ Sigo igual', act: 'dg-fail' }, { label: '🤔 No entiendo', act: 'dg-help' }, { label: '💬 Técnico', act: 'dg-wa' });
+    } else if (_tchatCtx.last) {
+        chips.push({ label: '🛒 Agregar al carrito', act: 'add', arg: _tchatCtx.last });
+        chips.push({ label: '🔁 Ver similares', act: 'similar', arg: _tchatCtx.last });
+        chips.push({ label: '📦 Otras categorías', act: 'overview' });
+    } else if (_tchatCtx.list.length > 1) {
+        chips.push({ label: '💸 Más barato primero', act: 'sort', arg: 'asc' });
+        chips.push({ label: '👑 Más caro primero', act: 'sort', arg: 'desc' });
+        chips.push({ label: '📦 Otras categorías', act: 'overview' });
+    }
+    // Completar con las preguntas rápidas que aún no se han usado (rotan)
+    let unused = TECNO_QUICK.map((c, i) => i).filter(i => !_tchatCtx.quickShown.includes(i));
+    if (!unused.length) { _tchatCtx.quickShown = []; unused = TECNO_QUICK.map((c, i) => i); }
+    const need = _dg.active ? 0 : Math.max(4 - chips.length, 1);
+    unused.slice(0, need).forEach(i => { chips.push({ label: TECNO_QUICK[i].label, q: TECNO_QUICK[i].q }); _tchatCtx.quickShown.push(i); });
+    _tchatChips = chips;
+    qr.innerHTML = chips.map((c, i) =>
+        `<button onclick="sendTecnoQuick(${i})"
             style="background:#fff;border:1.5px solid #e2e8f0;border-radius:20px;padding:5px 10px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;color:#374151;cursor:pointer;white-space:nowrap;transition:.15s;"
             onmouseover="this.style.borderColor='#1D9E75';this.style.color='#1D9E75'"
-            onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#374151'">${q}</button>`
+            onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#374151'">${_tesc(c.label)}</button>`
     ).join('');
 }
 
-function sendTecnoQuick(text) {
+function sendTecnoQuick(i) {
     // Si el bot quedó bloqueado, forzar reset antes de proceder
-    if(_tchatTyping) {
-        _tchatHideTyping();
-        _tchatTyping = false;
-    }
-    document.getElementById('tecno-quick-replies').innerHTML = '';
-    // Pasar texto directo, no depender del DOM del input
-    _sendTecnoMessageWithText(text);
+    if (_tchatTyping) { _tchatHideTyping(); _tchatTyping = false; }
+    const c = _tchatChips[i];
+    if (!c) return;
+    if (c.act) return tchatAct({ dataset: { a: c.act, v: c.arg == null ? '' : String(c.arg) } }, c.label);
+    _sendTecnoMessageWithText(c.q);
 }
 
 async function _sendTecnoMessageWithText(text) {
-    if(_tchatTyping) return;
-    if(!text || !text.trim()) return;
+    if (_tchatTyping) return;
+    if (!text || !text.trim()) return;
     const inp = document.getElementById('tecno-chat-input');
-    inp.value = '';
-    if(!Security.rateLimit('tchat')) return;
+    if (inp) inp.value = '';
+    if (!Security.rateLimit('tchat')) return;
     document.getElementById('tecno-quick-replies').innerHTML = '';
     _tchatAddMessage('user', Security.sanitize(text));
     _tchatTyping = true;
     _tchatShowTyping();
-    // Simular tiempo de respuesta natural
     await new Promise(r => setTimeout(r, 350 + Math.random() * 450));
     _tchatHideTyping();
     _tchatTyping = false;
-    const resp = _tchatResponder(text);
-    if(!resp.startsWith('__lista__')) _ultimaRespuestaBot = resp;
-    else _ultimaRespuestaBot = resp;
-    _tchatAddMessage('bot', resp.startsWith('__lista__') ? resp.split('||')[1] : resp);
+    let resp;
+    try { resp = _tchatResponder(text); }
+    catch (e) {
+        console.error('Tecno Bot:', e);
+        resp = '😅 Se me enredó algo con esa pregunta. Intenta de otra forma o escríbenos por WhatsApp.' + _tBtns([{ label: '💬 WhatsApp', a: 'wa', v: '', p: true }]);
+    }
+    _ultimaRespuestaBot = resp;
+    _tchatAddMessage('bot', resp);
     setTimeout(_tchatRenderQuickReplies, 400);
 }
 
 async function sendTecnoMessage() {
     const inp = document.getElementById('tecno-chat-input');
     const text = inp.value.trim();
-    if(!text) return;
+    if (!text) return;
     inp.value = '';
     _sendTecnoMessageWithText(text);
 }
 
-// ── Tecno Bot: añadir al carrito desde chat ──────────────────
-let _ultimaRespuestaBot = '';
+// ============================================================
+// DIAGNÓSTICO EXPRESS — Tecno Bot guía al cliente paso a paso
+// Si tras varios intentos / preguntas no se resuelve, lo manda a WhatsApp
+// con un resumen de lo que ya probó.
+// Para agregar un problema nuevo: añade un objeto a _DG_KB (la sección del
+// sitio y el chat lo toman solos).
+// ============================================================
+const DG_MAX_FAILS    = 5;    // pasos fallidos antes de pasar a WhatsApp
+const DG_MAX_CONFUSED = 3;    // veces que dice "no entiendo" / pregunta cómo hacerlo
+const DG_MAX_TURNS    = 14;   // mensajes totales dentro de una misma sesión
+let _dg = { active: false, id: null, step: 0, tried: [], fails: 0, confused: 0, asked: 0, turns: 0 };
+function _dgReset() { _dg = { active: false, id: null, step: 0, tried: [], fails: 0, confused: 0, asked: 0, turns: 0 }; }
+const _dgc = s => `<code style="background:#f1f5f9;padding:1px 5px;border-radius:5px;font-size:11.5px;">${s}</code>`;
 
-function _tchatAgregarAlCarrito(texto) {
-    const ql = texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    const esCompra = ql.match(/agrega|agregar|añade|añadir|quiero comprar|lo quiero|me llevo|ponlo|al carrito|lo tomo|dame ese|dame la|pedir|separar|apartar/);
-    if(!esCompra) return null;
+const _DG_KB = [
+    { id: 'no_enciende', icon: '🔌', title: 'No enciende', short: 'No enciende', desc: 'Presionas el botón y no pasa nada.',
+      re: /(no (me )?(enciende|prende|arranca|inicia|da (senal|vida))|esta muerta|no hace nada al (prender|encender)|se apago y no (prende|enciende))/,
+      svc: 'Reparación de Hardware',
+      cause: 'Por lo que describes, podría ser el cargador, la batería, la fuente de poder o la placa madre.',
+      tip: 'Usa siempre regleta con protección contra picos de voltaje para cuidar tu equipo.',
+      steps: [
+        { t: 'Revisar la energía', d: 'Confirma que el enchufe tiene corriente (pruébalo con otro aparato). Conecta el cargador <b>directo a la pared</b> y mira si se enciende la luz del cargador o del equipo.', more: 'Si usas regleta o UPS, sáltala y conéctalo directo a la pared. En una PC de torre, revisa que el cable de poder esté firme y que el interruptor de atrás de la fuente esté en la posición <b>I</b> (encendido).' },
+        { t: 'Descarga de energía (reset)', d: 'Desconecta el cargador, saca la batería si es removible y <b>mantén presionado el botón de encendido 30 segundos</b>. Luego conecta solo el cargador y enciende.', more: 'Es normal que no pase nada mientras mantienes el botón. Suéltalo, espera 10 segundos y entonces enciende normalmente.' },
+        { t: 'Quitar todo lo conectado', d: 'Desconecta USB, memorias, impresoras, cable HDMI y cualquier accesorio. A veces un dispositivo conectado bloquea el arranque.', more: 'Deja solamente el cargador conectado (o el cable de poder en una PC) y prueba encender.' },
+        { t: 'Probar otro cargador y buscar señales', d: 'Si puedes, prueba otro cargador compatible. Al presionar encendido, observa si hay <b>luces, ventiladores o pitidos</b>.', more: 'Luces o ventilador que giran pero pantalla negra: posible RAM o pantalla. Nada de nada: posible cargador, batería o placa.' }
+      ] },
+    { id: 'no_carga', icon: '🔋', title: 'No carga la batería', short: 'No carga', desc: 'Está enchufada y no sube la batería.',
+      re: /(no carga|no esta cargando|no (me )?carga|bateria.*(no carga|no sube|se queda en)|cargador.*(no sirve|no funciona|falla)|enchufada pero no|conectada.*no se esta cargando)/,
+      svc: 'Reparación de Hardware',
+      cause: 'Puede ser el cargador, el puerto de carga o una batería desgastada.',
+      tip: 'Evita dejar la laptop enchufada al 100% todo el día y no uses cargadores genéricos.',
+      steps: [
+        { t: 'Revisar cable y puerto de carga', d: 'Mira que el cable no esté pelado ni doblado y que el puerto de la laptop no esté flojo ni con polvo. Si hay suciedad, límpiala con un palillo de <b>madera</b> (nunca metal).', more: 'Mueve suavemente el conector: si la carga aparece y desaparece, el puerto o el cable están dañados.' },
+        { t: 'Probar otro enchufe y otro cargador', d: 'Conéctalo en otro tomacorriente. Si tienes otro cargador con el mismo voltaje, pruébalo.', more: 'Mira la etiqueta del cargador: debe coincidir el voltaje (V) y amperaje (A) con el original.' },
+        { t: 'Reiniciar y mirar el ícono de batería', d: 'Reinicia el equipo con el cargador conectado y pasa el mouse por el ícono de batería. ¿Dice <i>"conectada, no se está cargando"</i>?', more: 'Ese mensaje suele indicar una batería gastada o un driver dañado (el siguiente paso lo repara).' },
+        { t: 'Reinstalar el driver de batería', d: `Abre el <b>Administrador de dispositivos</b> (clic derecho en Inicio) → <b>Baterías</b> → clic derecho en <i>Batería con método de control compatible con ACPI</i> → <b>Desinstalar</b>. Apaga, desconecta el cargador 30 s, reconéctalo y enciende.`, more: 'Al reiniciar, Windows vuelve a instalar el driver automáticamente. No te asustes si desaparece un momento.' }
+      ] },
+    { id: 'lenta', icon: '🐢', title: 'Va muy lenta o se traba', short: 'Va lenta', desc: 'Tarda en abrir, se pega o se congela.',
+      re: /(\blent[oa]\b|se (traba|congela|pega|cuelga|arrastra)|tarda (mucho|en)|va despacio|demora (mucho|en)|esta trabada|esta pegada|muy lenta|rendimiento (malo|bajo))/,
+      svc: 'Mantenimiento Preventivo',
+      cause: 'Probablemente tiene disco duro lento (HDD), poca RAM, mucho polvo o necesita mantenimiento/upgrade a SSD.',
+      tip: 'Reinicia semanalmente y haz mantenimiento preventivo cada 6–12 meses.',
+      steps: [
+        { t: 'Reiniciar el equipo', d: 'Guarda tu trabajo y <b>reinicia</b> (no solo apagar la pantalla). Muchas lentitudes se quitan con esto.', more: 'En Windows 10/11, "Apagar" a veces no limpia todo por el inicio rápido; "Reiniciar" sí.' },
+        { t: 'Liberar espacio en disco', d: 'Ve a <b>Configuración → Sistema → Almacenamiento</b>. Si el disco está casi lleno (menos del 15% libre) borra archivos grandes, vacía la papelera y desinstala lo que no uses.', more: 'Activa "Sensor de almacenamiento" ahí mismo para que limpie archivos temporales automáticamente.' },
+        { t: 'Ver qué está consumiendo todo', d: `Abre el <b>Administrador de tareas</b> (${_dgc('Ctrl + Shift + Esc')}), ordena por <b>CPU, Memoria y Disco</b> y cierra lo que esté al 90–100% sin que lo necesites.`, more: 'Haz clic en el encabezado de la columna (CPU/Memoria/Disco) para ordenar. Selecciona el programa y toca "Finalizar tarea".' },
+        { t: 'Quitar programas del inicio', d: 'En el Administrador de tareas abre la pestaña <b>Inicio</b> y deshabilita lo innecesario (Spotify, Teams, actualizadores, etc.).', more: 'Clic derecho sobre el programa → Deshabilitar. No afecta al programa, solo evita que arranque solo.' },
+        { t: 'Analizar virus', d: 'Abre <b>Seguridad de Windows → Protección contra virus y amenazas → Análisis completo</b> y déjalo terminar.', more: 'Puede tardar de 30 minutos a 1 hora. Puedes seguir usando el equipo mientras tanto.' }
+      ] },
+    { id: 'pantalla_negra', icon: '🖥️', title: 'Enciende pero no da imagen', short: 'Sin imagen', desc: 'Luces y ventilador, pero pantalla negra.',
+      re: /(pantalla (negra|en negro|apagada|oscura|sin imagen)|no (da|hay|sale|tiene) (imagen|video)|no se ve nada|sin imagen|se ve (todo )?negro|prende pero no (da|se ve|muestra))/,
+      svc: 'Reparación de Hardware',
+      cause: 'Podría ser la pantalla, el cable interno, la RAM o la tarjeta gráfica.',
+      tip: 'Evita golpes y no cierres la laptop con objetos encima del teclado.',
+      steps: [
+        { t: 'Subir brillo y cambiar de pantalla', d: `Sube el brillo con las teclas <b>Fn</b> + brillo y prueba ${_dgc('Windows + P')} para cambiar el modo de proyección.`, more: 'Las teclas de brillo suelen tener un ícono de sol en F-keys (F5/F6, F11/F12…). Mantén Fn presionada mientras las tocas.' },
+        { t: 'Reiniciar el controlador gráfico', d: `Presiona ${_dgc('Windows + Ctrl + Shift + B')}. Si escuchas un pitido corto, la pantalla debería parpadear y volver.`, more: 'Hazlo con el equipo encendido aunque la pantalla esté negra.' },
+        { t: 'Probar con un monitor o TV externo', d: 'Conecta la laptop/PC a un <b>monitor o TV por HDMI</b>. Si ahí sí se ve, el problema es la pantalla o su cable interno.', more: 'Si no se ve en ninguno, el problema suele ser RAM o gráfica. Cambia la entrada (HDMI 1/2) del TV con el botón Source/Input.' },
+        { t: 'Descarga de energía', d: 'Apaga, desconecta cargador (y batería si es removible), mantén el botón de encendido 30 segundos y vuelve a encender.', more: 'Es el mismo reset de energía que se usa cuando un equipo no enciende.' },
+        { t: 'En PC de torre: revisar cables', d: 'Verifica que el cable HDMI/DisplayPort esté conectado a la <b>tarjeta gráfica</b> (la de abajo) y no a la placa. Prueba otro cable o puerto.', more: 'Si la PC tiene tarjeta gráfica dedicada, la conexión del monitor va en ella, no en los puertos de la placa madre.' }
+      ] },
+    { id: 'sobrecalienta', icon: '🔥', title: 'Se calienta o se apaga sola', short: 'Se calienta', desc: 'Ventilador ruidoso, calor o apagones.',
+      re: /(se calienta|esta caliente|muy caliente|sobrecalent\w*|se apaga (sola|solo|de repente|en pleno)|ventilador (ruidoso|hace ruido|suena (fuerte|mucho))|hace mucho ruido|temperatura (alta|muy alta))/,
+      svc: 'Mantenimiento Preventivo',
+      cause: 'Lo más común es polvo acumulado o pasta térmica seca, que requiere limpieza interna.',
+      tip: 'Limpia el polvo cada 6–12 meses y nunca uses la laptop sobre cama o sofá.',
+      steps: [
+        { t: 'Usar superficie dura y ventilada', d: 'Pon la laptop en una mesa dura, sin tapar las rejillas. Evita cama, sofá o regazo. Si puedes, usa una base con ventilador.', more: 'Las rejillas de aire están abajo o a los lados. Si las tapas, el calor se queda adentro.' },
+        { t: 'Cerrar lo que consume de más', d: `Abre el Administrador de tareas (${_dgc('Ctrl + Shift + Esc')}) y cierra los programas con CPU alta. Muchas pestañas del navegador también calientan.`, more: 'Si algún proceso está al 100% sin motivo, puede ser un virus o un programa trabado.' },
+        { t: 'Soplar el polvo de las rejillas', d: 'Con el equipo <b>apagado y desconectado</b>, sopla aire comprimido en las rejillas (en ráfagas cortas).', more: 'No uses aspiradora directo (genera estática) ni introduzcas objetos metálicos.' },
+        { t: 'Poner modo de energía Equilibrado', d: 'Ve a <b>Configuración → Sistema → Energía</b> y elige el modo <b>Equilibrado</b> o Ahorro.', more: 'El modo "Máximo rendimiento" sube mucho la temperatura en laptops.' },
+        { t: 'Revisar la temperatura', d: 'Descarga <b>HWMonitor</b> o <b>HWiNFO</b> y mira el CPU: si pasa de ~90 °C en uso normal, hay un problema de enfriamiento.', more: 'Si da más de 90 °C con tareas simples, lo ideal es limpieza interna y cambio de pasta térmica.' }
+      ] },
+    { id: 'wifi', icon: '📶', title: 'Sin internet o Wi-Fi', short: 'Sin Wi-Fi', desc: 'No conecta, se cae o va muy lento.',
+      re: /(sin internet|no (hay|tengo|tiene) internet|wifi.*(no|falla|lento|cae|desconecta|se va)|no (se )?(conecta|conecto|agarra|detecta|aparece).*(wifi|red|internet)|no (me )?(da|sale) internet|internet.*(no funciona|lento|se cae|se va)|se (cae|va) (el )?(wifi|internet))/,
+      svc: 'Instalación de Redes',
+      cause: 'Puede ser el router, el proveedor de internet o la tarjeta de red del equipo.',
+      tip: 'Coloca el router en un lugar alto y central, lejos de microondas y paredes gruesas.',
+      steps: [
+        { t: 'Ver si otros dispositivos tienen internet', d: 'Prueba con tu celular en el mismo Wi-Fi. Si el celular <b>tampoco</b> tiene, el problema es el router o el proveedor.', more: 'Si nadie tiene internet, llama a tu proveedor (Claro, Altice, Wind…) para reportar la avería.' },
+        { t: 'Reiniciar el router', d: 'Desconecta el router de la corriente <b>30 segundos</b>, vuelve a conectarlo y espera 2 minutos a que cargue.', more: 'Espera a que las luces se estabilicen antes de probar de nuevo.' },
+        { t: 'Revisar modo avión y botón de Wi-Fi', d: 'Asegúrate de que el <b>modo avión</b> esté apagado y el Wi-Fi activado (muchas laptops tienen una tecla Fn para eso).', more: 'En la barra de tareas, abajo a la derecha, toca el ícono de red y mira si el Wi-Fi está encendido.' },
+        { t: 'Olvidar la red y reconectar', d: 'En <b>Configuración → Red e Internet → Wi-Fi → Administrar redes conocidas</b>, olvida tu red y conéctate de nuevo con la contraseña.', more: 'Ten la contraseña a mano; suele estar en la etiqueta debajo del router.' },
+        { t: 'Restablecer la conexión', d: `Abre el <b>Símbolo del sistema como administrador</b> y escribe, una por una: ${_dgc('ipconfig /release')}, ${_dgc('ipconfig /renew')} y ${_dgc('ipconfig /flushdns')}.`, more: 'Busca "cmd" en Inicio, clic derecho → Ejecutar como administrador. Escribe cada comando y presiona Enter.' },
+        { t: 'Probar por cable', d: 'Si puedes, conecta un <b>cable de red</b> directo al router. Si por cable sí funciona, la tarjeta Wi-Fi del equipo es la sospechosa.', more: 'Si tu equipo no tiene puerto de red, un adaptador USB-Ethernet sirve para esta prueba.' }
+      ] },
+    { id: 'virus', icon: '🦠', title: 'Virus, anuncios o navegador raro', short: 'Virus / anuncios', desc: 'Ventanas emergentes, redirecciones, mensajes raros.',
+      re: /(virus|malware|publicidad|anuncios|ventanas emergentes|pop ?up|navegador (raro|lento|cambio)|hackearon|hackeado|me redirige|troyano|ransomware|archivos (encriptados|bloqueados|cifrados))/,
+      svc: 'Instalación de Software y OS',
+      cause: 'Todo apunta a malware o extensiones no deseadas; puede requerir limpieza profunda o reinstalación de Windows.',
+      tip: 'No instales programas "crackeados" ni abras adjuntos de correos desconocidos.',
+      steps: [
+        { t: 'Cortar internet y no pagar nada', d: 'Si aparece un mensaje pidiendo dinero para "liberar" tus archivos, <b>no pagues</b>. Desconecta el Wi-Fi/cable para frenar el daño.', more: 'Pedir un rescate es una estafa común. Primero desconecta de internet y luego sigue los pasos.' },
+        { t: 'Análisis sin conexión de Defender', d: 'Abre <b>Seguridad de Windows → Protección contra virus → Opciones de análisis → Análisis sin conexión de Microsoft Defender</b> → Analizar ahora.', more: 'El equipo se reiniciará solo y hará el análisis antes de cargar Windows, lo que detecta virus escondidos.' },
+        { t: 'Desinstalar programas sospechosos', d: 'En <b>Configuración → Aplicaciones</b> ordena por <b>fecha de instalación</b> y desinstala lo que no reconozcas.', more: 'Fíjate en barras de herramientas, "optimizadores" y programas instalados justo cuando empezaron los problemas.' },
+        { t: 'Limpiar el navegador', d: 'En Chrome/Edge abre <b>Extensiones</b>, elimina las que no conozcas y luego usa <b>Restablecer configuración</b> del navegador.', more: 'En Chrome: menú ⋮ → Extensiones → Administrar extensiones. Quita todas las desconocidas.' },
+        { t: 'Cambiar tus contraseñas', d: 'Desde <b>otro dispositivo limpio</b> cambia las contraseñas de correo, redes sociales y banco.', more: 'Empieza por el correo, porque con él se recuperan las demás cuentas.' }
+      ] },
+    { id: 'pantallazo_azul', icon: '💙', title: 'Pantallazo azul o se reinicia sola', short: 'Pantallazo azul', desc: 'Error azul, reinicios o cuelgues.',
+      re: /(pantallazo|pantalla azul|blue screen|bsod|se reinicia (sola|solo|de repente)|reinicia(ndose)? (sola|solo)|se cuelga y reinicia)/,
+      svc: 'Reparación de Hardware',
+      cause: 'Suele ser RAM, disco o drivers dañados, o archivos del sistema corruptos.',
+      tip: 'Mantén Windows y los drivers actualizados y no apagues el equipo en seco.',
+      steps: [
+        { t: 'Anotar el código de error', d: 'Cuando salga la pantalla azul, toma una foto con el celular y anota el <b>código</b> (ej. <i>CRITICAL_PROCESS_DIED</i>).', more: 'Ese código ayuda al técnico a saber si es RAM, disco o driver. Está abajo en la pantalla azul.' },
+        { t: 'Desconectar dispositivos externos', d: 'Quita USB, discos externos, impresoras y adaptadores. Reinicia y observa si sigue pasando.', more: 'A veces un driver de un dispositivo externo es el que provoca el error.' },
+        { t: 'Revisar archivos del sistema', d: `Abre <b>Símbolo del sistema como administrador</b> y ejecuta ${_dgc('sfc /scannow')}. Al terminar, ejecuta ${_dgc('DISM /Online /Cleanup-Image /RestoreHealth')}.`, more: 'Cada comando puede tardar 10–20 minutos. No cierres la ventana mientras trabajan.' },
+        { t: 'Probar la memoria RAM', d: `Presiona ${_dgc('Windows + R')}, escribe ${_dgc('mdsched.exe')} y elige <b>Reiniciar y comprobar problemas</b>.`, more: 'El equipo se reinicia y hace una prueba. Al volver a Windows te muestra si encontró errores.' },
+        { t: 'Actualizar Windows y drivers', d: 'Ve a <b>Configuración → Windows Update</b>, instala todo lo pendiente y reinicia.', more: 'Incluye las "actualizaciones opcionales", ahí suelen estar los drivers.' }
+      ] },
+    { id: 'sin_sonido', icon: '🔇', title: 'No tiene sonido', short: 'Sin sonido', desc: 'No se escucha o las bocinas fallan.',
+      re: /(sin sonido|no (se )?(escucha|oye|suena|hay sonido|tiene sonido)|bocinas?.*(no|falla)|audio.*(no (funciona|sale)|falla)|no hay audio|no sale (el )?(sonido|audio)|altavoz.*no)/,
+      svc: 'Reparación de Hardware',
+      cause: 'Puede ser el driver de audio, la salida mal seleccionada o las bocinas dañadas.',
+      tip: 'Evita volúmenes al máximo por mucho tiempo para no dañar las bocinas.',
+      steps: [
+        { t: 'Volumen y silencio', d: 'Revisa que el volumen no esté en 0 ni en silencio, y abre el <b>mezclador de volumen</b> (clic derecho al ícono de bocina) para ver si la app está silenciada.', more: 'Las teclas F de tu laptop tienen un ícono de bocina tachada: pueden estar silenciando el sonido.' },
+        { t: 'Elegir la salida correcta', d: 'Haz clic en el ícono de volumen y escoge las <b>bocinas del equipo</b> como salida (no un audífono Bluetooth o HDMI).', more: 'Si tienes audífonos Bluetooth cerca, el sonido puede estar saliendo por ellos.' },
+        { t: 'Solucionador de problemas de audio', d: 'Clic derecho al ícono de volumen → <b>Solucionar problemas de sonido</b> y sigue lo que te indique.', more: 'Déjalo terminar; a veces corrige el problema sin que hagas nada más.' },
+        { t: 'Reinstalar el driver de audio', d: 'En el <b>Administrador de dispositivos</b> abre <b>Controladores de sonido, vídeo y juegos</b>, clic derecho al de audio → <b>Desinstalar</b> y reinicia.', more: 'Windows lo vuelve a instalar al reiniciar. Prueba el sonido con un video.' },
+        { t: 'Probar con audífonos', d: 'Conecta unos audífonos con cable. Si en ellos sí suena, las bocinas internas son el problema.', more: 'Si tampoco suena con audífonos, es más probable que sea software o la tarjeta de audio.' }
+      ] },
+    { id: 'perifericos', icon: '⌨️', title: 'Teclado o mouse no responde', short: 'Teclado / mouse', desc: 'No escribe, no mueve el cursor o falla.',
+      re: /((teclado|mouse|raton).*(no (funciona|responde|sirve|escribe|mueve)|falla|dejo de|se dano|no hace nada)|teclas? (pegadas|no (funcionan|escriben))|no (me )?(escribe|responde) (el )?teclado|cursor.*(no (se )?mueve|congel))/,
+      svc: 'Reparación de Hardware',
+      cause: 'Puede ser el accesorio, el puerto USB o, en laptops, el teclado interno dañado o con líquido.',
+      tip: 'Evita comer o beber sobre el teclado y límpialo con aire comprimido.',
+      steps: [
+        { t: 'Batería, cable y receptor', d: 'Si es inalámbrico, cambia las <b>pilas</b> o cárgalo y reconecta el receptor USB. Si es de cable, revisa que no esté pelado.', more: 'Los dispositivos inalámbricos suelen tener un interruptor de encendido debajo: verifica que esté activado.' },
+        { t: 'Probar otro puerto USB', d: 'Conéctalo en otro puerto USB (en PC de torre, usa los traseros).', more: 'Evita hubs o extensiones para esta prueba.' },
+        { t: 'Reiniciar el equipo', d: 'Reinicia con el accesorio conectado. Si el mouse no mueve, usa el teclado: <b>Windows</b> abre Inicio y las flechas navegan.', more: 'Con el teclado: presiona la tecla Windows, escribe "reiniciar" y usa las flechas + Enter.' },
+        { t: 'Probarlo en otro equipo', d: 'Conéctalo a otra computadora. Si ahí funciona, el problema está en tu equipo (puerto o driver). Si no, el accesorio está dañado.', more: 'Es la prueba más rápida para saber de quién es la falla.' },
+        { t: 'Reinstalar el driver', d: 'Abre el <b>Administrador de dispositivos</b> → Teclados o Mouse → clic derecho en el dispositivo → <b>Desinstalar</b> → reinicia.', more: 'Windows reinstala el driver solo al reiniciar.' }
+      ] },
+    { id: 'impresora', icon: '🖨️', title: 'La impresora no imprime', short: 'Impresora', desc: 'No imprime, sale en blanco o atascada.',
+      re: /(impresora.*(no|falla|error|atasc|mancha|sale)|no imprime|no (me )?imprime|imprimir.*(no (puedo|funciona)|falla)|papel atascado|sale (en blanco|borros[ao]|con rayas))/,
+      svc: 'Reparación de Hardware',
+      cause: 'Puede ser cabezal o inyectores tapados, un rodillo desgastado o un problema de conexión/driver.',
+      tip: 'Imprime algo al menos una vez por semana para que la tinta no se seque.',
+      steps: [
+        { t: 'Encendido, luces y conexión', d: 'Verifica que esté encendida, sin luces de error parpadeando, y conectada por USB o a la <b>misma red Wi-Fi</b> que tu PC.', more: 'Si es Wi-Fi, imprime la "página de configuración de red" desde el panel de la impresora para ver si está conectada.' },
+        { t: 'Papel y tinta', d: 'Revisa que haya papel bien colocado, que no esté atascado y que la <b>tinta/tóner</b> no esté vacío.', more: 'Si hay atasco, apaga la impresora y saca el papel despacio, en la dirección del recorrido, sin rasgarlo.' },
+        { t: 'Limpiar la cola de impresión', d: 'Abre <b>Configuración → Impresoras y escáneres</b> → tu impresora → <b>Abrir cola de impresión</b> y cancela todos los trabajos pendientes.', more: 'Un trabajo trabado en la cola bloquea todos los demás. Documento → Cancelar todos los documentos.' },
+        { t: 'Verificar "Sin conexión" y predeterminada', d: 'En el menú de la cola, desmarca <b>Usar impresora sin conexión</b> y asegúrate de que sea la impresora <b>predeterminada</b>.', more: 'En Impresoras y escáneres, desactiva "Permitir que Windows administre mi impresora predeterminada" y elige la tuya.' },
+        { t: 'Reiniciar todo', d: 'Apaga impresora y PC, espera 30 segundos, enciende la impresora primero y luego la PC. Imprime una página de prueba.', more: 'Si sigue igual, a veces ayuda quitar la impresora y volver a agregarla.' },
+        { t: 'Limpieza de cabezales', d: 'Desde el menú de la impresora (o su software) ejecuta <b>Limpieza de cabezales</b> y luego imprime una prueba de inyectores.', more: 'No la repitas más de 2–3 veces seguidas; gasta mucha tinta.' }
+      ] },
+    { id: 'monitor_sin_senal', icon: '📺', title: 'Monitor sin señal o con rayas', short: 'Monitor sin señal', desc: 'Sin señal, parpadea o muestra líneas.',
+      re: /(sin senal|no signal|monitor.*(no (da|prende|enciende|muestra)|negro|apagado|parpadea|raya)|no hay senal|parpadea|(lineas|rayas) en (la )?pantalla|pantalla (parpadea|con rayas|con lineas))/,
+      svc: 'Reparación de Hardware',
+      cause: 'Puede ser cable, puerto de video, tarjeta gráfica o el propio monitor.',
+      tip: 'Usa cables de buena calidad y no los dobles bruscamente.',
+      steps: [
+        { t: 'Cable firme y entrada correcta', d: 'Conecta bien el cable de video en <b>ambos extremos</b> y con el botón <b>Input/Source</b> del monitor selecciona la entrada correcta (HDMI, DP, VGA).', more: 'Si el cable tiene tornillos (VGA/DVI), apriétalos. Prueba cambiando la entrada manualmente en el menú del monitor.' },
+        { t: 'Probar otro cable o puerto', d: 'Cambia de cable y de puerto de video. Un cable dañado es la causa más común.', more: 'Prueba con otro cable HDMI/DisplayPort que sepas que sirve.' },
+        { t: 'Probar el monitor en otro equipo', d: 'Conéctalo a otra computadora o consola. Si allí funciona, el monitor está bien y el problema es el equipo.', more: 'También puedes probar tu PC en otro monitor o TV.' },
+        { t: 'PC de torre: tarjeta gráfica', d: 'Si tu PC tiene tarjeta gráfica dedicada, conecta el monitor a <b>ella</b> (puertos de abajo) y no a la placa madre.', more: 'Con tarjeta gráfica instalada, los puertos de la placa normalmente quedan desactivados.' }
+      ] },
+    { id: 'no_arranca_windows', icon: '🪟', title: 'Windows no inicia', short: 'Windows no inicia', desc: 'Se queda cargando o en reparación.',
+      re: /(windows no (arranca|inicia|carga|abre)|no arranca windows|se queda (en|cargando|en el logo)|bucle|reparacion automatica|preparando reparacion|no (encuentra|detecta) (el )?(disco|sistema operativo)|no (bootea|inicia el sistema)|pantalla de carga infinita)/,
+      svc: 'Instalación de Software y OS',
+      cause: 'Puede ser sistema corrupto, disco dañado o un fallo de arranque.',
+      tip: 'Haz respaldo de tus archivos importantes con regularidad.',
+      steps: [
+        { t: 'Desconectar todo lo externo', d: 'Quita USB, discos externos y tarjetas SD, y reinicia. A veces intenta arrancar desde ellos y se queda trabado.', more: 'Deja solo el cargador conectado.' },
+        { t: 'Entrar a Reparación de inicio', d: 'Enciende y <b>apaga a la fuerza 3 veces seguidas</b> (manteniendo el botón) para que aparezca <i>Recuperación</i> → <b>Solucionar problemas → Opciones avanzadas → Reparación de inicio</b>.', more: 'En la tercera vez debería mostrar "Preparando reparación automática". Déjalo trabajar.' },
+        { t: 'Probar Modo seguro', d: 'En <b>Opciones avanzadas → Configuración de inicio → Reiniciar</b> y presiona <b>4</b> para Modo seguro.', more: 'Si entra a Modo seguro, el problema es un driver o programa; desinstala lo último que instalaste.' },
+        { t: 'Restaurar sistema', d: 'En <b>Opciones avanzadas</b> elige <b>Restaurar sistema</b> y selecciona un punto anterior al problema.', more: 'No borra tus archivos personales; solo regresa la configuración de Windows.' },
+        { t: 'Ver si la BIOS detecta el disco', d: 'Reinicia y presiona <b>F2, F10, F12 o Supr</b> para entrar a la BIOS. Mira si aparece tu disco. Si <b>no aparece</b>, es hardware.', more: 'La tecla depende de la marca. Si el disco no aparece, necesita revisión técnica y posiblemente recuperar datos.' }
+      ] },
+    { id: 'usb', icon: '💾', title: 'USB o disco externo no se detecta', short: 'USB / disco externo', desc: 'No aparece la memoria o el disco.',
+      re: /(usb.*(no|falla)|(memoria|flash|disco externo|disco duro externo|pen ?drive|usb).*(no (detecta|reconoce|aparece|abre|lee)|falla)|no (detecta|reconoce|lee) (el |la |mi )?(usb|memoria|disco))/,
+      svc: 'Recuperación de Datos',
+      cause: 'Puede ser el puerto, el cable, un driver o un disco/memoria dañados.',
+      tip: 'Expulsa siempre el USB con "Quitar hardware de forma segura" y respalda tus datos.',
+      steps: [
+        { t: 'Probar otro puerto USB', d: 'Conéctalo en otro puerto (en PC de torre, los de atrás). Si es disco externo, prueba otro cable.', more: 'Algunos discos externos necesitan un puerto con más energía: evita hubs.' },
+        { t: 'Probarlo en otro equipo', d: 'Conéctalo en otra computadora. Si allí sí aparece, el problema es de tu equipo.', more: 'Si tampoco aparece en otro equipo, el dispositivo puede estar dañado.' },
+        { t: 'Revisar Administración de discos', d: `Presiona ${_dgc('Windows + X')} → <b>Administración de discos</b>. ¿Aparece el disco? Si no tiene letra, clic derecho → <b>Cambiar letra de unidad</b>.`, more: 'Si dice "No asignado" o "RAW", NO formatees aún: podrías perder datos. Pasa al técnico.' },
+        { t: 'Reinstalar controlador USB', d: 'En el <b>Administrador de dispositivos</b>, abre <b>Controladoras de bus serie universal</b>, desinstala el dispositivo marcado con "!" y reinicia.', more: 'Con el dispositivo conectado, Windows lo reinstala al reiniciar.' }
+      ] },
+    { id: 'bateria_dura_poco', icon: '🪫', title: 'La batería dura muy poco', short: 'Batería dura poco', desc: 'Se descarga rápido, dura minutos.',
+      re: /(bateria.*(dura|poco|rapido|se acaba|se gasta|viciada)|se descarga (muy )?rapido|dura poco la bateria|la bateria no aguanta)/,
+      svc: 'Reparación de Hardware',
+      cause: 'Probablemente la batería ya está desgastada y conviene reemplazarla.',
+      tip: 'Mantén la carga entre 20% y 80% cuando puedas y evita el calor.',
+      steps: [
+        { t: 'Generar el reporte de batería', d: `Abre el <b>Símbolo del sistema como administrador</b> y escribe ${_dgc('powercfg /batteryreport')}. Abre el archivo que te indica y compara <b>Capacidad de diseño</b> vs <b>Capacidad de carga completa</b>.`, more: 'Si la capacidad actual es menos del 60% de la de diseño, la batería está desgastada y hay que cambiarla.' },
+        { t: 'Bajar brillo y activar ahorro', d: 'Baja el brillo y activa el <b>Ahorro de batería</b> en Configuración → Sistema → Energía.', more: 'El brillo es de lo que más consume en una laptop.' },
+        { t: 'Ver qué apps gastan batería', d: 'En <b>Configuración → Sistema → Energía → Uso de la batería</b> revisa qué apps consumen más y ciérralas.', more: 'Cierra apps en segundo plano que no uses.' }
+      ] },
+    { id: 'camara_mic', icon: '🎥', title: 'Cámara o micrófono no funciona', short: 'Cámara / micrófono', desc: 'No te ven o no te escuchan en videollamadas.',
+      re: /(camara.*(no|falla|negra)|microfono.*(no|falla)|no (se ve|funciona) la camara|no me escuchan|no (se )?escucha mi (voz|microfono)|no me ven)/,
+      svc: 'Reparación de Hardware',
+      cause: 'Suele ser permisos de privacidad, otra app usándola o el driver.',
+      tip: 'Cierra Zoom/Teams/Meet cuando no los uses para liberar la cámara.',
+      steps: [
+        { t: 'Revisar tapa y botón de cámara', d: 'Verifica que la cámara no esté tapada y que no haya una tecla Fn con un ícono de cámara apagada.', more: 'Muchas laptops tienen un deslizador físico o una tecla de F-keys que desactiva la cámara.' },
+        { t: 'Permisos de privacidad', d: 'Ve a <b>Configuración → Privacidad y seguridad → Cámara / Micrófono</b> y activa el acceso, incluyendo para la app que usas.', more: 'Activa "Permitir que las apps accedan a la cámara/micrófono".' },
+        { t: 'Cerrar otras apps que la usen', d: 'Cierra Zoom, Teams, Meet, WhatsApp Web, etc. Solo una app puede usar la cámara a la vez.', more: 'Reinicia el navegador si usas una videollamada web.' },
+        { t: 'Reinstalar el driver', d: 'En el <b>Administrador de dispositivos</b> abre <b>Cámaras</b> (o Entradas de audio), clic derecho → <b>Desinstalar</b> y reinicia.', more: 'Windows lo vuelve a instalar al reiniciar.' }
+      ] },
+    { id: 'dano_fisico', icon: '💧', title: 'Se mojó, se cayó o huele a quemado', short: 'Se mojó / golpe', desc: 'Líquido, golpe, pantalla rota o batería hinchada.',
+      re: /(se (me |le )?(mojo|cayo|derramo|quemo)|(laptop|pc|compu|computadora|equipo|telefono|celular|monitor)\s+(mojad[ao]|caid[ao]|golpead[ao]|quemad[ao])|derram\w*|liquido|pantalla (rota|quebrada|partida|estrellada|trizada)|(quebr\w+|rompi\w*) (la |mi )?pantalla|bateria hinchada|hinchada|olor a quemado|huele a quemado|humo|chispa)/,
+      svc: 'Reparación de Hardware', urgent: true,
+      cause: 'Un daño físico o líquido necesita revisión técnica pronto; mientras más rápido, mejor el pronóstico.',
+      tip: '', steps: [] }
+];
 
-    const encontrados = productos.filter(p => {
-        const nombre = p.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-        const palabras = nombre.split(' ').filter(w => w.length > 3);
-        return palabras.some(w => ql.includes(w)) || ql.includes(nombre);
-    });
-
-    if(encontrados.length === 1) {
-        addToCart(encontrados[0].id);
-        const sidebar = document.getElementById('cart-sidebar');
-        if(sidebar && sidebar.classList.contains('translate-x-full')) toggleCartMenu();
-        const resp = '🛒 ¡Listo! Agregué la <b>' + encontrados[0].nombre + '</b> al carrito por <b>RD$ ' + encontrados[0].precio.toLocaleString() + '</b>. ¡El carrito se abrió para que lo veas! 🔥<br><br>¿Necesitas algo más? 😊';
-        _ultimaRespuestaBot = resp;
-        return resp;
-    }
-
-    if(encontrados.length > 1) {
-        const resp = '🛒 Encontré varios productos que coinciden. ¿Cuál quieres agregar?<br><br>' +
-            encontrados.slice(0,5).map((p,i) => (i+1) + '. <b>' + p.nombre + '</b> — RD$ ' + p.precio.toLocaleString()).join('<br>') +
-            '<br><br>Escribe el <b>número</b> del que quieres y lo agrego al instante. 😊';
-        _ultimaRespuestaBot = '__lista__' + JSON.stringify(encontrados.slice(0,5).map(p=>p.id));
-        return resp;
-    }
-
-    // Intención de compra pero sin producto específico — mostrar catálogo
-    return '🛒 ¿Cuál producto quieres agregar? Dime el nombre o dime para qué lo usarás y te recomiendo uno. También puedes buscarlo en el <b>Catálogo</b>. 😊';
+// ── Clasificación ────────────────────────────────────────────
+function _dgMatches(ql) {
+    return _DG_KB.map(p => { const g = ql.match(new RegExp(p.re.source, 'g')); return { p, n: g ? g.length : 0 }; })
+        .filter(x => x.n > 0)
+        .sort((a, b) => (b.p.urgent ? 1 : 0) - (a.p.urgent ? 1 : 0) || b.n - a.n);
+}
+function _dgCur() { return _DG_KB.find(x => x.id === _dg.id) || null; }
+function _dgLog(result) {
+    try {
+        const k = 'mtje_diag_log', a = JSON.parse(localStorage.getItem(k) || '[]');
+        a.push({ t: Date.now(), id: _dg.id, r: result, n: _dg.tried.length });
+        localStorage.setItem(k, JSON.stringify(a.slice(-100)));
+    } catch (e) {}
 }
 
-function _tchatSeleccionNumero(texto) {
-    const num = parseInt(texto.trim());
-    if(isNaN(num) || !_ultimaRespuestaBot.startsWith('__lista__')) return null;
-    try {
-        const ids = JSON.parse(_ultimaRespuestaBot.replace('__lista__',''));
-        if(num >= 1 && num <= ids.length) {
-            const prod = productos.find(p => p.id === ids[num-1]);
-            if(!prod) return null;
-            addToCart(prod.id);
-            const sidebar = document.getElementById('cart-sidebar');
-            if(sidebar && sidebar.classList.contains('translate-x-full')) toggleCartMenu();
-            const resp = '🛒 ¡Brutal! Agregué la <b>' + prod.nombre + '</b> al carrito (RD$ ' + prod.precio.toLocaleString() + '). ¡Ya puedes hacer tu pedido! 🔥<br><br>¿Necesitas algo más? 😊';
-            _ultimaRespuestaBot = resp;
-            return resp;
-        }
-    } catch(e) {}
+function _dgDetect(ql) {
+    // Respuestas sueltas justo después de un diagnóstico ya cerrado
+    if (!_dg.active && _dg.id && _dg.turns > 0) {
+        if (/(sigue igual|no funciono|no (me )?(sirvio|resulto)|sigue (mal|sin))/.test(ql)) return _dgEscalate('pidio');
+        if (/^(ya )?(funciono|se soluciono|se arreglo|ya (prende|carga|enciende|funciona))/.test(ql)) { _dgLog('solved'); return '🎉 ¡Qué bueno! Me alegra que se haya resuelto. Si vuelve a pasar, aquí estoy.' + _tBtns([{ label: '🩺 Otro problema', a: 'dg-menu' }, { label: '🛍️ Ver productos', a: 'overview' }]); }
+    }
+    if (/^(que es|que son|como funciona|para que sirve|diferencia)/.test(ql)) return null;
+    if (/(cuanto cuesta|cuanto cobran|precio|cotiza|garantia)/.test(ql)) return null;
+    const m = _dgMatches(ql);
+    if (m.length) {
+        if (m.length > 1 && !m[0].p.urgent && m[0].n === m[1].n) return _dgMenu(m.slice(0, 3).map(x => x.p), true);
+        return _dgStart(m[0].p.id);
+    }
+    if (/(diagnostic|testeo|test de|probar mi equipo|revisar mi (equipo|laptop|pc|compu|computadora|impresora)|chequeo de mi|tengo (un )?(problema|falla|error)|(mi|la|el) (laptop|pc|compu|computadora|equipo|impresora|monitor|telefono|celular|tablet) (tiene|esta (mal|danad\w*|fallando)|me (da|falla)|falla)|no funciona|\bfalla\b|\bfallando\b|\bdanad[oa]\b)/.test(ql))
+        return _dgMenu();
     return null;
 }
 
-function _tchatResponder(q) {
-    const ql = q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    const pick = arr => arr[Math.floor(Math.random()*arr.length)];
-    const money = s => 'RD$ ' + parseInt(s).toLocaleString('es-DO');
-
-    // ─── 1. Selección de número en lista previa ─────────────────
-    const numR = _tchatSeleccionNumero(q);
-    if(numR) return numR;
-
-    // ─── 2. Agregar al carrito ───────────────────────────────────
-    const cartR = _tchatAgregarAlCarrito(q);
-    if(cartR) return cartR;
-
-    // ─── 3. SALUDOS ──────────────────────────────────────────────
-    if(/^(hola|buenas|hey|hi|good|que tal|buenos (dias|tardes|noches)|saludos|epa|alo|alo|que lo que|q lo q|buen dia|buenas tardes|buenas noches)\b/.test(ql))
-        return pick([
-            '¡Epa! 👋 Bienvenido a <b>Mundo Tecno J.E</b>, la tienda tech más brutal de Manoguayabo. ¿Qué equipo andas buscando hoy? 💻',
-            '¡Qué lo que! 🔥 Soy <b>Tecno Bot</b>, aquí pa\' lo que necesites. Dime: ¿buscas laptop, PC, accesorios o necesitas reparación?',
-            '¡Buenas! 🙌 ¿Cómo te puedo ayudar hoy? Tengo info de todos los productos, precios y servicios de <b>Mundo Tecno J.E</b>.',
-        ]);
-
-    // ─── 4. ¿QUIÉN ERES? ────────────────────────────────────────
-    if(/(quien eres|que eres|como te llamas|eres (ia|robot|humano|chatgpt|claude|gpt|inteligencia))/.test(ql))
-        return pick([
-            '🤖 Soy <b>Tecno Bot</b>, el asistente oficial de <b>Mundo Tecno J.E</b>. Conozco cada producto, precio y servicio de la tienda. ¿En qué te ayudo?',
-            '¡Soy <b>Tecno Bot</b>! 😄 Creado exclusivamente para Mundo Tecno J.E. No soy GPT ni nada por el estilo — soy 100% dominicano y tech. ¿Qué necesitas?',
-        ]);
-
-    // ─── 5. GRACIAS / REACCIONES ────────────────────────────────
-    if(/^(gracias|thank|dale|ok|listo|perfecto|genial|brutal|chevere|excelente|super|de nada|np|buenisimo)/.test(ql))
-        return pick([
-            '¡Con mucho gusto! 🙌 ¿Hay algo más en lo que te pueda ayudar?',
-            '¡Dale! 😎 Cualquier otra cosa que necesites, aquí estoy.',
-            '¡Figura! 😄 ¿Te puedo ayudar con algo más antes de que te vayas?',
-        ]);
-
-    // ─── 6. ADIOS ───────────────────────────────────────────────
-    if(/^(adios|bye|hasta luego|nos vemos|chao|ciao|hasta pronto)/.test(ql))
-        return '¡Hasta luego! 👋 Fue un placer ayudarte. ¡Que tengas un día brutal! 🔥';
-
-    // ─── 7. PRESUPUESTO ESPECÍFICO (ej: "tengo 20000") ──────────
-    const budgetMatch = ql.match(/(\d[\d,.]+)\s*(pesos|rd\$?|rdp|$)?/);
-    const budget = budgetMatch ? parseInt(budgetMatch[1].replace(/[,.]/g,'')) : null;
-    if(budget && budget >= 1000 && /(tengo|manejo|presupuesto|gasto|cuento con|dispongo|busco algo de|precio.*hasta|hasta.*pesos)/.test(ql)) {
-        const aptos = [...productos].filter(p => p.precio <= budget * 1.1).sort((a,b) => b.precio - a.precio).slice(0,3);
-        if(aptos.length)
-            return `💰 Con <b>${money(budget)}</b> estas son tus mejores opciones:<br><br>` +
-                aptos.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-                `<br><br>¿Cuál se adapta más a lo que necesitas? 🎯`;
-        return `💰 Con <b>${money(budget)}</b> el rango es un poco ajustado para nuestro catálogo actual. Escríbenos al <b>809-993-7908</b> y buscamos algo que se adapte a ti. 😊`;
-    }
-
-    // ─── 8. LO MÁS BARATO / ECONÓMICO ──────────────────────────
-    if(/(mas barato|mas economico|economica|lo mas barato|precio bajo|accesible|poco dinero|barato|no tengo mucho|basico)/.test(ql)) {
-        const sorted = [...productos].sort((a,b) => a.precio - b.precio).slice(0,3);
-        return `💸 Las opciones más accesibles que tenemos:<br><br>` +
-            sorted.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Cuánto tienes de presupuesto? Te busco la mejor relación calidad-precio. 🎯`;
-    }
-
-    // ─── 9. LO MEJOR / MÁS CARO / TOP ──────────────────────────
-    if(/(lo mejor|el mejor|mas potente|mas caro|high end|tope de gama|sin limite|precio no importa|lo top|top de)/.test(ql)) {
-        const top = [...productos].sort((a,b) => b.precio - a.precio).slice(0,3);
-        return `👑 Los equipos más potentes del catálogo:<br><br>` +
-            top.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Para qué lo usarías? Así confirmo que ese es el ideal pa\' ti. 🚀`;
-    }
-
-    // ─── 10. LAPTOPS GAMING ─────────────────────────────────────
-    if(/(laptop|portatil|notebook).*(gam|jugar|juego|gamer|fps|rog|msi|rtx)|(gam|jugar).*(laptop|portatil)/.test(ql)) {
-        const gamers = productos.filter(p => p.categoria === 'Laptops' && /gam|msi|rog/i.test(p.nombre+p.desc));
-        const list = gamers.length ? gamers : productos.filter(p => p.categoria === 'Laptops').sort((a,b) => b.precio - a.precio).slice(0,2);
-        return `🎮 Para gaming en laptop, estas son las bestias:<br><br>` +
-            list.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Tienes presupuesto definido? Te digo cuál es la mejor opción. 💪`;
-    }
-
-    // ─── 11. LAPTOPS TRABAJO / OFICINA ──────────────────────────
-    if(/(laptop|portatil).*(trabajo|oficina|empresa|negocio|excel|word|corporat)|(trabajo|oficina).*(laptop|portatil)/.test(ql)) {
-        const work = productos.filter(p => p.categoria === 'Laptops').sort((a,b) => a.precio - b.precio).slice(0,3);
-        return `💼 Para trabajo y oficina estas laptops son ideales:<br><br>` +
-            work.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Cuánto manejas de presupuesto? 😊`;
-    }
-
-    // ─── 12. LAPTOPS ESTUDIO / ESCUELA ──────────────────────────
-    if(/(estudiar|escuela|universidad|tarea|clase|estudiante|colegio|zoom|teams|google classroom)/.test(ql)) {
-        const study = productos.filter(p => p.categoria === 'Laptops').sort((a,b) => a.precio - b.precio).slice(0,2);
-        return `📚 ¡Para estudiar, sin romper el bolsillo!<br><br>` +
-            study.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>Ambas corren Teams, Zoom, Google Classroom y Office sin problema. 💪<br>¿Solo para clases o también para otras cosas?`;
-    }
-
-    // ─── 13. LAPTOPS EDICIÓN / DISEÑO ───────────────────────────
-    if(/(edic|editar|photoshop|premiere|after effect|diseñ|render|illustrator|davinci|video.*edit|adobe)/.test(ql)) {
-        return `🎨 Pa\' editar video y diseño necesitas pantalla y potencia. Mis picks:<br><br>` +
-            `• <b>MacBook Air M2 Pro</b> — <b>RD$ 79,000</b><br><small style="color:#64748b">  M2, 16GB RAM, 512GB SSD. Rápido, silencioso, brutal pa\' edición. 🍎</small><br><br>` +
-            `• <b>ASUS ZenBook OLED 14</b> — <b>RD$ 68,500</b><br><small style="color:#64748b">  i7 13va, pantalla OLED 2.8K. Los colores se ven increíbles. 🎬</small><br><br>` +
-            `• <b>PC Gamer Dominator J.E</b> — <b>RD$ 135,000</b><br><small style="color:#64748b">  RTX 4070 Ti + Ryzen 7. El más potente pa\' renders pesados. ⚡</small><br><br>` +
-            `¿Cuánto presupuesto manejas? 😊`;
-    }
-
-    // ─── 14. LAPTOPS GENERAL ────────────────────────────────────
-    if(/(laptop|laptops|portatil|notebook|computadora portatil)/.test(ql)) {
-        const laps = productos.filter(p => p.categoria === 'Laptops');
-        return `💻 ¡Tenemos <b>${laps.length} laptops</b> pa\' todo gusto y bolsillo!<br><br>` +
-            laps.slice(0,4).map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b>`).join('<br>') +
-            `<br><br>¿Para gaming, trabajo, estudios o edición de video? ¡Cuéntame y te recomiendo la ideal! 🎯`;
-    }
-
-    // ─── 15. MAC / APPLE ────────────────────────────────────────
-    if(/(mac|macbook|apple|ios|iphone)/.test(ql)) {
-        const mac = productos.find(p => /mac/i.test(p.nombre));
-        if(mac) return `🍎 ¡Sí manejamos Apple! El <b>${mac.nombre}</b> está en <b>${money(mac.precio)}</b>.<br><br>${mac.desc}<br><br>Perfecta para diseño, edición y productividad. ¿Te la aparto? 😊`;
-        return `🍎 Por ahora el MacBook Air M2 Pro está en catálogo a <b>RD$ 79,000</b>. Para otros modelos de Apple escríbenos al <b>809-993-7908</b>. 😊`;
-    }
-
-    // ─── 16. PC GAMER ───────────────────────────────────────────
-    if(/(pc.*(gam|jugar|juego)|gam.*pc|dominator|pc.*rtx|gaming.*desktop)/.test(ql)) {
-        const pc = productos.find(p => /gamer|dominator/i.test(p.nombre));
-        if(pc) return `🔥 ¡La <b>${pc.nombre}</b> es una BESTIA! — <b>${money(pc.precio)}</b><br><br>` +
-            pc.desc + `<br><br>Corre cualquier juego en ultra: Fortnite, Warzone, GTA VI… todo. 👑<br>¿La cotizo con delivery? 🚴`;
-        return `🔥 ¡Tenemos PCs gaming! Escríbenos al <b>809-993-7908</b> para cotizar. 😊`;
-    }
-
-    // ─── 17. PC TORRE / WORKSTATION ─────────────────────────────
-    if(/(pc.*(torre|escritorio|trabajo|oficina|empresa)|workstation|desktop.*trabajo)/.test(ql)) {
-        const ws = productos.find(p => /workstation|torre/i.test(p.nombre));
-        if(ws) return `💼 Para trabajo la <b>${ws.nombre}</b> es ideal — <b>${money(ws.precio)}</b><br><br>${ws.desc}<br><br>¿Necesitas varias o una sola? Pregunta por descuentos corporativos. 😊`;
-        const pcs = productos.filter(p => p.categoria === 'PC Torres');
-        return `💻 PCs de escritorio disponibles:<br><br>` + pcs.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b>`).join('<br>') + `<br><br>¿Cuál te interesa? 😊`;
-    }
-
-    // ─── 18. GAMING GENERAL ─────────────────────────────────────
-    if(/(gam|jugar|fortnite|warzone|free fire|valorant|gta|minecraft|call of duty|fps|moba|esport)/.test(ql)) {
-        return `🎮 ¡Hablas mi idioma! Para gaming tenemos:<br><br>` +
-            `<b>Laptops:</b><br>• ASUS ROG Strix G16 — ${money(115000)} (RTX 4060, 165Hz) 🔥<br>• MSI Titan — ${money(225000)} (RTX serie 40, i9) 👑<br><br>` +
-            `<b>PC de escritorio:</b><br>• PC Gamer Dominator J.E — ${money(135000)} (RTX 4070 Ti, Ryzen 7) 💪<br><br>` +
-            `¿Cuánto tienes de presupuesto? Te armo el setup ideal. 🎯`;
-    }
-
-    // ─── 19. MONITORES ──────────────────────────────────────────
-    if(/(monitor|pantalla|display|lg ultragear|samsung.*monitor|monitor.*gaming|monitor.*trabajo)/.test(ql)) {
-        const mons = productos.filter(p => p.categoria === 'Monitores');
-        return `🖥️ Monitores disponibles:<br><br>` +
-            mons.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Es para gaming o trabajo? ¡Te oriento al que más te conviene! 🎯`;
-    }
-
-    // ─── 20. IMPRESORAS ─────────────────────────────────────────
-    if(/(impresora|imprimir|tinta|laser|epson|hp.*impresora|ecotank|neverstop)/.test(ql)) {
-        const imps = productos.filter(p => p.categoria === 'Impresoras');
-        return `🖨️ Impresoras disponibles:<br><br>` +
-            imps.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Es para uso doméstico o intensivo en oficina? Así te digo cuál es la ideal. 😊`;
-    }
-
-    // ─── 21. TECLADOS ───────────────────────────────────────────
-    if(/(teclado|keyboard|logitech|corsair|mecanico|rgb)/.test(ql)) {
-        const tecs = productos.filter(p => p.categoria === 'Teclados');
-        return `⌨️ Teclados disponibles:<br><br>` +
-            tecs.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Para gaming o trabajo? 🎯`;
-    }
-
-    // ─── 22. REPARACIONES ───────────────────────────────────────
-    if(/(repar|arregl|tecnico|servicio.*tecnico|no enciende|no prende|pantalla rota|bateria|cargador|no funciona|dano|daño|mantenimiento|limpieza interna|formatea|formateo|windows|virus|malware|reinstal|lento|lenta)/.test(ql))
-        return pick([
-            `🔧 ¡Claro que reparamos! Nuestro técnico es crack. Servicios:<br><br>🖥️ Laptops y PCs de escritorio<br>📺 Cambio de pantallas y teclados<br>🔋 Sustitución de baterías<br>🦠 Eliminación de virus y formateos<br>🧹 Mantenimiento preventivo<br>🌐 Redes y Wi-Fi<br>💾 Recuperación de datos<br><br>Agenda tu cita en la sección <b>Servicios</b> o escríbenos al <b>809-993-7908</b>. ¡Recogemos en tu casa también! 😊`,
-            `🛠️ ¡Sí reparamos! ¿Qué le pasó al equipo? Cuéntame el problema y te digo si lo resolvemos aquí.<br><br>WhatsApp: <b>809-993-7908</b> 📲 ¡Lo atendemos rápido!`,
-        ]);
-
-    // ─── 23. LAPTOP LENTA ───────────────────────────────────────
-    if(/(laptop.*lenta|pc.*lenta|computadora.*lenta|muy lento|tarda mucho|va lento|muy tarda)/.test(ql))
-        return `😅 ¡Eso es súper común! Una laptop lenta puede ser por:<br><br>🦠 Virus o malware<br>💾 Disco lleno o dañado<br>🧹 Polvo interno acumulado<br>💻 Windows desactualizado<br><br>En Mundo Tecno J.E le hacemos chequeo completo y la dejamos como nueva. 🔧 Escríbenos al <b>809-993-7908</b>. 😊`;
-
-    // ─── 24. DELIVERY / ENVÍO ───────────────────────────────────
-    if(/(delivery|envio|entrega|domicilio|llevar|traer|despacho|hasta mi casa|me lo llevan)/.test(ql))
-        return pick([
-            `🚴 ¡Sí hacemos delivery! Cubrimos Santo Domingo y zonas cercanas. 📦<br><br>Agrega al carrito y elige <b>delivery</b>, o escríbenos al <b>809-993-7908</b>. ¡Rápido y seguro! 💨`,
-            `🏍️ ¡Dale! Hacemos delivery. Dinos qué equipo quieres y tu dirección y lo coordinamos.<br><br>WhatsApp: <b>809-993-7908</b> 📲`,
-        ]);
-
-    // ─── 25. PAGO / TRANSFERENCIA ───────────────────────────────
-    if(/(pago|pagar|transferencia|paypal|efectivo|tarjeta|credito|debito|banreservas|banco popular|metodo de pago|como pago|formas de pago)/.test(ql))
-        return `💳 Aceptamos estas formas de pago:<br><br>💵 <b>Efectivo</b> — En tienda o al recibir delivery<br>🏦 <b>Transferencia bancaria</b><br>&nbsp;&nbsp;&nbsp;→ Banco Popular: <b>837-272020</b><br>&nbsp;&nbsp;&nbsp;→ Banreservas: <b>960-7237498</b><br>&nbsp;&nbsp;&nbsp;→ Titular: Juan José Encarnación<br>💻 <b>PayPal</b> — Para pagos online seguros<br><br>❌ No aceptamos tarjetas de crédito en tienda. ¿Algo más? 😊`;
-
-    // ─── 26. GARANTÍA ───────────────────────────────────────────
-    if(/(garantia|devolucion|cambio de.*producto|viene malo|defecto|fallo|dano de fabrica)/.test(ql))
-        return `✅ ¡Todos nuestros productos tienen garantía! Si llega con defecto de fábrica, lo resolvemos.<br><br>Para condiciones específicas escríbenos al <b>809-993-7908</b>. Trabajamos para que quedes 100% satisfecho. 🤝`;
-
-    // ─── 27. UBICACIÓN ──────────────────────────────────────────
-    if(/(ubica|donde estan|donde estas|direccion|como llegar|mapa|donde queda|locacion|encontrar)/.test(ql))
-        return `📍 Aquí nos encuentras:<br><br><b>Cruce de Manoguayabo #137, Plaza A & R</b><br>Santo Domingo, República Dominicana 🇩🇴<br><br>Busca en el mapa de la sección <b>Ubicación</b> — tiene ruta directa a Google Maps. ¡Te esperamos!`;
-
-    // ─── 28. HORARIO ────────────────────────────────────────────
-    if(/(horario|hora|abre|cierra|cuando abren|estan abiertos|esta abierto|dias de atencion)/.test(ql))
-        return `⏰ <b>Horario de atención:</b><br><br>📅 Lun–Vie: <b>8:00 AM – 6:00 PM</b><br>📅 Sábado: <b>9:00 AM – 3:00 PM</b><br>❌ Domingo y Feriados: Cerrado<br><br>Fuera del horario escríbenos al <b>809-993-7908</b> y te respondemos en cuanto podamos. 📱`;
-
-    // ─── 29. CONTACTO / WHATSAPP ────────────────────────────────
-    if(/(whatsapp|numero|llamar|contacto|comunicar|hablar|telefono|celular|escribir|email|correo)/.test(ql))
-        return `📱 Puedes contactarnos por:<br><br>💬 <b>WhatsApp:</b> <a href="https://wa.me/18099937908" target="_blank" style="color:#25D366;font-weight:700;">809-993-7908</a><br>📧 <b>Email:</b> mundotecnoje@gmail.com<br>🤖 <b>Chat:</b> ¡Aquí mismo, pa\' lo que necesites!<br><br>¡Respondemos rápido! 🚀`;
-
-    // ─── 30. ARMAR PC / SETUP / COTIZADOR ───────────────────────
-    if(/(armar|ensamblar|custom|personaliz|a medida|cotizar|cotizacion|setup builder|build|mi pc|pc propia)/.test(ql))
-        return `🔩 ¡Eso es lo nuestro! Armamos PCs personalizadas pa\' cualquier uso.<br><br>Tienes dos opciones:<br>1️⃣ Usa el <b>Cotizador / Setup Builder</b> en el menú — diseña tu PC y ve el precio al instante.<br>2️⃣ Escríbenos al <b>809-993-7908</b> y te asesoramos directamente.<br><br>¿Para qué la usarías? (gaming, trabajo, edición…) 💪`;
-
-    // ─── 31. PRECIO ESPECÍFICO DE PRODUCTO ──────────────────────
-    if(/(cuanto cuesta|que precio|precio de|cuanto vale|cuanto es|costo de|valor de)/.test(ql)) {
-        const hits = productos.filter(p => {
-            const words = p.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(' ').filter(w => w.length > 3);
-            return words.some(w => ql.includes(w));
-        }).slice(0,2);
-        if(hits.length) return `💰 ` + hits.map(p => `La <b>${p.nombre}</b> está en <b>${money(p.precio)}</b>. ${p.desc}`).join('<br><br>') + `<br><br>¿Te interesa? ¿Lo agrego al carrito? 😊`;
-        return `💰 Dime el nombre del equipo y te digo el precio al instante. ¡O revisa el <b>Catálogo</b> con todos los precios! 😊`;
-    }
-
-    // ─── 32. STOCK / DISPONIBILIDAD ─────────────────────────────
-    if(/(disponible|stock|inventario|en existencia|lo tienen|hay|tienen)/.test(ql))
-        return `📦 ¡Tenemos <b>${productos.length} productos</b> disponibles ahora mismo!<br><br>Revisa la sección <b>Catálogo</b> o dime qué buscas y te confirmo stock. 😊`;
-
-    // ─── 33. COMPARACIÓN / RECOMENDACIÓN ────────────────────────
-    if(/(cual es mejor|cual recomiendas|me recomiendas|que recomiendas|cual compro|cual me conviene|me aconsejas|diferencia entre)/.test(ql))
-        return `🤔 ¡Para recomendarte lo ideal necesito saber dos cosas:<br><br>• ¿Para qué lo vas a usar? (gaming, trabajo, estudios, diseño…)<br>• ¿Cuánto tienes de presupuesto?<br><br>Con eso te digo exactamente cuál es el mejor pa\' ti. ¡Dispara! 🎯`;
-
-    // ─── 34. BÚSQUEDA POR NOMBRE DE PRODUCTO ────────────────────
-    const found = productos.filter(p => {
-        const pn = (p.nombre + ' ' + p.categoria).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-        const words = pn.split(' ').filter(w => w.length > 2);
-        return words.some(w => ql.includes(w));
-    }).slice(0,3);
-    if(found.length)
-        return `💡 ¡Encontré esto que puede interesarte!<br><br>` +
-            found.map(p => `• <b>${p.nombre}</b> — <b>${money(p.precio)}</b><br><small style="color:#64748b">  ${p.desc}</small>`).join('<br><br>') +
-            `<br><br>¿Quieres más info, lo agregamos al carrito o tienes otra pregunta? 🛒`;
-
-    // ─── 35. PREGUNTA TÉCNICA GENERAL ───────────────────────────
-    if(/(que es|como funciona|diferencia.*entre|ssd.*hdd|ram.*rom|ryzen.*intel|nvidia.*amd|ddram|ddr4.*ddr5|que significa|para que sirve)/.test(ql))
-        return `💡 Buena pregunta técnica. Para una respuesta detallada te conviene hablar con nuestro equipo en el <b>809-993-7908</b> — son expertos y te explican todo con calma. 😊<br><br>¿Hay algo más en lo que te ayude desde aquí?`;
-
-    // ─── 36. DEFAULT ─────────────────────────────────────────────
-    return pick([
-        `🤖 Esa pregunta me la tengo que llevar al equipo. 😄 Escríbenos directo al <b>809-993-7908</b> y te ayudan enseguida. ¡Responden al momento!`,
-        `💬 Para eso te conecto con los expertos de Mundo Tecno J.E. WhatsApp: <b>809-993-7908</b>. ¡O dime más y trato de ayudarte desde aquí! 😊`,
-        `🙌 Mmm, para eso es mejor hablar con el equipo directo. WhatsApp: <a href="https://wa.me/18099937908" target="_blank" style="color:#25D366;font-weight:700;">809-993-7908</a>. ¡Responden rápido! 🚀`,
+// ── Piezas visuales ──────────────────────────────────────────
+function _dgMenu(list, ambiguous) {
+    _dgReset();
+    _tchatCtx.list = []; _tchatCtx.rest = []; _tchatCtx.last = null;
+    const items = list || _DG_KB;
+    return `<div class="tc-wide">🩺 <b>Diagnóstico Express</b><br>${ambiguous ? 'Puede ser más de una cosa. ¿Cuál se parece más a lo que te pasa?' : 'Cuéntame <b>qué le pasa a tu equipo</b> (escríbelo con tus palabras) o escoge una opción y te guío paso a paso:'}` +
+        _tBtns(items.map(p => ({ label: p.icon + ' ' + p.short, a: 'dg-start', v: p.id }))) +
+        `<div style="font-size:11px;color:#64748b;margin-top:9px;">Si no logramos resolverlo, te conecto con un técnico por WhatsApp. 💬</div></div>`;
+}
+function _dgStepHtml(p, i) {
+    const st = p.steps[i], n = p.steps.length;
+    const bar = '<div style="display:flex;gap:4px;margin:10px 0 7px;">' + p.steps.map((_, k) => `<span style="flex:1;height:5px;border-radius:4px;background:${k < i ? '#1D9E75' : k === i ? '#f59e0b' : '#e2e8f0'};"></span>`).join('') + '</div>';
+    return `${bar}<div style="font-size:11px;font-weight:800;color:#0F6E56;">PASO ${i + 1} DE ${n}</div>
+        <b style="font-size:13.5px;display:block;margin:2px 0 4px;">${st.t}</b>
+        <div style="font-size:12.5px;line-height:1.55;">${st.d}</div>
+        <div style="font-size:11px;color:#64748b;margin-top:7px;">Hazlo y cuéntame qué pasó. 👇</div>` +
+        _tBtns([
+            { label: '✅ Ya funcionó', a: 'dg-ok', p: true },
+            { label: '❌ Sigo igual', a: 'dg-fail' },
+            { label: '🤔 No entiendo', a: 'dg-help' }
+        ]) + _tBtns([{ label: '🔄 Otro problema', a: 'dg-menu' }, { label: '💬 Hablar con un técnico', a: 'dg-wa' }]);
+}
+function _dgStart(id) {
+    const p = _DG_KB.find(x => x.id === id);
+    if (!p) return _dgMenu();
+    _tchatCtx.list = []; _tchatCtx.rest = []; _tchatCtx.last = null;
+    _dg = { active: !p.urgent, id, step: 0, tried: [], fails: 0, confused: 0, asked: 0, turns: 1 };
+    if (p.urgent) return _dgUrgent(p);
+    return `<div class="tc-wide">${p.icon} <b>${p.title}</b>. Tranquilo, lo revisamos juntos. Te digo qué hacer y tú me cuentas qué pasa: son <b>máximo ${p.steps.length} pasos</b>. Si no lo resolvemos, te paso con un técnico por WhatsApp. 💪${_dgStepHtml(p, 0)}</div>`;
+}
+function _dgUrgent(p) {
+    _dgLog('urgent');
+    const text = 'Hola, mi equipo tuvo un daño físico/líquido (se mojó, se cayó, pantalla rota o batería hinchada). Necesito que lo revisen urgente. Mi equipo (marca/modelo): ';
+    _dg.active = false;
+    return `<div class="tc-wide">🚨 <b>Esto necesita atención de un técnico pronto.</b> Mientras tanto, para evitar más daño:<br><br>
+        1️⃣ <b>Apágalo ya</b> y desconecta cargador y accesorios.<br>
+        2️⃣ <b>No lo enciendas</b> para "probar" (puede quemar la placa).<br>
+        3️⃣ Si se mojó: ponlo boca abajo en forma de "A" y no uses secador ni lo metas al arroz.<br>
+        4️⃣ Si la batería está hinchada o hay humo/olor a quemado, <b>aléjalo de materiales inflamables</b> y no lo cargues.<br><br>
+        Entre más rápido lo revisemos, mejor pronóstico tiene. ${_dgEscButtons(p, text)}</div>`;
+}
+function _dgEscButtons(p, waText) {
+    return _tBtns([
+        { label: '💬 Enviar por WhatsApp', a: 'wa', v: waText, p: true },
+        { label: '📅 Agendar reparación', a: 'cita', v: p.svc },
+        { label: '🏠 Técnico a domicilio', a: 'cita', v: 'Servicio Técnico a Domicilio' },
+        { label: '🔄 Otro problema', a: 'dg-menu' }
     ]);
 }
+
+// ── Flujo del diagnóstico ────────────────────────────────────
+function _dgNoSession() {
+    return '🩺 No tengo un diagnóstico abierto ahora mismo. ¿Quieres empezar uno?' + _tBtns([{ label: '🩺 Diagnosticar mi equipo', a: 'dg-menu', p: true }]);
+}
+function _dgNext() {
+    const p = _dgCur();
+    if (!p || !_dg.active) return _dgNoSession();
+    _dg.tried.push(p.steps[_dg.step].t);
+    _dg.fails++; _dg.step++; _dg.confused = 0;
+    if (_dg.step >= p.steps.length || _dg.fails >= DG_MAX_FAILS) return _dgEscalate('pasos');
+    return `<div class="tc-wide">${_tpick(['Dale, descartamos eso. Vamos con el siguiente. 🔎', 'Tranquilo, probamos otra cosa. 💡', 'Ok, eso no era. Sigamos. 🔧'])}${_dgStepHtml(p, _dg.step)}</div>`;
+}
+function _dgHelp() {
+    const p = _dgCur();
+    if (!p || !_dg.active) return _dgNoSession();
+    _dg.confused++;
+    if (_dg.confused >= DG_MAX_CONFUSED) return _dgEscalate('no_entiende');
+    const st = p.steps[_dg.step];
+    return `<div class="tc-wide">🤝 Te lo explico más fácil. <b>${st.t}</b>:<br><br>${st.more}<br><br>
+        <span style="font-size:11.5px;color:#64748b;">Si no te sientes seguro haciéndolo, no pasa nada: un técnico te lo guía.</span>` +
+        _tBtns([{ label: '✅ Ya funcionó', a: 'dg-ok', p: true }, { label: '❌ Lo hice y sigo igual', a: 'dg-fail' }, { label: '💬 Que me guíe un técnico', a: 'dg-wa' }]) + '</div>';
+}
+function _dgSolved() {
+    const p = _dgCur();
+    if (!p || !_dg.active) return _dgNoSession();
+    _dgLog('solved');
+    const tip = p.tip;
+    _dg.active = false;
+    return `🎉 <b>¡Brutal, se solucionó!</b> Me alegra un montón haberte ayudado.${tip ? `<br><br>💡 <b>Consejo:</b> ${tip}` : ''}<br><br>Si vuelve a pasar, aquí estoy. ¿Te ayudo con algo más?` +
+        _tBtns([{ label: '🩺 Otro problema', a: 'dg-menu' }, { label: '🛍️ Ver productos', a: 'overview' }, { label: '📅 Mantenimiento preventivo', a: 'cita', v: 'Mantenimiento Preventivo' }]);
+}
+function _dgEscalate(reason) {
+    const p = _dgCur();
+    if (!p) return _dgMenu();
+    const tried = _dg.tried.slice();
+    const why = {
+        pasos: 'Ya probamos todo lo que puedo guiarte por chat y el problema sigue.',
+        no_entiende: 'Veo que los pasos se están complicando, y no quiero que pierdas tiempo.',
+        preguntas: 'Llevamos varias preguntas y todavía no damos con la solución.',
+        intentos: 'Llevamos un buen rato intentándolo.',
+        pidio: 'Claro, con gusto te paso con una persona.'
+    }[reason] || '';
+    _dgLog('escalated');
+    const text = 'Hola, usé el Diagnóstico Express de Mundo Tecno J.E.\n\nProblema: ' + p.title +
+        '\nYa probé: ' + (tried.length ? tried.map((t, i) => (i + 1) + ') ' + t).join('; ') : 'todavía nada') +
+        '\nResultado: no se solucionó.\n\nMi equipo (marca/modelo): ';
+    _dg.active = false;
+    return `<div class="tc-wide">🧑‍🔧 ${why}<br><br>${p.cause}<br><br>
+        Un técnico de <b>Mundo Tecno J.E</b> lo revisa. Ya le preparé un <b>resumen de lo que probamos</b>${tried.length ? ':' : '.'}
+        ${tried.length ? '<div style="margin-top:6px;font-size:12px;color:#475569;">' + tried.map((t, i) => `${i + 1}. ${_tesc(t)}`).join('<br>') + '</div>' : ''}
+        <div style="margin-top:8px;font-size:12px;">Toca <b>Enviar por WhatsApp</b>, añade la marca/modelo de tu equipo y listo. 📲</div>
+        ${_dgEscButtons(p, text)}</div>`;
+}
+
+// Mensajes escritos por el cliente mientras hay un diagnóstico abierto
+function _dgHandle(ql) {
+    const p = _dgCur();
+    if (!p || !_dg.active) return null;
+    _dg.turns++;
+    if (/(humano|persona real|un tecnico|hablar con (alguien|un|una)|whatsapp|que me llamen|llamar|asesor|quiero (a )?alguien)/.test(ql)) return _dgEscalate('pidio');
+    if (/(salir|cancelar|terminar|dejalo asi|otro problema|cambiar de problema|empezar de nuevo|menu)/.test(ql)) return _dgMenu();
+    const urg = _dgMatches(ql).find(x => x.p.urgent);
+    if (urg && urg.p.id !== p.id) return _dgStart(urg.p.id);
+    if (/(cuanto cuesta|cuanto cobran|precio|cotiza|cuanto sale)/.test(ql))
+        return '💰 El costo depende de lo que encuentre el técnico al revisarlo; la <b>revisión y la cotización son directas por WhatsApp</b>. Mientras, seguimos con el paso actual si quieres.' +
+            _tBtns([{ label: '💬 Pedir cotización', a: 'dg-wa', p: true }, { label: '↩️ Seguir con el paso actual', a: 'dg-help' }]);
+    if (/(ubicacion|ubicados|direccion|horario|\bhora\b|abren|cierran|atienden|donde (estan|queda)|delivery|envio|pago|pagos|garantia|tienda|catalogo|productos)/.test(ql)) return null;   // deja que el bot responda y mantiene el diagnóstico abierto
+    if (_dg.turns >= DG_MAX_TURNS) return _dgEscalate('intentos');
+    const failStrong = /(sigue igual|no funciono|no (me )?(sirvio|resulto|ayudo|cambio)|persiste|lo mismo|sigue (mal|sin|dando|fallando)|aun (no|sigue)|todavia (no|sigue))/.test(ql);
+    if (failStrong) return _dgNext();
+    if (/(funciono|sirvio|se (soluciono|arreglo|resolvio)|resuelto|ya (prende|prendio|carga|cargo|enciende|arranca|quedo|funciona|sirve|se ve|se escucha|imprime|conecta))/.test(ql)) return _dgSolved();
+    if (/(^|\b)(siguiente|next|continua|adelante|proximo|otro paso)\b/.test(ql) || /(nada|igual|no pasa|ya (lo|la) (hice|probe|intente)|^(lo )?(hice|probe|intente)\b)/.test(ql)) return _dgNext();
+    if (/(no entiendo|no se como|como (hago|se hace|lo hago|lo (pruebo|reviso|abro))|donde (esta|queda|encuentro|veo|se)|que es|explica|explicame|mas detalle|detalle|no encuentro|cual es|no veo|paso a paso|ayudame|no puedo)/.test(ql)) return _dgHelp();
+    { const pq = _tQuery(ql); if (pq && pq.list.length && (pq.cats.length || pq.known.length)) return null; }
+    // ¿Menciona un problema distinto?
+    const m = _dgMatches(ql).filter(x => x.p.id !== p.id);
+    if (m.length) {
+        const q2 = m[0].p;
+        return `🤔 Eso suena a otro problema: <b>${q2.title}</b>. ¿Quieres que lo diagnostiquemos o seguimos con el actual?` +
+            _tBtns([{ label: q2.icon + ' Diagnosticar eso', a: 'dg-start', v: q2.id, p: true }, { label: '↩️ Seguir con el paso actual', a: 'dg-help' }]);
+    }
+    // Pregunta suelta: reforzamos el paso y contamos la insistencia
+    _dg.asked++;
+    if (_dg.asked >= DG_MAX_CONFUSED) return _dgEscalate('preguntas');
+    const st = p.steps[_dg.step];
+    return `<div class="tc-wide">Entiendo. Sigamos con el <b>paso ${_dg.step + 1}: ${st.t}</b>.<br><br>${st.d}<br><br>${st.more}<br><br>
+        <span style="font-size:12px;">¿Qué pasó al hacerlo?</span>` +
+        _tBtns([{ label: '✅ Ya funcionó', a: 'dg-ok', p: true }, { label: '❌ Sigo igual', a: 'dg-fail' }, { label: '💬 Técnico', a: 'dg-wa' }]) + '</div>';
+}
+
+// Botones y chips del diagnóstico
+function _dgAct(a, v, echo) {
+    const say = (def, fn) => _tchatSay(echo !== undefined ? echo : def, fn);
+    switch (a) {
+        case 'dg-menu':  return say('🩺 Diagnosticar mi equipo', () => _dgMenu());
+        case 'dg-start': { const p = _DG_KB.find(x => x.id === v); return say(p ? p.icon + ' ' + p.title : '', () => _dgStart(v)); }
+        case 'dg-ok':    return say('✅ Ya funcionó', () => _dgSolved());
+        case 'dg-fail':  return say('❌ Sigo igual', () => _dgNext());
+        case 'dg-help':  return say('🤔 No entiendo, más detalle', () => _dgHelp());
+        case 'dg-wa':    return say('💬 Quiero hablar con un técnico', () => (_dg.id ? _dgEscalate('pidio') : _dgMenu()));
+    }
+}
+
+// ── Sección del sitio web ────────────────────────────────────
+function renderDiagGrid() {
+    const g = document.getElementById('dg-grid');
+    if (!g) return;
+    g.innerHTML = _DG_KB.map(p => `<button type="button" onclick="dgOpenFromSite('${p.id}')" class="group text-left bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:shadow-lg hover:-translate-y-0.5 rounded-2xl p-5 transition">
+        <div class="text-3xl mb-2">${p.icon}</div>
+        <div class="font-bold text-sm leading-tight">${p.title}</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">${p.desc}</div>
+        <div class="text-[11px] font-bold text-emerald-600 mt-3 opacity-80 group-hover:opacity-100">Iniciar diagnóstico →</div></button>`).join('');
+}
+function dgOpenFromSite(id) {
+    openTecnoChat();
+    const p = _DG_KB.find(x => x.id === id);
+    setTimeout(() => _tchatSay('🩺 ' + (p ? p.title : 'Diagnosticar mi equipo'), () => p ? _dgStart(id) : _dgMenu()), 350);
+}
+function dgSiteSend() {
+    const inp = document.getElementById('dg-site-input');
+    const t = ((inp && inp.value) || '').trim();
+    if (inp) inp.value = '';
+    openTecnoChat();
+    setTimeout(() => _tchatSay(t ? '🩺 ' + t : '🩺 Quiero diagnosticar mi equipo', () => {
+        const ql = _tn(t).replace(/[¿?¡!,;:]/g, ' ').replace(/\s+/g, ' ').trim();
+        return (t && _dgDetect(ql)) || _dgMenu();
+    }), 350);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderDiagGrid); else renderDiagGrid();
+
 
 function _tchatLocalFallback(q) { return _tchatResponder(q); }
 
@@ -7438,10 +8334,7 @@ window.onload = function() {
             }).setView([LAT, LNG], 17);
 
             // Capa de tiles de OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                maxZoom: 19
-            }).addTo(map);
+            mtjeStreetLayer().addTo(map);
 
             // Icono personalizado animado
             const pulseIcon = L.divIcon({
@@ -7471,7 +8364,7 @@ window.onload = function() {
             map.on('click', function() { map.scrollWheelZoom.enable(); });
 
             // Botones de capas (Street / Satélite)
-            const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
+            const streetLayer = mtjeStreetLayer();
             const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 attribution: 'Tiles &copy; Esri', maxZoom: 19
             });
