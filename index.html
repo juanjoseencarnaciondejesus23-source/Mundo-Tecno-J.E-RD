@@ -45,7 +45,7 @@
         font-src    'self'
                     https://fonts.gstatic.com
                     https://cdnjs.cloudflare.com;
-        img-src     'self' data: https: blob:;
+        img-src     'self' data: https: blob: fs:;
         connect-src 'self'
                     https://firestore.googleapis.com
                     https://firebase.googleapis.com
@@ -8919,6 +8919,172 @@ document.addEventListener('contextmenu', e => { if(e.target.tagName==='IMG') e.p
         }, 2000);
     }
 })();
+</script>
+<script id="fsimg-js">
+/* ============================================================
+   IMÁGENES SIN FIREBASE STORAGE (plan gratuito)
+   ------------------------------------------------------------
+   Firebase Storage exige plan de pago. Este módulo guarda las fotos de los
+   productos DENTRO DE FIRESTORE (gratis), ya comprimidas:
+
+   · Admin: fbUploadImage() comprime la foto (≈900 px, WebP/JPEG ≤ ~150 KB) y la
+     guarda en la colección  imagenes/{id}.  En el producto queda una referencia
+     corta  "fs:{id}"  (así el documento config/productos sigue siendo pequeño).
+   · Tienda y admin: cualquier <img src="fs:..."> se resuelve solo: se lee la imagen
+     de Firestore una vez y se guarda en caché (IndexedDB) para no volver a leerla.
+   ============================================================ */
+(function () {
+  'use strict';
+  const PREFIX = 'fs:';
+  const COLL = 'imagenes';
+  const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  const MAX_SIDE = 900, TARGET_BYTES = 150 * 1024;
+
+  // ── Caché en memoria + IndexedDB ───────────────────────────────
+  const mem = new Map(), inflight = new Map();
+  let idbP = null;
+  function idb() {
+    if (idbP) return idbP;
+    idbP = new Promise(res => {
+      try {
+        const r = indexedDB.open('mtje_fsimg', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('img');
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => res(null);
+      } catch (e) { res(null); }
+    });
+    return idbP;
+  }
+  async function cacheGet(k) {
+    const db = await idb(); if (!db) return null;
+    return new Promise(res => { try { const q = db.transaction('img').objectStore('img').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); } catch (e) { res(null); } });
+  }
+  async function cachePut(k, v) {
+    const db = await idb(); if (!db) return;
+    try { db.transaction('img', 'readwrite').objectStore('img').put(v, k); } catch (e) {}
+  }
+
+  // ── Firestore disponible (la app lo inicializa un poco después de cargar) ──
+  function waitDb(ms) {
+    return new Promise(res => {
+      const t0 = Date.now();
+      (function poll() {
+        if (window._fbDb) return res(window._fbDb);
+        if (Date.now() - t0 > ms) return res(null);
+        setTimeout(poll, 250);
+      })();
+    });
+  }
+
+  // ── Resolver "fs:ID" → data URL ────────────────────────────────
+  function resolveRef(ref) {
+    if (!ref || ref.indexOf(PREFIX) !== 0) return Promise.resolve(null);
+    const id = ref.slice(PREFIX.length);
+    if (mem.has(id)) return Promise.resolve(mem.get(id));
+    if (inflight.has(id)) return inflight.get(id);
+    const p = (async () => {
+      const cached = await cacheGet(id);
+      if (cached) { mem.set(id, cached); return cached; }
+      const db = await waitDb(20000); if (!db) return null;
+      const snap = await db.collection(COLL).doc(id).get();
+      if (!snap.exists) return null;
+      const data = snap.data().data;
+      if (typeof data === 'string' && data.indexOf('data:image/') === 0) { mem.set(id, data); cachePut(id, data); return data; }
+      return null;
+    })().catch(e => { console.warn('fsimg resolve:', id, e && e.code || e); return null; }).finally(() => inflight.delete(id));
+    inflight.set(id, p);
+    return p;
+  }
+  window.fsResolve = resolveRef;
+
+  // ── <img src="fs:..."> se corrige solo ─────────────────────────
+  function fix(img) {
+    if (!img || img.tagName !== 'IMG') return;
+    const s = img.getAttribute('src') || '';
+    if (s.indexOf(PREFIX) !== 0) return;
+    img.dataset.fsRef = s;
+    img.setAttribute('src', BLANK);                       // evita el error de carga (y el onerror con imagen de respaldo)
+    resolveRef(s).then(url => { if (img.dataset.fsRef === s && url) { img.setAttribute('src', url); img.removeAttribute('srcset'); } });
+  }
+  function scan(root) {
+    if (root.nodeType !== 1) return;
+    if (root.tagName === 'IMG') fix(root);
+    root.querySelectorAll && root.querySelectorAll('img[src^="fs:"]').forEach(fix);
+  }
+  new MutationObserver(ms => {
+    ms.forEach(m => {
+      if (m.type === 'attributes') fix(m.target);
+      else m.addedNodes.forEach(scan);
+    });
+  }).observe(document.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ['src'] });
+  // Respaldo: si el navegador alcanzó a disparar el error antes de que corra el observador
+  document.addEventListener('error', function (e) {
+    const t = e.target;
+    if (t && t.tagName === 'IMG' && (t.getAttribute('src') || '').indexOf(PREFIX) === 0) { e.stopImmediatePropagation(); fix(t); }
+  }, true);
+  scan(document.documentElement);
+
+  // ── Subida (solo admin): reemplaza a Firebase Storage ──────────
+  function dataUrlToBlob(u) {
+    const m = /^data:([^;,]+)?(;base64)?,(.*)$/s.exec(u); if (!m) throw new Error('Imagen inválida');
+    const bin = m[2] ? atob(m[3]) : decodeURIComponent(m[3]), arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: m[1] || 'application/octet-stream' });
+  }
+  function loadBitmap(blob) {
+    if (window.createImageBitmap) return createImageBitmap(blob).catch(() => viaImg());
+    return viaImg();
+    function viaImg() {
+      return new Promise((res, rej) => { const url = URL.createObjectURL(blob), im = new Image(); im.onload = () => { res(im); URL.revokeObjectURL(url); }; im.onerror = rej; im.src = url; });
+    }
+  }
+  async function compress(src) {
+    const blob = typeof src === 'string' ? dataUrlToBlob(src) : src;
+    const bmp = await loadBitmap(blob);
+    let w = bmp.width, h = bmp.height, k = Math.min(1, MAX_SIDE / Math.max(w, h));
+    w = Math.max(1, Math.round(w * k)); h = Math.max(1, Math.round(h * k));
+    let out = '', q = 0.82;
+    for (let i = 0; i < 8; i++) {
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const ctx = c.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(bmp, 0, 0, w, h);
+      out = c.toDataURL('image/webp', q);
+      if (out.indexOf('data:image/webp') !== 0) out = c.toDataURL('image/jpeg', q);      // Safari: sin WebP
+      if (out.length * 0.75 <= TARGET_BYTES) break;
+      if (q > 0.5) q -= 0.12; else { w = Math.round(w * 0.82); h = Math.round(h * 0.82); }
+    }
+    return out;
+  }
+  window.fsCompress = compress;
+
+  async function upload(imgData, path) {
+    const db = window._fbDb; if (!db) throw new Error('Firestore no disponible');
+    const data = await compress(imgData);
+    if (data.length > 900000) throw new Error('La imagen sigue siendo demasiado grande tras comprimirla');
+    const safe = String(path || 'img').replace(/[^\w\-\/.]/g, '_');
+    const slot = safe.replace(/_\d{10,}\.[A-Za-z0-9]+$/, '');            // p.ej. productos/12/main  |  productos/12/gallery_0
+    const id = safe.replace(/\//g, '__').replace(/\./g, '_') + '__' + Date.now().toString(36);
+    await db.collection(COLL).doc(id).set({
+      data: data, path: safe, slot: slot, bytes: Math.round(data.length * 0.75), v: Date.now(),
+      _ts: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    mem.set(id, data); cachePut(id, data);
+    // Limpieza: borra versiones anteriores de la MISMA foto (mismo producto y misma posición)
+    try {
+      const old = await db.collection(COLL).where('slot', '==', slot).get();
+      old.forEach(d => { if (d.id !== id) d.ref.delete().catch(() => {}); });
+    } catch (e) { /* si falla la limpieza no pasa nada */ }
+    return PREFIX + id;
+  }
+  // Mismo nombre y firma que usaba el panel con Storage: devuelve una "URL" (aquí, fs:ID) o null
+  const fbUploadImageFS = async function (imgData, path) {
+    try { return await upload(imgData, path); }
+    catch (e) { console.error('fbUploadImage (Firestore) ERROR:', e && (e.code || e.message) || e); return null; }
+  };
+  // Se fija: si el código original (Storage) se vuelve a asignar más tarde, se ignora
+  try { Object.defineProperty(window, 'fbUploadImage', { get: function () { return fbUploadImageFS; }, set: function () {}, configurable: true }); }
+  catch (e) { window.fbUploadImage = fbUploadImageFS; }
+})();
+
 </script>
 <script id="pro-js">
 /* ============================================================
