@@ -45,7 +45,7 @@
         font-src    'self'
                     https://fonts.gstatic.com
                     https://cdnjs.cloudflare.com;
-        img-src     'self' data: https: blob:;
+        img-src     'self' data: https: blob: fs:;
         connect-src 'self'
                     https://firestore.googleapis.com
                     https://firebase.googleapis.com
@@ -1222,6 +1222,406 @@ function mtjeStreetLayer() {
             --c-accent: #06b6d4;
             --c-green: #10b981;
         }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           MUNDO TECNO J.E — CAPA VISUAL CYBER / SCI-FI CORPORATIVO
+           ---------------------------------------------------------------------------
+           Inyectable. No modifica HTML ni scripts (carrito, Firebase, cotizador, citas).
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        /* ── 1. TOKENS (paleta Glow + tipografía) ─────────────────────────────────── */
+        :root {
+          --mt-bg:        #0B0F19;
+          --mt-bg-elev:   #0d1117;
+          --mt-blue:      #0066FF;
+          --mt-purple:    #8A2BE2;
+          --mt-green:     #00FF66;
+          --mt-glass:     rgba(255, 255, 255, 0.03);
+          --mt-border:    rgba(255, 255, 255, 0.08);
+          --mt-glow-blue:  0 10px 30px rgba(0, 102, 255, 0.15);
+          --mt-glow-green: 0 0 20px rgba(0, 255, 102, 0.35);
+          --mt-font-head: 'Syne', 'Rajdhani', Inter, system-ui, sans-serif;
+          --mt-font-body: 'DM Sans', Inter, system-ui, sans-serif;
+          --mt-font-mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, monospace;
+          --c-blue:       #0066FF;
+          --c-blue-dark:  #0047b3;
+          --c-accent:     #8A2BE2;
+          --c-green:      #00FF66;
+        }
+
+        /* ── 2. BASE OSCURA ──────────────────────────────────────────────────────── */
+        html.dark body,
+        body {
+          background-color: var(--mt-bg) !important;
+          color: #e2e8f0;
+          font-family: var(--mt-font-body);
+        }
+        h1, h2, h3, h4, h5 {
+          font-family: var(--mt-font-head);
+          letter-spacing: -0.02em;
+        }
+        .card-price-num,
+        .pd-price-main,
+        #cart-total,
+        [class*="precio"],
+        .pro-price {
+          font-family: var(--mt-font-mono) !important;
+        }
+
+        /* ── 3. CATÁLOGO — GLASSMORPHISM ─────────────────────────────────────────── */
+        .amazon-card,
+        .product-card {
+          background: var(--mt-glass) !important;
+          backdrop-filter: blur(12px) saturate(1.2);
+          -webkit-backdrop-filter: blur(12px) saturate(1.2);
+          border: 1px solid var(--mt-border) !important;
+          border-radius: 16px !important;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+          transition:
+            transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 0.28s ease !important;
+        }
+        .amazon-card:hover,
+        .product-card:hover {
+          transform: translateY(-6px) !important;
+          box-shadow: var(--mt-glow-blue), 0 12px 40px rgba(0, 0, 0, 0.35) !important;
+          border-color: rgba(0, 102, 255, 0.35) !important;
+          z-index: 10;
+        }
+        html.dark .amazon-card,
+        html.dark .product-card {
+          background: rgba(13, 17, 23, 0.65) !important;
+        }
+        .card-img-wrap {
+          border-radius: 16px 16px 0 0;
+          background: rgba(255, 255, 255, 0.02) !important;
+        }
+        .card-title { color: #f1f5f9 !important; }
+        .amazon-card:hover .card-title { color: var(--mt-green) !important; }
+        .card-price-num,
+        .card-price-sym { color: var(--mt-green) !important; }
+        .btn-cart {
+          background: linear-gradient(135deg, #FFD814 0%, #F7CA00 100%) !important;
+          color: #0B0F19 !important;
+          box-shadow: 0 4px 16px rgba(255, 216, 20, 0.25) !important;
+        }
+        .btn-video {
+          background: linear-gradient(135deg, #0066FF 0%, #8A2BE2 100%) !important;
+        }
+
+        /* ── 4. TECNO BOT — PULSO + ENTRADA (position:fixed obligatorio) ─────────── */
+        @keyframes mt-online-pulse {
+          0%   { transform: scale(1);    opacity: 0.85; }
+          70%  { transform: scale(1.85); opacity: 0; }
+          100% { transform: scale(1.85); opacity: 0; }
+        }
+        @keyframes mt-fade-in-up {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        #tecno-chat-btn {
+          position: fixed !important;
+          bottom: 24px !important;
+          left: 24px !important;
+          z-index: 8500 !important;
+          background: linear-gradient(145deg, #1a1035 0%, #8A2BE2 55%, #0066FF 100%) !important;
+          box-shadow:
+            0 8px 28px rgba(138, 43, 226, 0.45),
+            0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+          overflow: visible !important;
+        }
+        #tecno-chat-btn::before {
+          content: '';
+          position: absolute;
+          inset: -4px;
+          border-radius: 50%;
+          border: 2px solid var(--mt-green);
+          animation: mt-online-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+          pointer-events: none;
+          box-shadow: var(--mt-glow-green);
+        }
+        #tecno-chat-btn::after {
+          content: '';
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: var(--mt-green);
+          box-shadow: 0 0 10px var(--mt-green);
+          border: 2px solid #0B0F19;
+          pointer-events: none;
+        }
+        #tecno-chat-window {
+          animation: mt-fade-in-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+          background: rgba(11, 15, 25, 0.92) !important;
+          backdrop-filter: blur(16px) !important;
+          -webkit-backdrop-filter: blur(16px) !important;
+          border: 1px solid rgba(138, 43, 226, 0.35) !important;
+          box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.5),
+            0 0 40px rgba(138, 43, 226, 0.12) !important;
+          border-radius: 20px !important;
+          overflow: hidden;
+        }
+
+        /* ── 5. FORMULARIOS — FOCUS GLOW ─────────────────────────────────────────── */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="password"],
+        input[type="datetime-local"],
+        textarea,
+        select {
+          transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease !important;
+        }
+        input:focus,
+        textarea:focus,
+        select:focus {
+          outline: none !important;
+          border-color: var(--mt-blue) !important;
+          box-shadow:
+            0 0 0 3px rgba(0, 102, 255, 0.2),
+            0 0 20px rgba(0, 102, 255, 0.12) !important;
+          background-color: rgba(0, 102, 255, 0.06) !important;
+        }
+
+        /* ── 6. MAPAS — RADIO + AISLAMIENTO + ANTI-BOTS ──────────────────────────── */
+        #leaflet-map,
+        #delivery-leaflet-map,
+        #appt-leaflet-map {
+          border-radius: 16px !important;
+          overflow: hidden;
+          isolation: isolate;
+          border: 1px solid rgba(0, 102, 255, 0.25);
+          box-shadow:
+            0 0 0 1px rgba(138, 43, 226, 0.12),
+            0 12px 40px rgba(0, 0, 0, 0.35);
+        }
+        .leaflet-container {
+          border-radius: 16px !important;
+          font-family: var(--mt-font-body);
+        }
+        /* Controles del mapa (zoom, capas) deben ser clicables */
+        .leaflet-control-container,
+        .leaflet-control,
+        .leaflet-control-zoom,
+        .leaflet-control-layers {
+          pointer-events: auto !important;
+        }
+        .leaflet-control-attribution {
+          pointer-events: none !important; /* solo texto; evita clics accidentales a leafletjs.com */
+        }
+        .leaflet-container .leaflet-pane,
+        .leaflet-container .leaflet-overlay-pane,
+        .leaflet-container .leaflet-marker-pane,
+        .leaflet-container .leaflet-shadow-pane,
+        .leaflet-container .leaflet-tile-pane {
+          pointer-events: auto !important;
+        }
+        /* Panel de capas por encima de tiles */
+        .leaflet-top, .leaflet-bottom {
+          z-index: 1000 !important;
+        }
+        .leaflet-control-layers {
+          z-index: 1001 !important;
+        }
+        .leaflet-control-layers-expanded {
+          padding: 8px 10px !important;
+          background: #fff !important;
+          color: #0f172a !important;
+          border-radius: 10px !important;
+          box-shadow: 0 4px 16px rgba(0,0,0,.25) !important;
+        }
+
+        /* ── 7. PANELES / MODALES ────────────────────────────────────────────────── */
+        #catalogo .sticky,
+        .modal-box,
+        .pd-box,
+        .login-box {
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+        }
+        .modal-box,
+        .pd-box {
+          border: 1px solid var(--mt-border);
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+        }
+        a.text-blue-600,
+        a[href*="wa.me"],
+        .text-blue-600 {
+          color: var(--mt-blue) !important;
+        }
+
+        /* ── 8. REDUCED MOTION ───────────────────────────────────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+          #tecno-chat-btn::before { animation: none; }
+          .amazon-card:hover,
+          .product-card:hover { transform: none !important; }
+          #tecno-chat-window { animation: none !important; }
+        }
+
+
+        body {
+            background-color: var(--mt-bg) !important;
+            color: #e2e8f0;
+            font-family: var(--mt-font-body);
+        }
+        h1, h2, h3, h4, h5 {
+            font-family: var(--mt-font-head);
+            letter-spacing: -0.02em;
+        }
+        /* Precios / códigos: mono limpia */
+        .card-price-num,
+        .pd-price-main,
+        #cart-total,
+        [class*="precio"],
+        .pro-price {
+            font-family: var(--mt-font-mono) !important;
+        }
+
+        /* ── Glassmorphism: tarjetas de catálogo ── */
+        .amazon-card,
+        .product-card {
+            background: var(--mt-glass) !important;
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            border: 1px solid var(--mt-border) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 0.28s ease !important;
+        }
+        .amazon-card:hover,
+        .product-card:hover {
+            transform: translateY(-6px) !important;
+            box-shadow: var(--mt-glow-blue), 0 12px 40px rgba(0, 0, 0, 0.35) !important;
+            border-color: rgba(0, 102, 255, 0.35) !important;
+            z-index: 10;
+        }
+        html.dark .amazon-card,
+        html.dark .product-card {
+            background: rgba(13, 17, 23, 0.65) !important;
+        }
+        .card-img-wrap {
+            border-radius: 16px 16px 0 0;
+            background: rgba(255, 255, 255, 0.02) !important;
+        }
+        .card-title { color: #f1f5f9 !important; }
+        .amazon-card:hover .card-title { color: var(--mt-green) !important; }
+        .card-price-num,
+        .card-price-sym { color: var(--mt-green) !important; }
+        .btn-cart {
+            background: linear-gradient(135deg, #FFD814 0%, #F7CA00 100%) !important;
+            color: #0B0F19 !important;
+            box-shadow: 0 4px 16px rgba(255, 216, 20, 0.25) !important;
+        }
+        .btn-video {
+            background: linear-gradient(135deg, #0066FF 0%, #8A2BE2 100%) !important;
+        }
+
+        /* ── Tecno Bot: pulso + entrada ── */
+        @keyframes mt-online-pulse {
+            0%   { transform: scale(1);   opacity: 0.85; }
+            70%  { transform: scale(1.85); opacity: 0; }
+            100% { transform: scale(1.85); opacity: 0; }
+        }
+        @keyframes mt-fade-in-up {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        #tecno-chat-btn {
+            /* Mantener fixed del estilo inline; solo reforzar look cyber */
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 24px !important;
+            z-index: 8500 !important;
+            background: linear-gradient(145deg, #1a1035 0%, #8A2BE2 55%, #0066FF 100%) !important;
+            box-shadow: 0 8px 28px rgba(138, 43, 226, 0.45), 0 0 0 1px rgba(255,255,255,0.08) !important;
+            overflow: visible !important;
+        }
+        #tecno-chat-btn::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid var(--mt-green);
+            animation: mt-online-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            pointer-events: none;
+            box-shadow: var(--mt-glow-green);
+        }
+        #tecno-chat-btn::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--mt-green);
+            box-shadow: 0 0 10px var(--mt-green);
+            border: 2px solid #0B0F19;
+            pointer-events: none;
+        }
+        #tecno-chat-window {
+            animation: mt-fade-in-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+            background: rgba(11, 15, 25, 0.92) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: 1px solid rgba(138, 43, 226, 0.35) !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(138, 43, 226, 0.12) !important;
+            border-radius: 20px !important;
+            overflow: hidden;
+        }
+
+        /* ── Formularios: focus glow ── */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="password"],
+        input[type="datetime-local"],
+        textarea,
+        select {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+        }
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none !important;
+            border-color: var(--mt-blue) !important;
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.2), 0 0 20px rgba(0, 102, 255, 0.12) !important;
+            background-color: rgba(0, 102, 255, 0.06) !important;
+        }
+
+        /* Secciones y paneles con profundidad */
+        #catalogo .sticky,
+        .modal-box,
+        .pd-box,
+        .login-box {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+        .modal-box,
+        .pd-box {
+            border: 1px solid var(--mt-border);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        /* Enlaces primarios */
+        a.text-blue-600,
+        a[href*="wa.me"],
+        .text-blue-600 {
+            color: var(--mt-blue) !important;
+        }
+
         * { box-sizing: border-box; }
         body { font-family: 'DM Sans', sans-serif; transition: background 0.3s, color 0.3s; }
         h1,h2,h3,h4,h5 { font-family: 'Syne', sans-serif; }
@@ -3164,6 +3564,347 @@ footer span[style*="475569"] { color: #94a3b8 !important; }
 #tecno-chat-messages [style*="color:#94a3b8"] { color: #64748b !important; }
 .bg-rose-500.text-white { background-color: #be123c; }
 .bg-rose-500.text-white:hover { background-color: #9f1239; }
+
+/* ── Chat: el campo de texto siempre legible (fondo claro → texto oscuro) ── */
+#tecno-chat-input { color: #0f172a !important; caret-color: #0f172a; background-color: #ffffff; }
+#tecno-chat-input::placeholder { color: #64748b; opacity: 1; }
+</style>
+
+<!-- MUNDO TECNO J.E · PREMIUM UI OVERRIDES
+     Capa visual aislada: conserva IDs, clases, eventos inline y scripts existentes. -->
+<style id="mtje-premium-overrides">
+:root{
+  --mt-bg:#0b0f19;--mt-panel:#101827;--mt-panel-2:#141f31;
+  --mt-blue:#06f;--mt-purple:#8a2be2;--mt-green:#00ff66;
+  --mt-line:rgba(148,163,184,.16);--mt-glass:rgba(255,255,255,.035);
+  --mt-text:#e8eef8;--mt-muted:#94a3b8;
+  --mt-shadow-blue:0 10px 30px rgba(0,102,255,.15);
+}
+html.dark,body{background:var(--mt-bg)!important;color:var(--mt-text)}
+body{font-family:'DM Sans',Inter,system-ui,sans-serif}
+h1,h2,h3,h4,h5,.font-bold,.font-black{letter-spacing:-.025em}
+a{transition:color .2s ease}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:2px solid rgba(0,102,255,.85)!important;outline-offset:2px}
+
+/* Catálogo: cristal con contraste suficiente */
+.amazon-card,.product-card{
+  background:var(--mt-glass)!important;
+  border:1px solid var(--mt-line)!important;border-radius:18px!important;
+  -webkit-backdrop-filter:blur(12px) saturate(1.15);
+  backdrop-filter:blur(12px) saturate(1.15);
+  box-shadow:0 8px 26px rgba(0,0,0,.22);
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s;
+}
+@media(hover:hover) and (pointer:fine){
+ .amazon-card:hover,.product-card:hover{transform:translateY(-6px)!important;
+  border-color:rgba(0,102,255,.42)!important;box-shadow:var(--mt-shadow-blue),0 18px 40px rgba(0,0,0,.32)!important}
+}
+.card-img-wrap{background:rgba(255,255,255,.025)!important}
+.card-title{color:#f1f5f9!important}
+.card-price-num,.card-price-sym,.pd-price-main{color:var(--mt-green)!important}
+.btn-video{background:linear-gradient(120deg,var(--mt-blue),var(--mt-purple))!important}
+.btn-cart{background:linear-gradient(120deg,#00ff66,#00c853)!important;color:#04120a!important;box-shadow:0 5px 18px rgba(0,255,102,.15)!important}
+
+/* Tecno Bot: radar online + ventana animada */
+@keyframes mtje-radar{0%{transform:scale(.72);opacity:.85}75%,100%{transform:scale(1.9);opacity:0}}
+@keyframes mtje-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+#tecno-chat-btn{overflow:visible!important;background:linear-gradient(135deg,#17112d,var(--mt-purple) 58%,var(--mt-blue))!important;
+ box-shadow:0 8px 28px rgba(138,43,226,.4),0 0 24px rgba(0,102,255,.18)!important}
+#tecno-chat-btn:before{content:"";position:absolute;inset:-5px;border:2px solid var(--mt-green);border-radius:50%;
+ animation:mtje-radar 2s cubic-bezier(.2,.7,.2,1) infinite;pointer-events:none}
+#tecno-chat-btn:after{content:"";position:absolute;right:5px;top:5px;width:10px;height:10px;border-radius:50%;
+ background:var(--mt-green);border:2px solid var(--mt-bg);box-shadow:0 0 12px var(--mt-green)}
+#tecno-chat-window{background:rgba(11,15,25,.96)!important;color:var(--mt-text)!important;
+ border:1px solid rgba(138,43,226,.4)!important;box-shadow:0 24px 70px rgba(0,0,0,.55)!important;
+ -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+ animation:mtje-rise .38s cubic-bezier(.22,1,.36,1) both}
+#tecno-chat-messages{background:#0e1726!important;color:#e2e8f0}
+#tecno-quick-replies{background:#111c2d!important;border-color:var(--mt-line)!important}
+#tecno-chat-window input{background:#0b1220!important;color:#f8fafc!important;border-color:var(--mt-line)!important}
+#tecno-chat-window input:focus{border-color:var(--mt-blue)!important;box-shadow:0 0 0 3px rgba(0,102,255,.16)!important}
+
+/* Checkout: panel premium, campos claros y bloques de pago/entrega */
+#cart-sidebar{background:rgba(11,15,25,.98)!important;color:#e8eef8!important;
+ border-left:1px solid rgba(0,102,255,.28)!important;box-shadow:-24px 0 70px rgba(0,0,0,.45)!important}
+#cart-sidebar .border-slate-200,#cart-sidebar .dark\:border-slate-700{border-color:var(--mt-line)!important}
+#cart-sidebar input,#cart-sidebar select,#cart-sidebar textarea{
+ background:#101a2a!important;color:#f8fafc!important;border-color:rgba(148,163,184,.22)!important}
+#cart-sidebar input::placeholder{color:#718096}
+#cart-sidebar input:focus,#cart-sidebar textarea:focus{
+ border-color:var(--mt-blue)!important;box-shadow:0 0 0 3px rgba(0,102,255,.18)!important;outline:none}
+#cart-sidebar .bank-card,#cart-sidebar .delivery-option{
+ background:rgba(255,255,255,.035)!important;border:1px solid var(--mt-line)!important;
+ border-radius:14px!important;padding:12px!important;transition:border-color .2s,background .2s,transform .2s}
+#cart-sidebar .bank-card:hover,#cart-sidebar .delivery-option:hover{
+ border-color:rgba(0,102,255,.55)!important;background:rgba(0,102,255,.07)!important;transform:translateY(-1px)}
+#cart-sidebar .bank-card:has(#check-popular:not(.hidden)),#cart-sidebar .bank-card:has(#check-reservas:not(.hidden)),
+#cart-sidebar #opt-oficina.active,#cart-sidebar #opt-delivery.active{
+ border-color:rgba(0,255,102,.5)!important;box-shadow:0 0 18px rgba(0,255,102,.08)}
+#pay-transfer-section,#pay-paypal-section,#pay-cash-section,#delivery-address-box{
+ transition:opacity .25s ease,transform .25s ease}
+#pay-paypal-section:not(.hidden),#pay-cash-section:not(.hidden){
+ background:rgba(255,255,255,.035)!important;border-color:var(--mt-line)!important;color:#e8eef8}
+#cart-total{color:var(--mt-green)!important}
+#cart-sidebar button{transition:filter .2s,transform .2s}
+#cart-sidebar button:active{transform:scale(.985)}
+
+/* Paso visual: los bloques existentes siguen siendo los mismos nodos funcionales */
+#cart-sidebar .p-6>div:nth-of-type(3),
+#cart-sidebar .p-6>div:nth-of-type(4){
+ position:relative;border:1px solid var(--mt-line);border-radius:16px;padding:16px!important;
+ background:rgba(255,255,255,.025);margin-top:16px}
+#cart-sidebar .p-6>div:nth-of-type(3)>h4:before{content:"01";color:#60a5fa;margin-right:8px;font-weight:900}
+#cart-sidebar .p-6>div:nth-of-type(4)>h4:before{content:"02";color:#a78bfa;margin-right:8px;font-weight:900}
+#delivery-section>h4:before{content:"03";color:#34d399;margin-right:8px;font-weight:900}
+
+/* Skeleton utility para imágenes y vídeos que llegan desde Firebase Storage */
+.image-placeholder,.skeleton-loading{
+ position:relative;overflow:hidden;background:linear-gradient(110deg,#111827 8%,#1e293b 18%,#263b59 33%,#111827 52%);
+ background-size:220% 100%;animation:mtje-shimmer 1.6s linear infinite;border-radius:12px}
+.image-placeholder:after,.skeleton-loading:after{
+ content:"";position:absolute;inset:0;transform:translateX(-100%);
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);
+ animation:mtje-shimmer-sweep 1.6s ease-in-out infinite}
+@keyframes mtje-shimmer{to{background-position-x:-220%}}
+@keyframes mtje-shimmer-sweep{to{transform:translateX(100%)}}
+.card-img-wrap img,.pd-main-img{transition:opacity .28s ease}
+img[loading="lazy"]{background:linear-gradient(110deg,#111827 8%,#1e293b 18%,#263b59 33%,#111827 52%);background-size:220% 100%}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ .amazon-card:hover,.product-card:hover{transform:none!important}
+}
+@media(max-width:640px){
+ #cart-sidebar .p-6{padding:18px!important}
+ #cart-sidebar .grid-cols-3{grid-template-columns:1fr!important}
+ #tecno-chat-btn{left:16px!important;bottom:16px!important}
+ #tecno-chat-window{left:12px!important;bottom:88px!important;width:calc(100vw - 24px)!important;max-width:none!important}
+}
+</style>
+
+<!-- MUNDO TECNO J.E — CYBER / SCI-FI CORPORATE THEME -->
+<style id="mtje-cyber-theme">
+/*
+ * MUNDO TECNO J.E — CYBER / SCI-FI CORPORATE THEME
+ * Capa visual únicamente. No modifica HTML, JavaScript ni Firebase.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --mt-bg: #0B0F19;
+  --mt-bg-2: #0d1117;
+  --mt-panel: rgba(255,255,255,.035);
+  --mt-panel-strong: rgba(13,17,23,.82);
+  --mt-border: rgba(255,255,255,.085);
+  --mt-border-blue: rgba(0,102,255,.42);
+  --mt-blue: #0066FF;
+  --mt-blue-2: #3f8cff;
+  --mt-purple: #8A2BE2;
+  --mt-green: #00FF66;
+  --mt-text: #e8edf7;
+  --mt-muted: #8b96aa;
+  --mt-mono: 'Space Mono', ui-monospace, monospace;
+  --mt-head: 'Rajdhani', 'Inter', system-ui, sans-serif;
+  --mt-body: 'Inter', system-ui, sans-serif;
+  --mt-radius: 16px;
+  --mt-radius-lg: 22px;
+  --mt-shadow: 0 16px 55px rgba(0,0,0,.35);
+  --mt-blue-glow: 0 0 0 1px rgba(0,102,255,.18), 0 12px 38px rgba(0,102,255,.18);
+  --mt-green-glow: 0 0 24px rgba(0,255,102,.25);
+  --mt-purple-glow: 0 0 30px rgba(138,43,226,.28);
+  --mt-ease: cubic-bezier(.2,.8,.2,1);
+}
+
+html { scroll-behavior: smooth; background: var(--mt-bg); }
+body {
+  background:
+    radial-gradient(circle at 15% 5%, rgba(0,102,255,.09), transparent 30rem),
+    radial-gradient(circle at 85% 18%, rgba(138,43,226,.07), transparent 32rem),
+    linear-gradient(180deg, #0B0F19 0%, #080c14 100%) !important;
+  color: var(--mt-text) !important;
+  font-family: var(--mt-body) !important;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  opacity: .24;
+  background-image: linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+::selection { background: rgba(0,102,255,.45); color: #fff; }
+::-webkit-scrollbar { width: 8px; background: #070b12; }
+::-webkit-scrollbar-thumb { background: linear-gradient(#0066FF,#8A2BE2); border-radius: 99px; }
+
+h1,h2,h3,h4,h5,h6,
+.font-display { font-family: var(--mt-head) !important; letter-spacing: .015em; }
+
+/* Navigation */
+nav {
+  background: rgba(8,12,20,.78) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+  border-bottom: 1px solid var(--mt-border) !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,.28) !important;
+}
+nav a, nav button { transition: color .22s var(--mt-ease), background .22s var(--mt-ease), transform .22s var(--mt-ease); }
+nav a:hover, nav button:hover { color: #fff !important; text-shadow: 0 0 18px rgba(0,102,255,.55); }
+
+/* Shared glass surface */
+.rounded-2xl, .rounded-xl,
+.amazon-card, .product-card,
+.bg-slate-800\/50, .bg-slate-800\/60,
+.bg-gray-800\/50, .bg-gray-900\/50 {
+  background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018)) !important;
+  border-color: var(--mt-border) !important;
+  box-shadow: var(--mt-shadow), inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+/* Product cards */
+#products-container > *, #products-container article, #products-container .product-card, #products-container .amazon-card {
+  border: 1px solid var(--mt-border) !important;
+  border-radius: var(--mt-radius-lg) !important;
+  background: var(--mt-panel) !important;
+  backdrop-filter: blur(12px) saturate(125%);
+  -webkit-backdrop-filter: blur(12px) saturate(125%);
+  overflow: hidden;
+  transition: transform .3s var(--mt-ease), border-color .3s var(--mt-ease), box-shadow .3s var(--mt-ease) !important;
+}
+#products-container > *:hover, #products-container article:hover, #products-container .product-card:hover, #products-container .amazon-card:hover {
+  transform: translateY(-6px) !important;
+  border-color: var(--mt-border-blue) !important;
+  box-shadow: var(--mt-blue-glow), var(--mt-shadow) !important;
+}
+#products-container img { transition: transform .45s var(--mt-ease), filter .45s var(--mt-ease); }
+#products-container > *:hover img, #products-container article:hover img { transform: scale(1.035); filter: saturate(1.08) contrast(1.04); }
+
+/* Prices / status */
+.card-price-num, .pd-price-main, #cart-total, [class*="precio"], .pro-price, .price, [class*="price"] {
+  font-family: var(--mt-mono) !important;
+  font-variant-numeric: tabular-nums;
+}
+.card-price-num, .pd-price-main, .pro-price { color: var(--mt-green) !important; text-shadow: 0 0 16px rgba(0,255,102,.18); }
+.text-emerald-400, .text-emerald-500, .text-green-400, .text-green-500 { color: var(--mt-green) !important; }
+
+/* Buttons */
+button, .btn, a[role="button"] {
+  transition: transform .22s var(--mt-ease), box-shadow .22s var(--mt-ease), border-color .22s var(--mt-ease), filter .22s var(--mt-ease) !important;
+}
+button:hover, .btn:hover, a[role="button"]:hover { transform: translateY(-2px); }
+.bg-blue-600, .bg-blue-500, .bg-indigo-600 {
+  background: linear-gradient(135deg, #0066FF, #174fd1) !important;
+  box-shadow: 0 8px 26px rgba(0,102,255,.23) !important;
+}
+.bg-blue-600:hover, .bg-blue-500:hover, .bg-indigo-600:hover { filter: brightness(1.08); box-shadow: 0 12px 32px rgba(0,102,255,.38) !important; }
+
+/* Inputs */
+input, textarea, select {
+  color: #e8edf7 !important;
+  background: rgba(7,11,19,.68) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 12px !important;
+  transition: border-color .2s var(--mt-ease), box-shadow .2s var(--mt-ease), background .2s var(--mt-ease), transform .2s var(--mt-ease) !important;
+}
+input::placeholder, textarea::placeholder { color: #66728a !important; }
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: rgba(0,102,255,.8) !important;
+  box-shadow: 0 0 0 3px rgba(0,102,255,.10), 0 0 24px rgba(0,102,255,.12) !important;
+  background: rgba(7,13,24,.9) !important;
+}
+
+/* Forms / contact */
+#contacto .rounded-2xl, #servicios .rounded-2xl {
+  position: relative; overflow: hidden;
+}
+#contacto .rounded-2xl::before, #servicios .rounded-2xl::before {
+  content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,102,255,.55), transparent);
+  opacity: .7;
+}
+
+/* Map: rounded + isolated, without blocking Leaflet interaction */
+#map, .leaflet-container {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  border: 1px solid var(--mt-border) !important;
+  box-shadow: 0 20px 55px rgba(0,0,0,.32) !important;
+}
+.leaflet-control { z-index: 500 !important; }
+
+/* Cart */
+#cart-sidebar {
+  background: rgba(8,12,20,.94) !important;
+  backdrop-filter: blur(22px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(150%) !important;
+  border-left: 1px solid var(--mt-border-blue) !important;
+  box-shadow: -20px 0 70px rgba(0,0,0,.42) !important;
+}
+
+/* Modals */
+.fixed.inset-0 { backdrop-filter: blur(5px); }
+.fixed.inset-0 > .bg-white, .fixed.inset-0 > .bg-slate-900, .fixed.inset-0 > div[class*="rounded"] {
+  background: linear-gradient(145deg, rgba(16,23,37,.97), rgba(7,12,20,.97)) !important;
+  border: 1px solid var(--mt-border) !important;
+  box-shadow: 0 35px 100px rgba(0,0,0,.55), 0 0 45px rgba(0,102,255,.07) !important;
+}
+
+/* AI cotizador */
+#cot-parts, #cot-parts-body, [id*="cot-"] .rounded-xl {
+  border-color: var(--mt-border) !important;
+}
+#cot-parts-body { background: rgba(255,255,255,.018) !important; }
+
+/* Tecno Bot — purple identity + green online radar */
+#tecno-chat-button, #tecno-bot-button, #tecno-chat-toggle {
+  position: relative !important;
+  background: radial-gradient(circle at 35% 25%, #b56cff 0%, #8A2BE2 38%, #40116f 100%) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  box-shadow: 0 0 0 1px rgba(138,43,226,.18), 0 0 34px rgba(138,43,226,.42), 0 14px 42px rgba(0,0,0,.4) !important;
+  isolation: isolate;
+}
+#tecno-chat-button::before, #tecno-bot-button::before, #tecno-chat-toggle::before {
+  content: ''; position: absolute; inset: -7px; border: 2px solid rgba(0,255,102,.45); border-radius: inherit; z-index: -1;
+  animation: mtBotRadar 2.4s ease-out infinite;
+}
+#tecno-chat-button::after, #tecno-bot-button::after, #tecno-chat-toggle::after {
+  content: ''; position: absolute; width: 7px; height: 7px; right: 7px; top: 7px; border-radius: 50%;
+  background: var(--mt-green); box-shadow: 0 0 12px var(--mt-green); animation: mtBotPulse 1.8s ease-in-out infinite;
+}
+#tecno-chat-window {
+  background: linear-gradient(160deg, rgba(14,18,30,.96), rgba(8,12,21,.98)) !important;
+  border: 1px solid rgba(138,43,226,.34) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 28px 90px rgba(0,0,0,.52), 0 0 42px rgba(138,43,226,.12) !important;
+  animation: mtChatIn .38s cubic-bezier(.16,1,.3,1) both;
+}
+#tecno-chat-window input, #tecno-chat-window textarea { border-color: rgba(138,43,226,.22) !important; }
+#tecno-chat-window input:focus, #tecno-chat-window textarea:focus { border-color: rgba(138,43,226,.72) !important; box-shadow: 0 0 0 3px rgba(138,43,226,.10), 0 0 25px rgba(138,43,226,.14) !important; }
+
+/* Online chips */
+.online, .status-online, [class*="online"] { }
+
+/* Reveal polish */
+.reveal, .reveal-left, .reveal-right { will-change: transform, opacity; }
+
+@keyframes mtBotRadar { 0% { transform: scale(.92); opacity: .75; } 70% { transform: scale(1.22); opacity: 0; } 100% { transform: scale(1.22); opacity: 0; } }
+@keyframes mtBotPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.8); } }
+@keyframes mtChatIn { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* Mobile */
+@media (max-width: 768px) {
+  body::after { background-size: 32px 32px; }
+  #products-container > *, #products-container article, #products-container .product-card, #products-container .amazon-card { border-radius: 14px !important; }
+  #products-container > *:hover, #products-container article:hover, #products-container .product-card:hover, #products-container .amazon-card:hover { transform: translateY(-2px) !important; }
+  #tecno-chat-window { max-width: calc(100vw - 24px) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 overflow-x-hidden">
@@ -3770,9 +4511,11 @@ footer span[style*="475569"] { color: #94a3b8 !important; }
     <!-- Botón flotante -->
     <button id="tecno-chat-btn" onclick="openTecnoChat()"
         style="position:fixed;bottom:24px;left:24px;z-index:8500;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#1a2b4a 0%,#1D9E75 100%);border:none;cursor:pointer;box-shadow:0 8px 28px rgba(29,158,117,0.5);display:flex;align-items:center;justify-content:center;transition:transform 0.2s,box-shadow 0.2s;" title="Hablar con Tecno Bot"
-        onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 12px 36px rgba(29,158,117,0.65)'"
-        onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px rgba(29,158,117,0.5)'">
+        >
         <i class="fa-solid fa-robot" style="color:#fff;font-size:24px;"></i>
+        <span class="mtje-bot-eye mtje-bot-eye-left" aria-hidden="true"></span>
+        <span class="mtje-bot-eye mtje-bot-eye-right" aria-hidden="true"></span>
+        <span class="mtje-bot-mouth" aria-hidden="true"></span>
         <span id="tecno-chat-unread" style="display:none;position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;padding:2px 6px;border-radius:99px;min-width:18px;text-align:center;">1</span>
     </button>
 
@@ -4760,7 +5503,7 @@ function selectDelivery(type) {
 let _deliveryMap = null, _deliveryMarker = null;
 function initDeliveryMap() {
     if (_deliveryMap) { _deliveryMap.invalidateSize(); return; }
-    _deliveryMap = L.map('delivery-leaflet-map', { zoomControl: true, scrollWheelZoom: false })
+    _deliveryMap = L.map('delivery-leaflet-map', { attributionControl: false, zoomControl: true, scrollWheelZoom: false })
         .setView([18.486, -69.931], 13);
     mtjeStreetLayer().addTo(_deliveryMap);
     _deliveryMap.on('click', function(e) {
@@ -4904,7 +5647,7 @@ function checkoutCart() {
 
     // ── PASO 2.5: Generar y descargar la factura en PDF con los datos reales ──
     window._lastPedidoFactura = pedido;
-    generarFacturaPDF(pedido);
+    generarFacturaPDF(pedido, true);
 
     // ── PASO 3: Sincronización en segundo plano (no bloquea la UI) ────────
     // BroadcastChannel: otras pestañas del mismo navegador
@@ -5060,7 +5803,7 @@ function loadPdfLibs() {
         !window.jspdf ? load('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js') : null
     ]);
 }
-async function generarFacturaPDF(pedido) {
+async function generarFacturaPDF(pedido, preguntarDescarga = false) {
     if(!pedido) return;
     try { await loadPdfLibs(); } catch(e) { console.warn('No se pudieron cargar las librerías de PDF:', e); }
     if(typeof html2canvas === 'undefined' || !window.jspdf) {
@@ -5091,12 +5834,47 @@ async function generarFacturaPDF(pedido) {
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
         }
-        pdf.save(`Factura_MundoTecnoJE_${numFactura}.pdf`);
         wrapper.remove();
+        const descargar = () => pdf.save(`Factura_MundoTecnoJE_${numFactura}.pdf`);
+        if (preguntarDescarga) {
+            mostrarPreguntaDescargaFactura(descargar);
+        } else {
+            descargar();
+        }
     }).catch(err => {
         console.warn('Error generando la factura PDF:', err);
         wrapper.remove();
     });
+}
+
+function mostrarPreguntaDescargaFactura(descargarCallback) {
+    const existente = document.getElementById('factura-download-choice-overlay');
+    if (existente) existente.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'factura-download-choice-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,.72);z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px);';
+    overlay.innerHTML = `
+        <div style="width:100%;max-width:430px;background:linear-gradient(145deg,#0f172a,#111827);border:1px solid rgba(0,102,255,.35);border-radius:24px;padding:30px 28px;text-align:center;box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 45px rgba(0,102,255,.12);">
+            <div style="width:68px;height:68px;margin:0 auto 16px;border-radius:20px;background:rgba(0,102,255,.13);border:1px solid rgba(0,102,255,.35);display:flex;align-items:center;justify-content:center;color:#60a5fa;font-size:28px;">
+                <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <h3 style="font-family:Syne,sans-serif;font-size:21px;font-weight:900;color:#fff;margin:0 0 10px;">¿Deseas descargar tu factura?</h3>
+            <p style="color:#94a3b8;font-size:14px;line-height:1.6;margin:0 0 24px;">Tu pedido ya fue registrado correctamente. Puedes descargar ahora tu factura en PDF o continuar sin descargarla.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <button id="factura-no-btn" type="button" style="background:rgba(255,255,255,.06);color:#cbd5e1;border:1px solid rgba(255,255,255,.12);font-weight:800;font-size:14px;padding:13px 12px;border-radius:14px;cursor:pointer;">No, continuar</button>
+                <button id="factura-yes-btn" type="button" style="background:linear-gradient(135deg,#0066ff,#2563eb);color:#fff;border:1px solid rgba(96,165,250,.45);font-weight:900;font-size:14px;padding:13px 12px;border-radius:14px;cursor:pointer;box-shadow:0 10px 30px rgba(0,102,255,.25);"><i class="fa-solid fa-download" style="margin-right:6px;"></i>Sí, descargar</button>
+            </div>
+            <p style="color:#64748b;font-size:11px;margin:16px 0 0;">Tu pedido y factura permanecen registrados para administración.</p>
+        </div>`;
+    document.body.appendChild(overlay);
+
+    const cerrar = () => overlay.remove();
+    document.getElementById('factura-no-btn').onclick = cerrar;
+    document.getElementById('factura-yes-btn').onclick = () => {
+        try { descargarCallback(); } catch(e) { console.warn('No se pudo descargar la factura:', e); }
+        cerrar();
+    };
 }
 
 function mostrarConfirmacionPedido(pedido) {
@@ -5113,8 +5891,8 @@ function mostrarConfirmacionPedido(pedido) {
                 ${pedido.productos.map(p=>`<div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>${p.cantidad}x ${p.nombre}</span><span style="font-weight:700;">RD$ ${(p.precio*p.cantidad).toLocaleString()}</span></div>`).join('')}
                 <div style="border-top:1px solid #e2e8f0;margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;font-weight:900;color:#2563eb;"><span>Total</span><span>RD$ ${pedido.total.toLocaleString()}</span></div>
             </div>
-            <p style="color:#16a34a;font-size:12px;margin:0 0 14px;"><i class="fa-solid fa-file-invoice"></i> Tu factura en PDF se descargó automáticamente.</p>
-            <button onclick="generarFacturaPDF(window._lastPedidoFactura)"
+            <p style="color:#16a34a;font-size:12px;margin:0 0 14px;"><i class="fa-solid fa-file-invoice"></i> Tu factura está lista. Puedes descargarla cuando quieras.</p>
+            <button onclick="generarFacturaPDF(window._lastPedidoFactura, false)"
                 style="width:100%;background:#f1f5f9;color:#0f172a;font-family:Syne,sans-serif;font-weight:700;font-size:14px;padding:12px;border-radius:14px;border:none;cursor:pointer;margin-bottom:10px;">
                 <i class="fa-solid fa-download"></i> Descargar Factura de Nuevo
             </button>
@@ -5276,13 +6054,12 @@ function toggleApptMap() {
 }
 function initApptMap() {
     if (_apptMap) { _apptMap.invalidateSize(); return; }
-    _apptMap = L.map('appt-leaflet-map', { zoomControl: true, scrollWheelZoom: false, tap: true })
+    _apptMap = L.map('appt-leaflet-map', { attributionControl: false, zoomControl: true, scrollWheelZoom: false, tap: true })
         .setView([18.486, -69.931], 13);
-    mtjeStreetLayer().addTo(_apptMap);
-
-    // Capa satélite opcional
-    const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
-    L.control.layers({ '🗺️ Mapa': mtjeStreetLayer(), '🛰️ Satélite': sat }, {}, { position: 'topright' }).addTo(_apptMap);
+    const apptStreet = mtjeStreetLayer();
+    const apptSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
+    apptStreet.addTo(_apptMap);
+    L.control.layers({ '🗺️ Mapa': apptStreet, '🛰️ Satélite': apptSat }, {}, { position: 'topright', collapsed: true }).addTo(_apptMap);
 
     _apptMap.on('click', function(e) {
         placeApptMarker(e.latlng.lat, e.latlng.lng);
@@ -5696,15 +6473,44 @@ function enviarCitaTecnicoWhatsApp(citaId) {
     _waLink.target = '_blank'; _waLink.rel = 'noopener noreferrer';
     document.body.appendChild(_waLink); _waLink.click(); document.body.removeChild(_waLink);
 }
+
+function abrirGoogleMapsDesdeBtn(btn) {
+    if (!btn) return;
+    const dir = decodeURIComponent(btn.getAttribute('data-dir') || '');
+    const lat = btn.getAttribute('data-lat');
+    const lng = btn.getAttribute('data-lng');
+    const coords = (lat !== '' && lat != null && lng !== '' && lng != null)
+        ? { lat: Number(lat), lng: Number(lng) }
+        : null;
+    abrirGoogleMaps(dir, coords);
+}
+
 function abrirGoogleMaps(direccion, coords) {
-    if (coords && coords.lat && coords.lng) {
-        // Coordenadas GPS exactas → navegación directa
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${coords.lat},${coords.lng}&travelmode=driving`, '_blank');
-    } else if (/^https?:\/\//i.test((direccion||'').trim())) {
-        window.open(direccion.trim(), '_blank');
-    } else {
-        const q = encodeURIComponent((direccion||'') + ', Santo Domingo, República Dominicana');
-        window.open('https://www.google.com/maps/dir/?api=1&destination=' + q + '&travelmode=driving', '_blank');
+    try {
+        // coords puede venir como objeto, string JSON o null
+        if (typeof coords === 'string' && coords) {
+            try { coords = JSON.parse(coords); } catch (e) { coords = null; }
+        }
+        let url = '';
+        if (coords && (coords.lat != null) && (coords.lng != null)) {
+            url = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(coords.lat + ',' + coords.lng) + '&travelmode=driving';
+        } else if (/^https?:\/\//i.test(String(direccion || '').trim())) {
+            url = String(direccion).trim();
+        } else {
+            const q = encodeURIComponent((direccion || '') + ', Santo Domingo, República Dominicana');
+            url = 'https://www.google.com/maps/dir/?api=1&destination=' + q + '&travelmode=driving';
+        }
+        // Preferir navegación nativa en móvil; fallback a window.open
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (e) {
+        console.warn('abrirGoogleMaps:', e);
+        alert('No se pudo abrir el mapa. Copia la dirección e ábrela en Google Maps.');
     }
 }
 function enviarDeliveryWhatsApp(pedidoId) {
@@ -5752,7 +6558,7 @@ function renderPedidosList() {
             : '<span class="status-label bg-slate-100 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Completado</span>';
 
         const mapsBtn = isDelivery && p.direccion
-            ? `<button onclick="abrirGoogleMaps(${JSON.stringify(p.direccion)}, ${JSON.stringify(p.coords||null)})" class="flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition font-semibold"><i class="fa-solid fa-diamond-turn-right"></i> ${p.coords ? 'Navegar (GPS)' : 'Ver en Maps'}</button>`
+            ? `<button onclick="abrirGoogleMapsDesdeBtn(this)" data-dir="${encodeURIComponent(p.direccion||'')}" data-lat="${p.coords&&p.coords.lat!=null?p.coords.lat:''}" data-lng="${p.coords&&p.coords.lng!=null?p.coords.lng:''}" class="flex items-center gap-1.5 text-xs bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition font-semibold"><i class="fa-solid fa-diamond-turn-right"></i> ${p.coords ? 'Navegar (GPS)' : 'Ver en Maps'}</button>`
             : '';
 
         const deliveryBtn = isDelivery && p.direccion
@@ -8545,6 +9351,7 @@ window.onload = function() {
         if (typeof L !== 'undefined' && document.getElementById('leaflet-map')) {
             const LAT = 18.477, LNG = -69.996;
             const map = L.map('leaflet-map', {
+                attributionControl: false,  // evita redirección a leafletjs.com en pruebas/bots
                 zoomControl: true,
                 scrollWheelZoom: false,
                 doubleClickZoom: true,
@@ -8552,8 +9359,17 @@ window.onload = function() {
                 tap: true
             }).setView([LAT, LNG], 17);
 
-            // Capa de tiles de OpenStreetMap
-            mtjeStreetLayer().addTo(map);
+            // Capas base (misma instancia en el control → el switch funciona)
+            const streetLayer = mtjeStreetLayer();
+            const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri', maxZoom: 19
+            });
+            streetLayer.addTo(map);
+            L.control.layers(
+                { '🗺️ Mapa': streetLayer, '🛰️ Satélite': satelliteLayer },
+                {},
+                { position: 'topright', collapsed: true }
+            ).addTo(map);
 
             // Icono personalizado animado
             const pulseIcon = L.divIcon({
@@ -8572,7 +9388,7 @@ window.onload = function() {
                 <div style="font-family:DM Sans,sans-serif;padding:4px 2px;min-width:180px;">
                     <div style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:4px;">🖥️ Mundo Tecno J.E</div>
                     <div style="font-size:11px;color:#64748b;margin-bottom:8px;">Cruce de Manoguayabo #137 Plaza A & R</div>
-                    <a href="https://maps.app.goo.gl/gSBZAKjoKebLz29z7" target="_blank"
+                    <a href="https://maps.app.goo.gl/gSBZAKjoKebLz29z7" target="_blank" rel="noopener noreferrer"
                        style="display:inline-flex;align-items:center;gap:5px;background:#2563eb;color:#fff;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;text-decoration:none;">
                         📍 Ver en Google Maps
                     </a>
@@ -8581,13 +9397,6 @@ window.onload = function() {
 
             // Activar scroll wheel al hacer clic en el mapa
             map.on('click', function() { map.scrollWheelZoom.enable(); });
-
-            // Botones de capas (Street / Satélite)
-            const streetLayer = mtjeStreetLayer();
-            const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri', maxZoom: 19
-            });
-            L.control.layers({ '🗺️ Mapa': streetLayer, '🛰️ Satélite': satelliteLayer }, {}, { position: 'topright' }).addTo(map);
         }
     }, 200);
 };
@@ -8915,6 +9724,172 @@ document.addEventListener('contextmenu', e => { if(e.target.tagName==='IMG') e.p
         }, 2000);
     }
 })();
+</script>
+<script id="fsimg-js">
+/* ============================================================
+   IMÁGENES SIN FIREBASE STORAGE (plan gratuito)
+   ------------------------------------------------------------
+   Firebase Storage exige plan de pago. Este módulo guarda las fotos de los
+   productos DENTRO DE FIRESTORE (gratis), ya comprimidas:
+
+   · Admin: fbUploadImage() comprime la foto (≈900 px, WebP/JPEG ≤ ~150 KB) y la
+     guarda en la colección  imagenes/{id}.  En el producto queda una referencia
+     corta  "fs:{id}"  (así el documento config/productos sigue siendo pequeño).
+   · Tienda y admin: cualquier <img src="fs:..."> se resuelve solo: se lee la imagen
+     de Firestore una vez y se guarda en caché (IndexedDB) para no volver a leerla.
+   ============================================================ */
+(function () {
+  'use strict';
+  const PREFIX = 'fs:';
+  const COLL = 'imagenes';
+  const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  const MAX_SIDE = 900, TARGET_BYTES = 150 * 1024;
+
+  // ── Caché en memoria + IndexedDB ───────────────────────────────
+  const mem = new Map(), inflight = new Map();
+  let idbP = null;
+  function idb() {
+    if (idbP) return idbP;
+    idbP = new Promise(res => {
+      try {
+        const r = indexedDB.open('mtje_fsimg', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('img');
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => res(null);
+      } catch (e) { res(null); }
+    });
+    return idbP;
+  }
+  async function cacheGet(k) {
+    const db = await idb(); if (!db) return null;
+    return new Promise(res => { try { const q = db.transaction('img').objectStore('img').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); } catch (e) { res(null); } });
+  }
+  async function cachePut(k, v) {
+    const db = await idb(); if (!db) return;
+    try { db.transaction('img', 'readwrite').objectStore('img').put(v, k); } catch (e) {}
+  }
+
+  // ── Firestore disponible (la app lo inicializa un poco después de cargar) ──
+  function waitDb(ms) {
+    return new Promise(res => {
+      const t0 = Date.now();
+      (function poll() {
+        if (window._fbDb) return res(window._fbDb);
+        if (Date.now() - t0 > ms) return res(null);
+        setTimeout(poll, 250);
+      })();
+    });
+  }
+
+  // ── Resolver "fs:ID" → data URL ────────────────────────────────
+  function resolveRef(ref) {
+    if (!ref || ref.indexOf(PREFIX) !== 0) return Promise.resolve(null);
+    const id = ref.slice(PREFIX.length);
+    if (mem.has(id)) return Promise.resolve(mem.get(id));
+    if (inflight.has(id)) return inflight.get(id);
+    const p = (async () => {
+      const cached = await cacheGet(id);
+      if (cached) { mem.set(id, cached); return cached; }
+      const db = await waitDb(20000); if (!db) return null;
+      const snap = await db.collection(COLL).doc(id).get();
+      if (!snap.exists) return null;
+      const data = snap.data().data;
+      if (typeof data === 'string' && data.indexOf('data:image/') === 0) { mem.set(id, data); cachePut(id, data); return data; }
+      return null;
+    })().catch(e => { console.warn('fsimg resolve:', id, e && e.code || e); return null; }).finally(() => inflight.delete(id));
+    inflight.set(id, p);
+    return p;
+  }
+  window.fsResolve = resolveRef;
+
+  // ── <img src="fs:..."> se corrige solo ─────────────────────────
+  function fix(img) {
+    if (!img || img.tagName !== 'IMG') return;
+    const s = img.getAttribute('src') || '';
+    if (s.indexOf(PREFIX) !== 0) return;
+    img.dataset.fsRef = s;
+    img.setAttribute('src', BLANK);                       // evita el error de carga (y el onerror con imagen de respaldo)
+    resolveRef(s).then(url => { if (img.dataset.fsRef === s && url) { img.setAttribute('src', url); img.removeAttribute('srcset'); } });
+  }
+  function scan(root) {
+    if (root.nodeType !== 1) return;
+    if (root.tagName === 'IMG') fix(root);
+    root.querySelectorAll && root.querySelectorAll('img[src^="fs:"]').forEach(fix);
+  }
+  new MutationObserver(ms => {
+    ms.forEach(m => {
+      if (m.type === 'attributes') fix(m.target);
+      else m.addedNodes.forEach(scan);
+    });
+  }).observe(document.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ['src'] });
+  // Respaldo: si el navegador alcanzó a disparar el error antes de que corra el observador
+  document.addEventListener('error', function (e) {
+    const t = e.target;
+    if (t && t.tagName === 'IMG' && (t.getAttribute('src') || '').indexOf(PREFIX) === 0) { e.stopImmediatePropagation(); fix(t); }
+  }, true);
+  scan(document.documentElement);
+
+  // ── Subida (solo admin): reemplaza a Firebase Storage ──────────
+  function dataUrlToBlob(u) {
+    const m = /^data:([^;,]+)?(;base64)?,(.*)$/s.exec(u); if (!m) throw new Error('Imagen inválida');
+    const bin = m[2] ? atob(m[3]) : decodeURIComponent(m[3]), arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: m[1] || 'application/octet-stream' });
+  }
+  function loadBitmap(blob) {
+    if (window.createImageBitmap) return createImageBitmap(blob).catch(() => viaImg());
+    return viaImg();
+    function viaImg() {
+      return new Promise((res, rej) => { const url = URL.createObjectURL(blob), im = new Image(); im.onload = () => { res(im); URL.revokeObjectURL(url); }; im.onerror = rej; im.src = url; });
+    }
+  }
+  async function compress(src) {
+    const blob = typeof src === 'string' ? dataUrlToBlob(src) : src;
+    const bmp = await loadBitmap(blob);
+    let w = bmp.width, h = bmp.height, k = Math.min(1, MAX_SIDE / Math.max(w, h));
+    w = Math.max(1, Math.round(w * k)); h = Math.max(1, Math.round(h * k));
+    let out = '', q = 0.82;
+    for (let i = 0; i < 8; i++) {
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const ctx = c.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(bmp, 0, 0, w, h);
+      out = c.toDataURL('image/webp', q);
+      if (out.indexOf('data:image/webp') !== 0) out = c.toDataURL('image/jpeg', q);      // Safari: sin WebP
+      if (out.length * 0.75 <= TARGET_BYTES) break;
+      if (q > 0.5) q -= 0.12; else { w = Math.round(w * 0.82); h = Math.round(h * 0.82); }
+    }
+    return out;
+  }
+  window.fsCompress = compress;
+
+  async function upload(imgData, path) {
+    const db = window._fbDb; if (!db) throw new Error('Firestore no disponible');
+    const data = await compress(imgData);
+    if (data.length > 900000) throw new Error('La imagen sigue siendo demasiado grande tras comprimirla');
+    const safe = String(path || 'img').replace(/[^\w\-\/.]/g, '_');
+    const slot = safe.replace(/_\d{10,}\.[A-Za-z0-9]+$/, '');            // p.ej. productos/12/main  |  productos/12/gallery_0
+    const id = safe.replace(/\//g, '__').replace(/\./g, '_') + '__' + Date.now().toString(36);
+    await db.collection(COLL).doc(id).set({
+      data: data, path: safe, slot: slot, bytes: Math.round(data.length * 0.75), v: Date.now(),
+      _ts: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    mem.set(id, data); cachePut(id, data);
+    // Limpieza: borra versiones anteriores de la MISMA foto (mismo producto y misma posición)
+    try {
+      const old = await db.collection(COLL).where('slot', '==', slot).get();
+      old.forEach(d => { if (d.id !== id) d.ref.delete().catch(() => {}); });
+    } catch (e) { /* si falla la limpieza no pasa nada */ }
+    return PREFIX + id;
+  }
+  // Mismo nombre y firma que usaba el panel con Storage: devuelve una "URL" (aquí, fs:ID) o null
+  const fbUploadImageFS = async function (imgData, path) {
+    try { return await upload(imgData, path); }
+    catch (e) { console.error('fbUploadImage (Firestore) ERROR:', e && (e.code || e.message) || e); return null; }
+  };
+  // Se fija: si el código original (Storage) se vuelve a asignar más tarde, se ignora
+  try { Object.defineProperty(window, 'fbUploadImage', { get: function () { return fbUploadImageFS; }, set: function () {}, configurable: true }); }
+  catch (e) { window.fbUploadImage = fbUploadImageFS; }
+})();
+
 </script>
 <script id="pro-js">
 /* ============================================================
@@ -9525,5 +10500,388 @@ document.addEventListener('contextmenu', e => { if(e.target.tagName==='IMG') e.p
 })();
 
 </script>
+
+<script id="mtje-visitor-gps">
+(function () {
+  'use strict';
+  var watchId = null, lastWrite = 0, started = false;
+  function getDb() { return window._vtDb || window._fbDb || null; }
+  function getSid() { return window._vtSid || null; }
+
+  function startGpsFromUserAction(button) {
+    if (started) return;
+    if (!navigator.geolocation) {
+      if (button) button.textContent = 'GPS no disponible';
+      return;
+    }
+    var db = getDb(), sid = getSid();
+    if (!db || !sid) {
+      if (button) button.textContent = 'Inténtalo más tarde';
+      return;
+    }
+    started = true;
+    if (button) { button.disabled = true; button.textContent = 'Solicitando permiso…'; }
+
+    watchId = navigator.geolocation.watchPosition(function (position) {
+      var c = position.coords;
+      if (Date.now() - lastWrite < 5000) return;
+      lastWrite = Date.now();
+      db.collection('visitantes').doc(sid).set({
+        gpsLat: c.latitude,
+        gpsLng: c.longitude,
+        gpsAccuracy: Math.round(c.accuracy || 0),
+        gpsUpdatedAt: Date.now(),
+        gpsConsent: true,
+        gpsSource: 'browser-geolocation'
+      }, { merge: true }).then(function () {
+        if (button) button.textContent = 'GPS compartido ✓';
+      }).catch(function (error) {
+        console.warn('[VT GPS] Firestore:', error);
+        if (button) { button.disabled = false; button.textContent = 'Compartir GPS'; }
+        started = false;
+      });
+    }, function (error) {
+      if (button) {
+        button.disabled = false;
+        button.textContent = error.code === 1 ? 'Permiso denegado' : 'Reintentar GPS';
+      }
+      started = false;
+    }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 20000 });
+  }
+
+  function addChatGpsAction() {
+    var chat = document.getElementById('tecno-chat-window');
+    if (!chat || document.getElementById('mtje-chat-gps')) return;
+    var header = chat.firstElementChild;
+    var controls = header && header.lastElementChild;
+    if (!controls) return;
+    var button = document.createElement('button');
+    button.id = 'mtje-chat-gps';
+    button.type = 'button';
+    button.title = 'Compartir mi ubicación GPS precisa';
+    button.setAttribute('aria-label', 'Compartir mi ubicación GPS precisa');
+    button.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+    button.style.cssText = 'background:rgba(255,255,255,.12);border:0;color:#fff;cursor:pointer;border-radius:8px;padding:6px 9px;font-size:13px;';
+    button.addEventListener('click', function () { startGpsFromUserAction(button); });
+    controls.insertBefore(button, controls.firstChild);
+  }
+
+  function init() {
+    addChatGpsAction();
+    var chat = document.getElementById('tecno-chat-window');
+    if (chat) new MutationObserver(addChatGpsAction).observe(chat, { childList: true, subtree: true });
+    var open = window.openTecnoChat;
+    if (typeof open === 'function' && !open.__mtjeGpsHooked) {
+      window.openTecnoChat = function () {
+        var result = open.apply(this, arguments);
+        addChatGpsAction();
+        return result;
+      };
+      window.openTecnoChat.__mtjeGpsHooked = true;
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+  window.addEventListener('pagehide', function () {
+    if (watchId !== null && navigator.geolocation) navigator.geolocation.clearWatch(watchId);
+  });
+})();
+</script>
+
+
+
+
+
+<style id="mtje-tecnobot-icon-life">
+  /* El botón permanece fijo; solo el robot tiene movimiento. */
+  #tecno-chat-btn {
+    position: fixed !important;
+    left: 24px !important;
+    bottom: 24px !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    overflow: visible;
+  }
+  #tecno-chat-btn > i {
+    display: inline-block;
+    transform-origin: 50% 65%;
+    will-change: transform, filter;
+    animation: mtjeRobotIdle 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,.38));
+    transition: transform .16s ease-out, filter .2s ease;
+  }
+  #tecno-chat-btn:hover > i {
+    filter: drop-shadow(0 0 9px rgba(255,255,255,.9));
+  }
+  @keyframes mtjeRobotIdle {
+    0%, 100% { transform: translateY(0) rotate(-3deg) scale(1); }
+    25% { transform: translateY(-3px) rotate(2deg) scale(1.04); }
+    50% { transform: translateY(0) rotate(3deg) scale(1); }
+    75% { transform: translateY(-2px) rotate(-2deg) scale(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #tecno-chat-btn > i { animation: none; }
+  }
+</style>
+<script id="mtje-tecnobot-icon-tracking">
+(function () {
+  'use strict';
+  var button, icon, eyes = [], raf = 0, pointerX = 0, pointerY = 0;
+  var currentX = 0, currentY = 0, targetX = 0, targetY = 0;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function init() {
+    button = document.getElementById('tecno-chat-btn');
+    if (!button) return;
+    icon = button.querySelector('i');
+    eyes = Array.prototype.slice.call(button.querySelectorAll('.mtje-bot-eye'));
+    if (!icon) return;
+
+    document.addEventListener('mousemove', function (event) {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      updateTarget();
+    }, { passive:true });
+
+    document.addEventListener('pointermove', function (event) {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      updateTarget();
+    }, { passive:true });
+
+    button.addEventListener('mouseleave', function () {
+      targetX = targetY = 0;
+      schedule();
+    });
+  }
+
+  function updateTarget() {
+    if (reduced || !button) return;
+    var rect = button.getBoundingClientRect();
+    var centerX = rect.left + rect.width / 2;
+    var centerY = rect.top + rect.height / 2;
+    var dx = pointerX - centerX;
+    var dy = pointerY - centerY;
+    var distance = Math.sqrt(dx * dx + dy * dy) || 1;
+
+    // El icono se desplaza dentro del botón hacia la posición real del cursor,
+    // sin mover el botón ni salir del círculo.
+    var maxTravel = Math.max(0, Math.min(rect.width, rect.height) * 0.19);
+    var travel = Math.min(maxTravel, distance * 0.12);
+    targetX = (dx / distance) * travel;
+    targetY = (dy / distance) * travel;
+    schedule();
+  }
+
+  function schedule() {
+    if (!raf) raf = requestAnimationFrame(animate);
+  }
+
+  function animate() {
+    raf = 0;
+    if (!icon || !button) return;
+    currentX += (targetX - currentX) * 0.22;
+    currentY += (targetY - currentY) * 0.22;
+
+    var rect = button.getBoundingClientRect();
+    var centerX = rect.left + rect.width / 2 + currentX;
+    var centerY = rect.top + rect.height / 2 + currentY;
+    var dx = pointerX - centerX;
+    var dy = pointerY - centerY;
+    var angle = Math.max(-16, Math.min(16, dx * 0.22));
+    var tilt = Math.max(-7, Math.min(7, dy * 0.12));
+
+    icon.style.transform = 'translate3d(' + currentX.toFixed(2) + 'px,' +
+      currentY.toFixed(2) + 'px,0) rotate(' + (angle + tilt).toFixed(2) + 'deg) scale(1.06)';
+
+    // Los ojos acompañan al cursor con un pequeño desplazamiento de pupila.
+    var eyeX = Math.max(-1.4, Math.min(1.4, dx / 90));
+    var eyeY = Math.max(-1.2, Math.min(1.2, dy / 100));
+    eyes.forEach(function (eye) {
+      eye.style.marginLeft = eyeX.toFixed(2) + 'px';
+      eye.style.marginTop = eyeY.toFixed(2) + 'px';
+    });
+
+    if (Math.abs(targetX - currentX) > 0.15 || Math.abs(targetY - currentY) > 0.15) {
+      schedule();
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+
+<style id="mtje-tecnobot-face-animation">
+  #tecno-chat-btn { isolation:isolate; }
+  #tecno-chat-btn .mtje-bot-eye,
+  #tecno-chat-btn .mtje-bot-mouth {
+    position:absolute;
+    z-index:2;
+    pointer-events:none;
+  }
+  #tecno-chat-btn .mtje-bot-eye {
+    top:23px;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:#15304a;
+    box-shadow:0 0 3px rgba(255,255,255,.9);
+    transform-origin:center;
+    animation:mtjeBlink 4.6s infinite;
+  }
+  #tecno-chat-btn .mtje-bot-eye-left { left:23px; }
+  #tecno-chat-btn .mtje-bot-eye-right { right:23px; animation-delay:.08s; }
+  #tecno-chat-btn .mtje-bot-mouth {
+    left:27px;
+    top:32px;
+    width:7px;
+    height:3px;
+    border-radius:2px 2px 5px 5px;
+    background:#15304a;
+    transform-origin:center top;
+    animation:mtjeMouthMove 1.25s ease-in-out infinite;
+  }
+  @keyframes mtjeBlink {
+    0%, 43%, 47%, 83%, 87%, 100% { transform:scaleY(1); }
+    45%, 85% { transform:scaleY(.08); }
+  }
+  @keyframes mtjeMouthMove {
+    0%, 100% { height:2px; width:6px; }
+    35% { height:5px; width:7px; }
+    65% { height:2px; width:4px; }
+  }
+  #tecno-chat-btn.mtje-bot-sleeping .mtje-bot-eye {
+    animation:none !important;
+    height:1.5px;
+    border-radius:50%;
+    transform:rotate(-8deg);
+    box-shadow:none;
+  }
+  #tecno-chat-btn.mtje-bot-sleeping .mtje-bot-mouth {
+    animation:none !important;
+    height:1px;
+    width:5px;
+    border-radius:2px;
+    opacity:.8;
+  }
+  #tecno-chat-btn.mtje-bot-waking .mtje-bot-eye {
+    animation:mtjeWakeBlink .55s ease-out 2;
+  }
+  @keyframes mtjeWakeBlink {
+    0%,100% { transform:scaleY(1); }
+    50% { transform:scaleY(.08); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #tecno-chat-btn .mtje-bot-eye,
+    #tecno-chat-btn .mtje-bot-mouth { animation:none; }
+  }
+</style>
+<script id="mtje-tecnobot-idle-sleep">
+(function () {
+  'use strict';
+  var idleTimer = null;
+  var button = null;
+  var IDLE_MS = 5 * 60 * 1000;
+
+  function wake() {
+    if (!button) return;
+    var wasSleeping = button.classList.contains('mtje-bot-sleeping');
+    button.classList.remove('mtje-bot-sleeping');
+    if (wasSleeping) {
+      button.classList.remove('mtje-bot-waking');
+      void button.offsetWidth;
+      button.classList.add('mtje-bot-waking');
+      window.setTimeout(function () {
+        if (button) button.classList.remove('mtje-bot-waking');
+      }, 1200);
+    }
+    if (idleTimer) window.clearTimeout(idleTimer);
+    idleTimer = window.setTimeout(function () {
+      if (button) button.classList.add('mtje-bot-sleeping');
+    }, IDLE_MS);
+  }
+
+  function init() {
+    button = document.getElementById('tecno-chat-btn');
+    if (!button) return;
+    ['mousemove', 'pointermove', 'mousedown', 'keydown', 'touchstart', 'wheel'].forEach(function (eventName) {
+      document.addEventListener(eventName, wake, { passive:true });
+    });
+    button.addEventListener('click', wake);
+    wake();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+
+<style id="mtje-tecnobot-cursor-position-refinement">
+  #tecno-chat-btn { overflow: visible; }
+  #tecno-chat-btn > i { position: relative; z-index: 1; will-change: transform; }
+  #tecno-chat-btn .mtje-bot-eye { will-change: margin; }
+</style>
+
+
+<style id="mtje-tecnobot-input-click-fix">
+  /* Asegura que la ventana y el campo reciban clics aunque existan capas visuales. */
+  #tecno-chat-window {
+    pointer-events: auto !important;
+    z-index: 99990 !important;
+  }
+  #tecno-chat-window * {
+    pointer-events: auto;
+  }
+  #tecno-chat-input {
+    position: relative !important;
+    z-index: 100000 !important;
+    display: block !important;
+    pointer-events: auto !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    cursor: text !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    touch-action: manipulation;
+  }
+  #tecno-chat-window button,
+  #tecno-chat-window input {
+    cursor: pointer;
+  }
+  #tecno-chat-input { cursor: text !important; }
+</style>
+<script id="mtje-tecnobot-input-focus-fix">
+(function () {
+  function enableChatInput() {
+    var win = document.getElementById('tecno-chat-window');
+    var input = document.getElementById('tecno-chat-input');
+    if (!win || !input) return;
+
+    [win, input].forEach(function (el) {
+      el.style.setProperty('pointer-events', 'auto', 'important');
+    });
+    input.addEventListener('click', function (event) {
+      event.stopPropagation();
+      input.focus();
+    });
+    input.addEventListener('pointerdown', function () {
+      input.focus();
+    });
+
+    // Reapply only the input interaction properties if the chat rerenders.
+    new MutationObserver(function () {
+      input.style.setProperty('pointer-events', 'auto', 'important');
+      input.style.setProperty('user-select', 'text', 'important');
+    }).observe(input, { attributes: true, attributeFilter: ['style', 'class'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enableChatInput);
+  else enableChatInput();
+})();
+</script>
+
 </body>
 </html>
