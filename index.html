@@ -9,7 +9,7 @@
 <meta name="description" content="Laptops, PCs, monitores y accesorios en pesos dominicanos, cotizador de PC por componentes, diagnóstico en línea, servicio técnico y delivery en Santo Domingo.">
 <meta name="theme-color" content="#030609">
 <meta name="color-scheme" content="dark">
-<meta name="robots" content="index, follow">\n    <link rel="canonical" href="https://juanjoseencarnaciondejesus23-source.github.io/Mundo-Tecno-J.E-RD/">
+<meta name="robots" content="index, follow"><link rel="canonical" href="https://juanjoseencarnaciondejesus23-source.github.io/Mundo-Tecno-J.E-RD/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mundo Tecno J.E">
 <meta property="og:locale" content="es_DO">
@@ -3645,9 +3645,9 @@ button,input,select,textarea{font:inherit}
 #cart-sidebar .bank-card:has(#check-popular:not(.hidden)),#cart-sidebar .bank-card:has(#check-reservas:not(.hidden)),
 #cart-sidebar #opt-oficina.active,#cart-sidebar #opt-delivery.active{
  border-color:rgba(0,255,102,.5)!important;box-shadow:0 0 18px rgba(0,255,102,.08)}
-#pay-transfer-section,#pay-paypal-section,#pay-cash-section,#delivery-address-box{
+#pay-cash-section,#pay-cod-section,#delivery-address-box{
  transition:opacity .25s ease,transform .25s ease}
-#pay-paypal-section:not(.hidden),#pay-cash-section:not(.hidden){
+#pay-cash-section:not(.hidden),#pay-cod-section:not(.hidden){
  background:rgba(255,255,255,.035)!important;border-color:var(--mt-line)!important;color:#e8eef8}
 #cart-total{color:var(--mt-green)!important}
 #cart-sidebar button{transition:filter .2s,transform .2s}
@@ -4022,65 +4022,20 @@ window.mtjeConsentVersion="2026-11-09";
                 </div>
             </div>
 
-            <!-- MÉTODO DE PAGO EXPANDIDO -->
+            <!-- MÉTODO DE PAGO: solo efectivo y contra reembolso -->
             <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                 <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-wallet mr-1"></i> Método de Pago</h4>
-                <div class="grid grid-cols-3 gap-2 mb-4">
-                    <label class="border dark:border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-blue-500 transition bg-slate-50 dark:bg-slate-900 text-xs font-bold" onclick="showPaymentSection('transfer')">
-                        <input type="radio" name="pay-method" value="transfer" checked class="accent-blue-600"> <i class="fa-solid fa-building-columns text-green-500"></i> Transferencia
-                    </label>
-                    <label class="border dark:border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-blue-500 transition bg-slate-50 dark:bg-slate-900 text-xs font-bold" onclick="showPaymentSection('paypal')">
-                        <input type="radio" name="pay-method" value="paypal" class="accent-blue-600"> <i class="fa-brands fa-paypal text-blue-700"></i> PayPal
-                    </label>
+                <div class="grid grid-cols-2 gap-2 mb-4">
                     <label class="border dark:border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-blue-500 transition bg-slate-50 dark:bg-slate-900 text-xs font-bold" onclick="showPaymentSection('cash')">
-                        <input type="radio" name="pay-method" value="cash" class="accent-blue-600"> <i class="fa-solid fa-money-bill-wave text-emerald-500"></i> Efectivo
+                        <input type="radio" name="pay-method" value="cash" checked class="accent-blue-600"> <i class="fa-solid fa-money-bill-wave text-emerald-500"></i> Efectivo
                     </label>
                     <label class="border dark:border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-blue-500 transition bg-slate-50 dark:bg-slate-900 text-xs font-bold" onclick="showPaymentSection('cod')">
                         <input type="radio" name="pay-method" value="cod" class="accent-blue-600"> <i class="fa-solid fa-hand-holding-dollar text-amber-500"></i> Contra reembolso
                     </label>
                 </div>
 
-                <!-- TRANSFERENCIA BANCARIA -->
-                <div id="pay-transfer-section" class="space-y-3">
-                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Selecciona el banco para transferir:</p>
-                    <div class="bank-card flex items-center gap-3" role="button" tabindex="0" onclick="selectBank('popular')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectBank('popular')}">
-                        <div class="bank-logo bg-red-600 text-white rounded-xl w-12 h-12 flex items-center justify-center font-black text-lg">BP</div>
-                        <div>
-                            <p class="font-bold text-sm">Banco Popular</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Datos de transferencia disponibles al confirmar el pedido.</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Titular: <strong class="text-slate-700 dark:text-slate-200">Juan José Encarnación</strong></p>
-                        </div>
-                        <i class="fa-solid fa-circle-check text-blue-500 ml-auto hidden" id="check-popular"></i>
-                    </div>
-                    <div class="bank-card flex items-center gap-3" role="button" tabindex="0" onclick="selectBank('reservas')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectBank('reservas')}">
-                        <div class="bank-logo bg-yellow-500 text-white rounded-xl w-12 h-12 flex items-center justify-center font-black text-lg">BR</div>
-                        <div>
-                            <p class="font-bold text-sm">Banreservas</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Datos de transferencia disponibles al confirmar el pedido.</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Titular: <strong class="text-slate-700 dark:text-slate-200">Juan José Encarnación</strong></p>
-                        </div>
-                        <i class="fa-solid fa-circle-check text-green-500 ml-auto hidden" id="check-reservas"></i>
-                    </div>
-                    <div id="bank-selected-info" class="hidden bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl p-3 text-xs font-medium text-blue-700 dark:text-blue-300">
-                        <i class="fa-solid fa-info-circle mr-1"></i> <span id="bank-selected-text"></span>
-                    </div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1 mt-2">Nombre del Titular</label>
-                    <input type="text" id="transfer-name" placeholder="Nombre completo" maxlength="60" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1 mt-2"><i class="fa-solid fa-calendar-day text-green-500 mr-1"></i> Fecha en que realizaste la transferencia *</label>
-                    <input type="date" id="transfer-date" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1 mt-2">No. de Referencia / Comprobante (opcional)</label>
-                    <input type="text" id="transfer-reference" placeholder="Ej: 000123456" maxlength="40" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
-                </div>
-
-                <!-- PAYPAL -->
-                <div id="pay-paypal-section" class="hidden text-center p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-100 dark:border-slate-700">
-                    <i class="fa-brands fa-paypal text-4xl text-blue-700 mb-2"></i>
-                    <p class="text-sm font-bold">Pago mediante PayPal (coordinación)</p>
-                    <p class="text-xs text-slate-500 mt-1">Este sitio no procesa pagos PayPal directamente. Envía tu pedido y solicita al equipo el enlace oficial de pago. No compartas tu contraseña ni códigos de seguridad.</p>
-                </div>
-
                 <!-- EFECTIVO -->
-                <div id="pay-cash-section" class="hidden p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl text-sm">
+                <div id="pay-cash-section" class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl text-sm">
                     <i class="fa-solid fa-money-bill-wave text-emerald-500 text-2xl mb-2"></i>
                     <p class="font-bold text-emerald-700 dark:text-emerald-300">Pago en Efectivo</p>
                     <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1" id="pay-cash-desc">Confirma tu pedido por WhatsApp y coordina la entrega/pago en oficina o por delivery.</p>
@@ -5489,9 +5444,9 @@ function renderCart() {
 // ============================================================
 // PAYMENT
 // ============================================================
-let selectedBank = null, selectedDelivery = null;
+let selectedDelivery = null;
 function showPaymentSection(type) {
-    ['card','transfer','paypal','cash','cod'].forEach(t=>{
+    ['cash','cod'].forEach(t=>{
         const el = document.getElementById('pay-'+t+'-section');
         if(el) el.classList.toggle('hidden', t!==type);
     });
@@ -5502,19 +5457,6 @@ function showPaymentSection(type) {
             dateInput.value = hoy.toISOString().slice(0,10);
         }
     }
-}
-function selectBank(bank) {
-    if (!['popular','reservas'].includes(bank)) return;
-    selectedBank = {bank};
-    document.querySelectorAll('.bank-card').forEach(c=>c.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
-    document.getElementById('check-popular').classList.add('hidden');
-    document.getElementById('check-reservas').classList.add('hidden');
-    document.getElementById('check-'+bank).classList.remove('hidden');
-    const info = document.getElementById('bank-selected-info');
-    info.classList.remove('hidden');
-    document.getElementById('bank-selected-text').textContent =
-        `Seleccionaste ${bank==='popular'?'Banco Popular':'Banreservas'}. Solicita los datos de transferencia al equipo por WhatsApp después de enviar tu pedido.`;
 }
 function selectDelivery(type) {
     selectedDelivery = type;
@@ -5601,31 +5543,13 @@ function checkoutCart() {
         return;
     }
 
-    const payMethod = document.querySelector('input[name="pay-method"]:checked')?.value || 'transfer';
+    const payMethod = document.querySelector('input[name="pay-method"]:checked')?.value || 'cash';
     let payDetails = '';
     let bancoNombre = '';
     let transferDate = '';
     let transferReference = '';
     let transferTitular = '';
-    if(payMethod==='transfer') {
-        if(!selectedBank) { alert('Por favor selecciona un banco para la transferencia.'); return; }
-        bancoNombre = selectedBank.bank==='popular' ? 'Banco Popular' : 'Banreservas';
-        payDetails = `Transferencia bancaria solicitada — ${bancoNombre}. Datos de cuenta se facilitan por canal privado.`;
-        transferTitular = Security.sanitize((document.getElementById('transfer-name')?.value || '').trim());
-        if (transferTitular.length < 3) {
-            alert('Indica el nombre de la persona que realizó la transferencia.');
-            document.getElementById('transfer-name')?.focus();
-            return;
-        }
-        transferDate = document.getElementById('transfer-date')?.value || '';
-        if(!transferDate) {
-            alert('Por favor indica la fecha en que realizaste la transferencia.');
-            document.getElementById('transfer-date')?.focus();
-            return;
-        }
-        transferReference = Security.sanitize((document.getElementById('transfer-reference')?.value || '').trim());
-    } else if(payMethod==='paypal') { payDetails = 'PayPal'; }
-    else if(payMethod==='cod') { payDetails = 'Contra reembolso / pago contra entrega'; }
+    if(payMethod==='cod') { payDetails = 'Contra reembolso / pago contra entrega'; }
     else { payDetails = 'Efectivo'; }
     const direccion = Security.sanitize((document.getElementById('delivery-address-input')?.value || '').trim());
     if (selectedDelivery === 'delivery' && direccion.length < 8) {
@@ -5732,21 +5656,36 @@ function _buildFacturaHTML(pedido) {
             <td style="padding:9px 10px;border-bottom:1px solid #e2e8f0;font-size:12.5px;color:#1f2937;text-align:right;white-space:nowrap;">${_facMoney(p.precio*p.cantidad)}</td>
         </tr>`).join('');
 
-    let metodoPagoLabel, filasPago;
-    if(pedido.payMethod === 'transfer') {
-        metodoPagoLabel = 'Transferencia Bancaria';
-        filasPago = `
-            <div style="font-size:12.5px;margin-bottom:5px;"><b style="color:#1a2b4a;display:inline-block;min-width:150px;">Banco:</b> ${_facEscape(pedido.banco || '—')}</div>
-            <div style="font-size:12.5px;margin-bottom:5px;"><b style="color:#1a2b4a;display:inline-block;min-width:150px;">Titular de la cuenta:</b> ${_facEscape(pedido.transferTitular || '—')}</div>
-            <div style="font-size:12.5px;margin-bottom:5px;"><b style="color:#1a2b4a;display:inline-block;min-width:150px;">Fecha de transferencia:</b> ${_facFechaBonita(pedido.transferDate)}</div>
-            <div style="font-size:12.5px;margin-bottom:5px;"><b style="color:#1a2b4a;display:inline-block;min-width:150px;">No. de referencia:</b> ${_facEscape(pedido.transferReference || '—')}</div>`;
-    } else if(pedido.payMethod === 'paypal') {
-        metodoPagoLabel = 'PayPal';
-        filasPago = `<div style="font-size:12.5px;">Pago procesado a través de PayPal.</div>`;
-    } else {
-        metodoPagoLabel = 'Efectivo';
-        filasPago = `<div style="font-size:12.5px;">Pago en efectivo contra entrega / retiro en oficina.</div>`;
-    }
+    const estadoFactura = ['pendiente','procesado','atendido'].includes(String(pedido.facturaEstado || '').toLowerCase())
+        ? String(pedido.facturaEstado).toLowerCase() : 'pendiente';
+    const esContraReembolso = String(pedido.payMethod || '').toLowerCase() === 'cod';
+    const metodoPagoLabel = esContraReembolso ? 'Contra reembolso' : 'Efectivo';
+    const modalidadPago = esContraReembolso
+        ? 'El cliente abonará el total al recibir el pedido.'
+        : (pedido.delivery === 'delivery'
+            ? 'Pago en efectivo al recibir el pedido.'
+            : 'Pago en efectivo al retirar el pedido en tienda.');
+    const condicionPorEstado = {
+        pendiente: esContraReembolso
+            ? 'Pago pendiente al recibir el pedido.'
+            : 'Pago pendiente.',
+        procesado: esContraReembolso
+            ? 'Pedido procesado. Pago pendiente al recibir el pedido.'
+            : 'Pedido procesado. Pago pendiente hasta la entrega o el retiro.',
+        atendido: esContraReembolso
+            ? 'Pedido atendido. Pago recibido al completar la entrega.'
+            : 'Pedido atendido. Pago confirmado al completar la entrega o el retiro.'
+    };
+    const filasPago = `
+        <div style="font-size:12.5px;line-height:1.6;"><b>Condición:</b> ${condicionPorEstado[estadoFactura]}<br>
+        <b>Modalidad:</b> ${modalidadPago}</div>`;
+    const estadoPagoLabel = estadoFactura === 'atendido' ? '✔ Pago confirmado' :
+        estadoFactura === 'procesado' ? '◷ Pedido procesado — pago pendiente' : '◷ Pago pendiente';
+    const estadoPagoStyle = estadoFactura === 'atendido'
+        ? 'background:#e6f7f0;color:#0F6E56;border:1px solid #bfe9d8;'
+        : estadoFactura === 'procesado'
+            ? 'background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;'
+            : 'background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;';
 
     const direccionEntrega = pedido.delivery === 'delivery'
         ? (pedido.direccion ? _facEscape(pedido.direccion) : '—')
@@ -5757,23 +5696,7 @@ function _buildFacturaHTML(pedido) {
     <div style="width:760px;background:#ffffff;padding:44px 46px;font-family:'DM Sans',Arial,sans-serif;color:#1f2937;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:3px solid #1a2b4a;">
             <div style="display:flex;gap:12px;align-items:center;">
-                <svg width="50" height="50" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
-                  <polygon points="45,4 81,24 81,66 45,86 9,66 9,24" fill="#1a2b4a"/>
-                  <line x1="45" y1="14" x2="45" y2="32" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/>
-                  <line x1="45" y1="58" x2="45" y2="76" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/>
-                  <line x1="19" y1="38" x2="33" y2="46" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/>
-                  <line x1="57" y1="46" x2="71" y2="38" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/>
-                  <line x1="19" y1="52" x2="33" y2="44" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/>
-                  <line x1="57" y1="44" x2="71" y2="52" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/>
-                  <circle cx="45" cy="45" r="10" fill="#1D9E75"/>
-                  <circle cx="45" cy="45" r="5" fill="#0F6E56"/>
-                  <circle cx="45" cy="14" r="4" fill="#378ADD"/>
-                  <circle cx="45" cy="76" r="4" fill="#378ADD"/>
-                  <circle cx="19" cy="38" r="4" fill="#378ADD"/>
-                  <circle cx="71" cy="38" r="4" fill="#378ADD"/>
-                  <circle cx="19" cy="52" r="4" fill="#378ADD"/>
-                  <circle cx="71" cy="52" r="4" fill="#378ADD"/>
-                </svg>
+                <img src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2290%22%20height%3D%2290%22%20viewBox%3D%220%200%2090%2090%22%3E%0A%3Cpolygon%20points%3D%2245%2C4%2081%2C24%2081%2C66%2045%2C86%209%2C66%209%2C24%22%20fill%3D%22%231a2b4a%22/%3E%0A%3Cline%20x1%3D%2245%22%20y1%3D%2214%22%20x2%3D%2245%22%20y2%3D%2232%22%20stroke%3D%22%231D9E75%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%0A%3Cline%20x1%3D%2245%22%20y1%3D%2258%22%20x2%3D%2245%22%20y2%3D%2276%22%20stroke%3D%22%231D9E75%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%0A%3Cline%20x1%3D%2219%22%20y1%3D%2238%22%20x2%3D%2233%22%20y2%3D%2246%22%20stroke%3D%22%231D9E75%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%0A%3Cline%20x1%3D%2257%22%20y1%3D%2246%22%20x2%3D%2271%22%20y2%3D%2238%22%20stroke%3D%22%231D9E75%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%0A%3Cline%20x1%3D%2219%22%20y1%3D%2252%22%20x2%3D%2233%22%20y2%3D%2244%22%20stroke%3D%22%231D9E75%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%0A%3Cline%20x1%3D%2257%22%20y1%3D%2244%22%20x2%3D%2271%22%20y2%3D%2252%22%20stroke%3D%22%231D9E75%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%0A%3Ccircle%20cx%3D%2245%22%20cy%3D%2245%22%20r%3D%2210%22%20fill%3D%22%231D9E75%22/%3E%3Ccircle%20cx%3D%2245%22%20cy%3D%2245%22%20r%3D%225%22%20fill%3D%22%230F6E56%22/%3E%0A%3Ccircle%20cx%3D%2245%22%20cy%3D%2214%22%20r%3D%224%22%20fill%3D%22%23378ADD%22/%3E%3Ccircle%20cx%3D%2245%22%20cy%3D%2276%22%20r%3D%224%22%20fill%3D%22%23378ADD%22/%3E%0A%3Ccircle%20cx%3D%2219%22%20cy%3D%2238%22%20r%3D%224%22%20fill%3D%22%23378ADD%22/%3E%3Ccircle%20cx%3D%2271%22%20cy%3D%2238%22%20r%3D%224%22%20fill%3D%22%23378ADD%22/%3E%0A%3Ccircle%20cx%3D%2219%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23378ADD%22/%3E%3Ccircle%20cx%3D%2271%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23378ADD%22/%3E%0A%3C/svg%3E" alt="Logo Mundo Tecno J.E" width="50" height="50" style="width:50px;height:50px;display:block;object-fit:contain;flex:0 0 50px;">
                 <div>
                     <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:19px;color:#1a2b4a;">Mundo Tecno <span style="color:#378ADD;">J.E</span></div>
                     <div style="font-size:10.5px;color:#6b7280;letter-spacing:.03em;">Innovación y Calidad</div>
@@ -5826,7 +5749,7 @@ function _buildFacturaHTML(pedido) {
                 Información de pago — ${metodoPagoLabel}
             </div>
             ${filasPago}
-            <div style="display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;background:#e6f7f0;color:#0F6E56;font-size:11.5px;font-weight:700;border:1px solid #bfe9d8;">✔ Pago confirmado</div>
+            <div style="display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;font-size:11.5px;font-weight:700;${estadoPagoStyle}">${estadoPagoLabel}</div>
         </div>
 
         <div style="margin-top:22px;font-size:11px;color:#6b7280;">
@@ -5858,11 +5781,13 @@ async function generarFacturaPDF(pedido, preguntarDescarga = false) {
     }
     const numFactura = 'MTJE-' + String(pedido.id).slice(-6);
     const wrapper = document.createElement('div');
-    wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;';
+    wrapper.style.cssText = 'position:fixed;left:-10000px;top:0;z-index:-1;width:850px;pointer-events:none;';
     wrapper.innerHTML = _buildFacturaHTML(pedido);
     document.body.appendChild(wrapper);
 
-    html2canvas(wrapper, {scale:2, backgroundColor:'#ffffff'}).then(canvas => {
+    const logoImg = wrapper.querySelector('img[alt="Logo Mundo Tecno J.E"]');
+    try { if (logoImg && !logoImg.complete) await new Promise(resolve => { logoImg.onload = resolve; logoImg.onerror = resolve; }); if (logoImg && logoImg.decode) await logoImg.decode(); } catch(e) {}
+    html2canvas(wrapper, {scale:2, backgroundColor:'#ffffff', useCORS:true, allowTaint:false}).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p','mm','a4');
@@ -7954,8 +7879,7 @@ ${cat}
 • Recuperación de datos
 
 💳 MÉTODOS DE PAGO:
-• Transferencia bancaria (Banco Popular o Banreservas) — los datos de cuenta se facilitan por WhatsApp al confirmar el pedido; titular: Juan José Encarnación.
-• PayPal | Efectivo (No tarjetas de crédito en tienda)
+• Efectivo o contra reembolso, sujeto a confirmación del pedido y modalidad de entrega.
 
 🚴 ENTREGA: Delivery a domicilio (Santo Domingo y zonas aledañas) | Retiro en tienda: Cruce de Manoguayabo #137 Plaza A & R
 
@@ -8401,7 +8325,7 @@ function _tAddReply(p) {
 function _tCartIntent(ql) {
     if (!/(agreg|anad|al carrito|lo quiero|la quiero|me lo llevo|me la llevo|me llevo|ponlo|ponla|lo tomo|la tomo|dame ese|dame esa|comprar|compro|apartar|separar|pedir|ordenar|lo llevo|la llevo)/.test(ql)) return null;
     if (/(como (puedo |hago para )?(comprar|pedir|ordenar)|donde compro|como hago (un )?pedido)/.test(ql))
-        return '🛍️ ¡Comprar es facilito!<br><br>1️⃣ Escoge tu producto en el <b>Catálogo</b> (o pídemelo aquí)<br>2️⃣ Toca <b>Agregar al carrito</b><br>3️⃣ Abre el carrito, pon tu nombre y elige <b>delivery o retiro</b><br>4️⃣ Paga por transferencia, PayPal o efectivo<br><br>O dime qué quieres y yo lo agrego por ti. 😉' +
+        return '🛍️ ¡Comprar es facilito!<br><br>1️⃣ Escoge tu producto en el <b>Catálogo</b> (o pídemelo aquí)<br>2️⃣ Toca <b>Agregar al carrito</b><br>3️⃣ Abre el carrito, pon tu nombre y elige <b>delivery o retiro</b><br>4️⃣ Paga en efectivo o contra reembolso<br><br>O dime qué quieres y yo lo agrego por ti. 😉' +
             _tBtns([{ label: '🛍️ Ir al catálogo', a: 'catalog', v: 'Todos', p: true }, { label: '📦 Ver categorías', a: 'overview' }]);
     const cleaned = ql.replace(/(agreg\w*|anad\w*|ponl[oa]|al carrito|carrito|comprar\w*|compro|apart\w*|separ\w*|pedir|ordenar|me lo llevo|me la llevo|me llevo|lo llevo|la llevo|lo tomo|la tomo|lo quiero|la quiero|dame (ese|esa))/g, ' ').replace(/\s+/g, ' ').trim();
     const nm = cleaned.match(/^(?:la |el |lo |opcion |numero )*(\d{1,2})$/);
@@ -8529,9 +8453,9 @@ function _tDelivery() {
         ]);
 }
 function _tPayment() {
-    return '💳 Aceptamos estas formas de pago:<br><br>💵 <b>Efectivo</b> — en tienda o al recibir tu delivery<br>🏦 <b>Transferencia bancaria</b> — Banco Popular o Banreservas. Los datos de cuenta se facilitan por WhatsApp al confirmar el pedido.<br>💻 <b>PayPal</b> — solicita al equipo el enlace o instrucciones de pago antes de completar la operación.<br><br>❌ No aceptamos tarjetas de crédito directamente en tienda.' +
+    return '💳 Aceptamos estas formas de pago:<br><br>💵 <b>Efectivo</b> — en tienda o al recibir tu delivery<br>📦 <b>Contra reembolso</b> — sujeto a confirmación del pedido y la zona de entrega.<br><br>❌ No aceptamos tarjetas de crédito directamente en tienda.' +
         _tBtns([
-            { label: '💬 Solicitar datos de transferencia', a: 'wa', v: 'Hola, quiero realizar una transferencia bancaria. ¿Me comparten los datos para pagar mi pedido?', p: true },
+            { label: '💬 Consultar formas de pago', a: 'wa', v: 'Hola, quisiera confirmar las opciones de pago disponibles para mi pedido.', p: true },
             { label: '🧾 Ir al carrito', a: 'cart' }
         ]);
 }
