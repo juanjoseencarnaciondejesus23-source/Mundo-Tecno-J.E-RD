@@ -5,10 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90'%3E%3Cpolygon points='45,4 81,24 81,66 45,86 9,66 9,24' fill='%231a2b4a'/%3E%3Cline x1='45' y1='14' x2='45' y2='32' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='45' y1='58' x2='45' y2='76' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='19' y1='38' x2='33' y2='46' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='57' y1='46' x2='71' y2='38' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='19' y1='52' x2='33' y2='44' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='57' y1='44' x2='71' y2='52' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='45' cy='45' r='10' fill='%231D9E75'/%3E%3Ccircle cx='45' cy='45' r='5' fill='%230F6E56'/%3E%3Ccircle cx='45' cy='14' r='4' fill='%23378ADD'/%3E%3Ccircle cx='45' cy='76' r='4' fill='%23378ADD'/%3E%3Ccircle cx='19' cy='38' r='4' fill='%23378ADD'/%3E%3Ccircle cx='71' cy='38' r='4' fill='%23378ADD'/%3E%3Ccircle cx='19' cy='52' r='4' fill='%23378ADD'/%3E%3Ccircle cx='71' cy='52' r='4' fill='%23378ADD'/%3E%3C/svg%3E">
     <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90'%3E%3Cpolygon points='45,4 81,24 81,66 45,86 9,66 9,24' fill='%231a2b4a'/%3E%3Cline x1='45' y1='14' x2='45' y2='32' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='45' y1='58' x2='45' y2='76' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='19' y1='38' x2='33' y2='46' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='57' y1='46' x2='71' y2='38' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='19' y1='52' x2='33' y2='44' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='57' y1='44' x2='71' y2='52' stroke='%231D9E75' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='45' cy='45' r='10' fill='%231D9E75'/%3E%3Ccircle cx='45' cy='45' r='5' fill='%230F6E56'/%3E%3Ccircle cx='45' cy='14' r='4' fill='%23378ADD'/%3E%3Ccircle cx='45' cy='76' r='4' fill='%23378ADD'/%3E%3Ccircle cx='19' cy='38' r='4' fill='%23378ADD'/%3E%3Ccircle cx='71' cy='38' r='4' fill='%23378ADD'/%3E%3Ccircle cx='19' cy='52' r='4' fill='%23378ADD'/%3E%3Ccircle cx='71' cy='52' r='4' fill='%23378ADD'/%3E%3C/svg%3E">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
 <meta name="description" content="Laptops, PCs, monitores y accesorios en pesos dominicanos, cotizador de PC por componentes, diagnóstico en línea, servicio técnico y delivery en Santo Domingo.">
 <meta name="theme-color" content="#030609">
 <meta name="color-scheme" content="dark">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="index, follow">\n    <link rel="canonical" href="https://juanjoseencarnaciondejesus23-source.github.io/Mundo-Tecno-J.E-RD/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mundo Tecno J.E">
 <meta property="og:locale" content="es_DO">
@@ -31,7 +32,9 @@
          ══════════════════════════════════════════════════════════════ -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
             <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(self), payment=()">
-    <!-- Nota de seguridad: añadir frame-ancestors 'self' en firebase.json para protección completa contra clickjacking -->
+    <!-- IMPORTANTE: frame-ancestors, HSTS y otros headers deben configurarse en el hosting.
+         Las reglas reales de Firestore/Storage también deben protegerse en Firebase Console;
+         una página HTML no puede sustituir reglas de servidor. -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src  'self' 'unsafe-inline'
@@ -59,7 +62,6 @@
                     https://*.basemaps.cartocdn.com
                     https://nominatim.openstreetmap.org
                     https://server.arcgisonline.com
-                    https://api.anthropic.com
                     https://www.gstatic.com;
         frame-src   https://drive.google.com https://www.youtube.com https://youtube.com https://player.vimeo.com;
         worker-src  blob:;
@@ -67,6 +69,7 @@
         media-src   'self' https://firebasestorage.googleapis.com blob: https: data: mediastream:;
         object-src  'none';
         base-uri    'self';
+        upgrade-insecure-requests;
         form-action 'self';
     ">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -944,6 +947,7 @@ function mtjeStreetLayer() {
     // El fetch de IP se hace cada vez que se carga la página. Lo cacheamos
     // en sessionStorage para evitar la petición en recargas frecuentes.
     (function cachearIP() {
+        if (!window.mtjeAnalyticsAllowed()) { window.CLIENT_IP="desconocida"; window.CLIENT_CITY=""; return; }
         try {
             const cached = sessionStorage.getItem('mtje_client_ip');
             if (cached) {
@@ -3906,7 +3910,15 @@ input:focus, textarea:focus, select:focus {
 }
 
 </style>
+<script>
+window.mtjeAnalyticsAllowed=function(){try{return localStorage.getItem("mtje_cookie_analytics")==="granted"}catch(e){return false}};
+window.mtjeConsentVersion="2026-11-09";
+</script>
+<style id="mtje-compliance-accessibility">
+.mtje-skip-link{position:fixed;left:12px;top:-60px;z-index:100000;background:#fff;color:#0f172a;padding:10px 14px;border-radius:8px;font-weight:800}.mtje-skip-link:focus{top:12px}:focus-visible{outline:3px solid #38bdf8!important;outline-offset:3px!important}.mtje-legal-nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}.mtje-legal-nav a{color:#cbd5e1;text-decoration:underline;text-underline-offset:3px}.mtje-legal-modal{position:fixed;inset:0;z-index:12000;background:rgba(2,6,23,.78);display:none;align-items:center;justify-content:center;padding:20px}.mtje-legal-modal.open{display:flex}.mtje-legal-card{width:min(960px,100%);max-height:90vh;overflow:auto;background:#fff;color:#172033;border-radius:18px;padding:28px}.dark .mtje-legal-card{background:#0f172a;color:#e5e7eb}.mtje-legal-card h2,.mtje-legal-card h3{color:#075985}.dark .mtje-legal-card h2,.dark .mtje-legal-card h3{color:#7dd3fc}.mtje-cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:11000;background:#0f172a;color:#f8fafc;border:1px solid #475569;border-radius:16px;padding:18px;box-shadow:0 18px 60px rgba(0,0,0,.35)}.mtje-cookie-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.mtje-cookie-actions button{border:1px solid #64748b;border-radius:9px;padding:9px 13px;font-weight:800;cursor:pointer}.mtje-cookie-primary{background:#2563eb;color:#fff;border-color:#2563eb!important}.mtje-cookie-secondary{background:#1e293b;color:#fff}.mtje-consent{display:flex;gap:9px;align-items:flex-start;margin:14px 0;font-size:12px;line-height:1.5;color:#475569}.dark .mtje-consent{color:#cbd5e1}.mtje-consent input{margin-top:3px;width:17px;height:17px;flex:0 0 auto}.mtje-consent a{color:#0369a1;text-decoration:underline}.dark .mtje-consent a{color:#7dd3fc}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
+<a class="mtje-skip-link" href="#contenido-principal">Saltar al contenido principal</a>
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 overflow-x-hidden">
 <a href="#main" class="skip-link">Saltar al contenido principal</a>
 
@@ -3997,10 +4009,11 @@ input:focus, textarea:focus, select:focus {
             <!-- DATOS DEL CLIENTE (para la factura) -->
             <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                 <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-user mr-1"></i> Tus Datos (para la factura)</h4>
+                <p class="text-[11px] text-slate-500 mb-3">Usaremos estos datos para gestionar tu pedido, coordinar la entrega y emitir la factura. No introduzcas contraseñas ni datos de tarjetas.</p>
                 <div class="space-y-2">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Nombre completo *</label>
-                        <input type="text" id="cliente-nombre-checkout" placeholder="Ej: Juan Pérez" maxlength="80" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="text" id="cliente-nombre-checkout" autocomplete="name" required aria-label="Nombre completo" placeholder="Ej: Juan Pérez" maxlength="80" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Cédula/RNC (opcional)</label>
@@ -4022,26 +4035,29 @@ input:focus, textarea:focus, select:focus {
                     <label class="border dark:border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-blue-500 transition bg-slate-50 dark:bg-slate-900 text-xs font-bold" onclick="showPaymentSection('cash')">
                         <input type="radio" name="pay-method" value="cash" class="accent-blue-600"> <i class="fa-solid fa-money-bill-wave text-emerald-500"></i> Efectivo
                     </label>
+                    <label class="border dark:border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-blue-500 transition bg-slate-50 dark:bg-slate-900 text-xs font-bold" onclick="showPaymentSection('cod')">
+                        <input type="radio" name="pay-method" value="cod" class="accent-blue-600"> <i class="fa-solid fa-hand-holding-dollar text-amber-500"></i> Contra reembolso
+                    </label>
                 </div>
 
                 <!-- TRANSFERENCIA BANCARIA -->
                 <div id="pay-transfer-section" class="space-y-3">
                     <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Selecciona el banco para transferir:</p>
-                    <div class="bank-card flex items-center gap-3" onclick="selectBank('popular','837272020')">
+                    <div class="bank-card flex items-center gap-3" role="button" tabindex="0" onclick="selectBank('popular')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectBank('popular')}">
                         <div class="bank-logo bg-red-600 text-white rounded-xl w-12 h-12 flex items-center justify-center font-black text-lg">BP</div>
                         <div>
                             <p class="font-bold text-sm">Banco Popular</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Cuenta: <strong class="text-blue-600">837-272020</strong></p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Titular: <strong class="text-slate-700 dark:text-slate-200">Sr. Juan José Encarnacion</strong></p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Datos de transferencia disponibles al confirmar el pedido.</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Titular: <strong class="text-slate-700 dark:text-slate-200">Juan José Encarnación</strong></p>
                         </div>
                         <i class="fa-solid fa-circle-check text-blue-500 ml-auto hidden" id="check-popular"></i>
                     </div>
-                    <div class="bank-card flex items-center gap-3" onclick="selectBank('reservas','9607237498')">
+                    <div class="bank-card flex items-center gap-3" role="button" tabindex="0" onclick="selectBank('reservas')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectBank('reservas')}">
                         <div class="bank-logo bg-yellow-500 text-white rounded-xl w-12 h-12 flex items-center justify-center font-black text-lg">BR</div>
                         <div>
                             <p class="font-bold text-sm">Banreservas</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Cuenta: <strong class="text-green-600">960-7237498</strong></p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Titular: <strong class="text-slate-700 dark:text-slate-200">Sr. Juan José Encarnacion</strong></p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Datos de transferencia disponibles al confirmar el pedido.</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Titular: <strong class="text-slate-700 dark:text-slate-200">Juan José Encarnación</strong></p>
                         </div>
                         <i class="fa-solid fa-circle-check text-green-500 ml-auto hidden" id="check-reservas"></i>
                     </div>
@@ -4059,9 +4075,8 @@ input:focus, textarea:focus, select:focus {
                 <!-- PAYPAL -->
                 <div id="pay-paypal-section" class="hidden text-center p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-100 dark:border-slate-700">
                     <i class="fa-brands fa-paypal text-4xl text-blue-700 mb-2"></i>
-                    <p class="text-sm font-bold">Pago seguro vía PayPal</p>
-                    <p class="text-xs text-slate-500 mt-1">Serás redirigido al portal de PayPal para completar tu pago de forma segura.</p>
-                    <input type="email" placeholder="Tu email de PayPal" class="mt-3 w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <p class="text-sm font-bold">Pago mediante PayPal (coordinación)</p>
+                    <p class="text-xs text-slate-500 mt-1">Este sitio no procesa pagos PayPal directamente. Envía tu pedido y solicita al equipo el enlace oficial de pago. No compartas tu contraseña ni códigos de seguridad.</p>
                 </div>
 
                 <!-- EFECTIVO -->
@@ -4071,6 +4086,13 @@ input:focus, textarea:focus, select:focus {
                     <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1" id="pay-cash-desc">Confirma tu pedido por WhatsApp y coordina la entrega/pago en oficina o por delivery.</p>
                 </div>
 
+                <!-- CONTRA REEMBOLSO -->
+                <div id="pay-cod-section" class="hidden p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-2xl text-sm">
+                    <i class="fa-solid fa-hand-holding-dollar text-amber-500 text-2xl mb-2"></i>
+                    <p class="font-bold text-amber-800 dark:text-amber-300">Contra reembolso / pago contra entrega</p>
+                    <p class="text-xs text-amber-700 dark:text-amber-400 mt-1">Disponible únicamente cuando el pedido, la zona y la modalidad de entrega sean confirmados por Mundo Tecno J.E. El importe confirmado se paga al recibir.</p>
+                </div>
+
                 <!-- OPCIONES DE ENTREGA (visible para todos los métodos) -->
                 <div class="mt-4" id="delivery-section">
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-truck mr-1"></i> ¿Cómo deseas recibir tu pedido?</h4>
@@ -4078,8 +4100,8 @@ input:focus, textarea:focus, select:focus {
                         <div class="delivery-option text-center" onclick="selectDelivery('oficina')" id="opt-oficina">
                             <i class="fa-solid fa-store text-blue-500 text-xl mb-1"></i>
                             <p class="text-xs font-bold">Retirar en Oficina</p>
-                            <p class="text-xs text-slate-400">Cruce de Manoguayabo #137 Plaza A &amp; R, RD</p>
-                        </div>
+                            <p class="text-xs text-slate-400">Cruce de Manoguayabo #137 Plaza A &amp; R, Santo Domingo Oeste, República Dominicana</p>
+                    </div>
                         <div class="delivery-option text-center" onclick="selectDelivery('delivery')" id="opt-delivery">
                             <i class="fa-solid fa-motorcycle text-green-500 text-xl mb-1"></i>
                             <p class="text-xs font-bold">Envío Delivery</p>
@@ -4091,13 +4113,13 @@ input:focus, textarea:focus, select:focus {
                     <div id="delivery-address-box" class="hidden mt-3">
                         <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Tu Dirección</label>
                         <div class="flex gap-2">
-                            <input type="text" id="delivery-address-input" placeholder="Ej: Calle 5, Los Alcarrizos..." class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <input type="text" id="delivery-address-input" autocomplete="street-address" aria-label="Dirección de entrega" placeholder="Ej: Calle 5, Los Alcarrizos..." class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             <button onclick="detectarUbicacionDelivery()" id="btn-gps-delivery" title="Detectar mi ubicación actual" class="bg-emerald-600 text-white px-3 py-2 rounded-lg hover:bg-emerald-700 transition text-xs font-bold shrink-0 flex items-center gap-1"><i class="fa-solid fa-location-crosshairs"></i></button>
                             <button onclick="openMapForDelivery()" title="Abrir mapa" class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition text-xs font-bold"><i class="fa-solid fa-map-location-dot"></i></button>
                         </div>
                         <div class="mt-2">
                             <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1"><i class="fa-solid fa-phone text-emerald-500 mr-1"></i> Tu Número de Contacto *</label>
-                            <input type="tel" id="delivery-phone-cliente" placeholder="Ej: 809-555-1234" maxlength="20" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <input type="tel" id="delivery-phone-cliente" autocomplete="tel" inputmode="tel" aria-label="Número de contacto para delivery" placeholder="Ej: 809-555-1234" maxlength="20" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                         </div>
                         <div id="map-container" class="mt-2 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
                             <div id="delivery-leaflet-map" style="width:100%;height:220px;border-radius:12px;"></div>
@@ -4112,7 +4134,8 @@ input:focus, textarea:focus, select:focus {
                     <span>Total Estimado:</span>
                     <span id="cart-total" class="text-blue-600 dark:text-blue-400">RD$ 0</span>
                 </div>
-                <button onclick="checkoutCart()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                <div class="mtje-consent"><input type="checkbox" id="checkout-privacy-consent" required><label for="checkout-privacy-consent">Acepto los <a href="#terminos-condiciones" onclick="mtjeOpenLegal('terms');return false;">Términos y Condiciones</a> y he leído la <a href="#politica-privacidad" onclick="mtjeOpenLegal('privacy');return false;">Política de Privacidad</a>.</label></div>
+<button onclick="checkoutCart()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm">
                     <i class="fa-solid fa-paper-plane"></i> Realizar Pago / Confirmar Pedido
                 </button>
             </div>
@@ -4120,7 +4143,7 @@ input:focus, textarea:focus, select:focus {
     </div>
     <div id="cart-overlay" class="hidden fixed inset-0 bg-black/30 z-40" onclick="toggleCartMenu()"></div>
 
-    <main id="main" tabindex="-1">
+    <main id="contenido-principal" id="main" tabindex="-1">
 <!-- ===== HERO ===== -->
     <section id="inicio" class="hero-bg h-screen flex items-center text-white pt-16" style="position:relative;overflow:hidden;">
         <!-- Floating particles -->
@@ -4362,19 +4385,19 @@ input:focus, textarea:focus, select:focus {
                         <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-indigo-400"><i class="fa-solid fa-eye"></i> Visión Tecnológica</h3>
                         <p class="text-sm text-slate-300 leading-relaxed">Posicionarnos como el centro de soluciones tecnológicas de mayor confianza en Santo Domingo Oeste, expandiendo canales de distribución digital estructurada.</p>
                     </div>
-                    <!-- Stats bar -->
-                    <div class="stats-bar reveal">
+                    <!-- Diferenciadores de servicio: se evitan métricas no verificadas. -->
+                    <div class="stats-bar reveal" aria-label="Compromisos de servicio">
                         <div class="stat-item">
-                            <span class="stat-number" data-target="500">0</span>
-                            <span class="stat-label">Clientes</span>
+                            <span class="stat-number">A medida</span>
+                            <span class="stat-label">Asesoría tecnológica</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number" data-target="98">0</span>
-                            <span class="stat-label">% Satisfacción</span>
+                            <span class="stat-number">Soporte</span>
+                            <span class="stat-label">Servicio técnico</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number" data-target="5">0</span>
-                            <span class="stat-label">Años en servicio</span>
+                            <span class="stat-number">Cercanía</span>
+                            <span class="stat-label">Atención personalizada</span>
                         </div>
                     </div>
                 </div>
@@ -4399,16 +4422,16 @@ input:focus, textarea:focus, select:focus {
                     <!-- Métricas personales -->
                     <div class="grid grid-cols-3 gap-3">
                         <div class="bg-slate-700/40 rounded-xl p-3 text-center border border-slate-600/40">
-                            <p class="text-2xl font-black text-blue-400">5+</p>
-                            <p class="text-xs text-slate-400 mt-0.5">Años de experiencia</p>
+                            <p class="text-sm font-black text-blue-300">A medida</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Asesoría tecnológica</p>
                         </div>
                         <div class="bg-slate-700/40 rounded-xl p-3 text-center border border-slate-600/40">
-                            <p class="text-2xl font-black text-green-400">500+</p>
-                            <p class="text-xs text-slate-400 mt-0.5">Equipos reparados</p>
+                            <p class="text-sm font-black text-green-300">Servicio</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Soporte y reparación</p>
                         </div>
                         <div class="bg-slate-700/40 rounded-xl p-3 text-center border border-slate-600/40">
-                            <p class="text-2xl font-black text-amber-400">100%</p>
-                            <p class="text-xs text-slate-400 mt-0.5">Compromiso</p>
+                            <p class="text-sm font-black text-amber-300">RD$</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Precios en pesos dominicanos</p>
                         </div>
                     </div>
                 </div>
@@ -4428,7 +4451,8 @@ input:focus, textarea:focus, select:focus {
                     <h3 class="text-xl font-bold border-b dark:border-slate-700 pb-3 flex items-center gap-2 text-blue-600 dark:text-blue-400"><i class="fa-solid fa-location-dot"></i> Laboratorio Físico</h3>
                     <div>
                         <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Dirección Principal</p>
-                        <p class="text-sm font-semibold mt-1" style="color:#38bdf8 !important;">Cruce de Manoguayabo #137 Plaza A &amp; R, RD</p>
+                        <p class="text-sm font-semibold mt-1" style="color:#38bdf8 !important;">Cruce de Manoguayabo #137 Plaza A &amp; R, Santo Domingo Oeste, República Dominicana</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Teléfono: 809-993-7908 · Correo: mundotecnoje@gmail.com</p>
                     </div>
                     <div class="w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-md" style="height:300px; position:relative;">
                         <div id="leaflet-map" style="height:300px; width:100%; border-radius:12px; z-index:1;"></div>
@@ -4501,16 +4525,17 @@ input:focus, textarea:focus, select:focus {
             </svg>
             <span class="text-lg font-bold">Mundo Tecno <span class="text-blue-400">J.E</span></span>
         </div>
-        <p class="text-slate-400 text-xs">© 2025 Mundo Tecno J.E • Santo Domingo Oeste, RD • Todos los derechos reservados</p>
+        <p class="text-slate-400 text-xs">© <span id="current-year">2026</span> Mundo Tecno J.E • Santo Domingo Oeste, RD • Todos los derechos reservados</p>
+        <nav class="mtje-legal-nav" aria-label="Información legal"><a href="#politica-privacidad" onclick="mtjeOpenLegal('privacy');return false;">Política de Privacidad</a><a href="#terminos-condiciones" onclick="mtjeOpenLegal('terms');return false;">Términos y Condiciones</a><a href="#politica-cookies" onclick="mtjeOpenLegal('cookies');return false;">Política de Cookies</a><a href="#contra-reembolso" onclick="mtjeOpenLegal('cod');return false;">Contra reembolso</a></nav>
         <div class="mt-2 flex items-center justify-center gap-1 text-xs text-slate-600">
-            <i class="fa-solid fa-shield-halved text-green-500"></i> <span>Sitio protegido con seguridad avanzada</span>
+            <i class="fa-solid fa-shield-halved text-green-500"></i> <span>Realiza tus pagos únicamente por canales oficiales y verifica los datos antes de transferir.</span>
         </div>
     </footer>
 
     <!-- ===== TECNO BOT — Chat flotante ===== -->
     <!-- Botón flotante -->
     <button id="tecno-chat-btn" onclick="openTecnoChat()"
-        style="position:fixed;bottom:24px;left:24px;z-index:8500;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#1a2b4a 0%,#1D9E75 100%);border:none;cursor:pointer;box-shadow:0 8px 28px rgba(29,158,117,0.5);display:flex;align-items:center;justify-content:center;transition:transform 0.2s,box-shadow 0.2s;" title="Hablar con Tecno Bot"
+        style="position:fixed;bottom:24px;left:24px;z-index:8500;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#1a2b4a 0%,#1D9E75 100%);border:none;cursor:pointer;box-shadow:0 8px 28px rgba(29,158,117,0.5);display:flex;align-items:center;justify-content:center;transition:transform 0.2s,box-shadow 0.2s;" title="Hablar con Tecno Bot" aria-label="Abrir chat con Tecno Bot"
         >
         <i class="fa-solid fa-robot" style="color:#fff;font-size:24px;"></i>
         <span class="mtje-bot-eye mtje-bot-eye-left" aria-hidden="true"></span>
@@ -4626,7 +4651,7 @@ input:focus, textarea:focus, select:focus {
                     </div>
                 </div>
                 <!-- En existencia -->
-                <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#16a34a;"><i class="fa-solid fa-circle-check" style="font-size:11px;"></i> En existencia — listo para entrega</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#16a34a;"><i class="fa-solid fa-circle-check" style="font-size:11px;"></i> Disponibilidad sujeta a confirmación del pedido</div>
                 <!-- CTAs -->
                 <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
                     <button class="pd-cta-btn" id="pd-add-cart-btn"
@@ -4773,6 +4798,7 @@ input:focus, textarea:focus, select:focus {
             </div>
             <!-- Honeypot -->
             <input type="text" class="honeypot" name="fax" tabindex="-1" autocomplete="off">
+            <div class="mtje-consent"><input type="checkbox" id="appt-privacy-consent" required><label for="appt-privacy-consent">He leído la <a href="#politica-privacidad" onclick="mtjeOpenLegal('privacy');return false;">Política de Privacidad</a> y autorizo el tratamiento de los datos enviados para gestionar mi solicitud.</label></div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre Completo *</label>
@@ -5465,7 +5491,7 @@ function renderCart() {
 // ============================================================
 let selectedBank = null, selectedDelivery = null;
 function showPaymentSection(type) {
-    ['card','transfer','paypal','cash'].forEach(t=>{
+    ['card','transfer','paypal','cash','cod'].forEach(t=>{
         const el = document.getElementById('pay-'+t+'-section');
         if(el) el.classList.toggle('hidden', t!==type);
     });
@@ -5477,8 +5503,9 @@ function showPaymentSection(type) {
         }
     }
 }
-function selectBank(bank, account) {
-    selectedBank = {bank,account};
+function selectBank(bank) {
+    if (!['popular','reservas'].includes(bank)) return;
+    selectedBank = {bank};
     document.querySelectorAll('.bank-card').forEach(c=>c.classList.remove('selected'));
     event.currentTarget.classList.add('selected');
     document.getElementById('check-popular').classList.add('hidden');
@@ -5486,7 +5513,8 @@ function selectBank(bank, account) {
     document.getElementById('check-'+bank).classList.remove('hidden');
     const info = document.getElementById('bank-selected-info');
     info.classList.remove('hidden');
-    document.getElementById('bank-selected-text').textContent = `Transferir a ${bank==='popular'?'Banco Popular':'Banreservas'} - Cuenta: ${account}`;
+    document.getElementById('bank-selected-text').textContent =
+        `Seleccionaste ${bank==='popular'?'Banco Popular':'Banreservas'}. Solicita los datos de transferencia al equipo por WhatsApp después de enviar tu pedido.`;
 }
 function selectDelivery(type) {
     selectedDelivery = type;
@@ -5553,18 +5581,25 @@ function openMapForDelivery() {
 }
 
 function checkoutCart() {
+    if(!document.getElementById("checkout-privacy-consent")?.checked){alert("Debes aceptar los Términos y la Política de Privacidad para confirmar el pedido.");return;}
     if(isAdminLoggedIn) { alert('Estás en modo administrador. Cierra el panel para hacer un pedido como cliente.'); return; }
     if(!Security.rateLimit('checkout')) return;
     if(!carrito.length) { alert('Tu carrito está vacío.'); return; }
 
     // ── Datos del cliente (obligatorios para poder emitir la factura) ────
     const clienteNombre = Security.sanitize((document.getElementById('cliente-nombre-checkout')?.value || '').trim());
-    if(!clienteNombre) {
-        alert('Por favor ingresa tu nombre completo para poder generar tu factura.');
+    if(clienteNombre.length < 3) {
+        alert('Escribe tu nombre completo (al menos 3 caracteres) para generar la factura.');
+
         document.getElementById('cliente-nombre-checkout')?.focus();
         return;
     }
     const clienteCedula = Security.sanitize((document.getElementById('cliente-cedula-checkout')?.value || '').trim());
+    if (clienteCedula && !/^[0-9A-Za-z-]{5,20}$/.test(clienteCedula)) {
+        alert('Revisa el formato de la cédula/RNC. Usa solo letras, números y guiones.');
+        document.getElementById('cliente-cedula-checkout')?.focus();
+        return;
+    }
 
     const payMethod = document.querySelector('input[name="pay-method"]:checked')?.value || 'transfer';
     let payDetails = '';
@@ -5575,8 +5610,13 @@ function checkoutCart() {
     if(payMethod==='transfer') {
         if(!selectedBank) { alert('Por favor selecciona un banco para la transferencia.'); return; }
         bancoNombre = selectedBank.bank==='popular' ? 'Banco Popular' : 'Banreservas';
-        payDetails = `Transferencia a ${bancoNombre} — Cta: ${selectedBank.account}`;
+        payDetails = `Transferencia bancaria solicitada — ${bancoNombre}. Datos de cuenta se facilitan por canal privado.`;
         transferTitular = Security.sanitize((document.getElementById('transfer-name')?.value || '').trim());
+        if (transferTitular.length < 3) {
+            alert('Indica el nombre de la persona que realizó la transferencia.');
+            document.getElementById('transfer-name')?.focus();
+            return;
+        }
         transferDate = document.getElementById('transfer-date')?.value || '';
         if(!transferDate) {
             alert('Por favor indica la fecha en que realizaste la transferencia.');
@@ -5585,8 +5625,14 @@ function checkoutCart() {
         }
         transferReference = Security.sanitize((document.getElementById('transfer-reference')?.value || '').trim());
     } else if(payMethod==='paypal') { payDetails = 'PayPal'; }
+    else if(payMethod==='cod') { payDetails = 'Contra reembolso / pago contra entrega'; }
     else { payDetails = 'Efectivo'; }
-    const direccion = document.getElementById('delivery-address-input')?.value || '';
+    const direccion = Security.sanitize((document.getElementById('delivery-address-input')?.value || '').trim());
+    if (selectedDelivery === 'delivery' && direccion.length < 8) {
+        alert('Escribe una dirección de entrega más completa para coordinar el envío.');
+        document.getElementById('delivery-address-input')?.focus();
+        return;
+    }
     const clientePhoneDelivery = Security.sanitize((document.getElementById('delivery-phone-cliente')?.value || '').trim());
     if(selectedDelivery === 'delivery' && !clientePhoneDelivery) {
         alert('Por favor ingresa tu número de contacto para que el repartidor pueda comunicarse contigo.');
@@ -6119,6 +6165,7 @@ function closeAppointmentModal() {
     if (_apptMap) { _apptMap.remove(); _apptMap = null; _apptMarker = null; }
 }
 function submitAppointment() {
+    if(!document.getElementById("appt-privacy-consent")?.checked){alert("Debes aceptar el consentimiento de privacidad para enviar la solicitud.");return;}
     if(isAdminLoggedIn) { alert('Estás en modo administrador. Cierra el panel para solicitar una cita como cliente.'); return; }
     if(!Security.rateLimit('cita')) return;
     if(!Security.checkHoneypot()) return;
@@ -7907,7 +7954,7 @@ ${cat}
 • Recuperación de datos
 
 💳 MÉTODOS DE PAGO:
-• Transferencia bancaria (Banco Popular cta 837-272020 y Banreservas cta 960-7237498) — Titular: Juan José Encarnación
+• Transferencia bancaria (Banco Popular o Banreservas) — los datos de cuenta se facilitan por WhatsApp al confirmar el pedido; titular: Juan José Encarnación.
 • PayPal | Efectivo (No tarjetas de crédito en tienda)
 
 🚴 ENTREGA: Delivery a domicilio (Santo Domingo y zonas aledañas) | Retiro en tienda: Cruce de Manoguayabo #137 Plaza A & R
@@ -8482,11 +8529,10 @@ function _tDelivery() {
         ]);
 }
 function _tPayment() {
-    return '💳 Aceptamos estas formas de pago:<br><br>💵 <b>Efectivo</b> — en tienda o al recibir tu delivery<br>🏦 <b>Transferencia bancaria</b><br>&nbsp;&nbsp;→ Banco Popular: <b>837-272020</b><br>&nbsp;&nbsp;→ Banreservas: <b>960-7237498</b><br>&nbsp;&nbsp;→ Titular: Juan José Encarnación<br>💻 <b>PayPal</b> — para pagos online<br><br>❌ No aceptamos tarjetas de crédito en tienda.' +
+    return '💳 Aceptamos estas formas de pago:<br><br>💵 <b>Efectivo</b> — en tienda o al recibir tu delivery<br>🏦 <b>Transferencia bancaria</b> — Banco Popular o Banreservas. Los datos de cuenta se facilitan por WhatsApp al confirmar el pedido.<br>💻 <b>PayPal</b> — solicita al equipo el enlace o instrucciones de pago antes de completar la operación.<br><br>❌ No aceptamos tarjetas de crédito directamente en tienda.' +
         _tBtns([
-            { label: '📋 Copiar Banco Popular', a: 'copy', v: '837-272020' },
-            { label: '📋 Copiar Banreservas', a: 'copy', v: '960-7237498' },
-            { label: '🧾 Ir al carrito', a: 'cart', p: true }
+            { label: '💬 Solicitar datos de transferencia', a: 'wa', v: 'Hola, quiero realizar una transferencia bancaria. ¿Me comparten los datos para pagar mi pedido?', p: true },
+            { label: '🧾 Ir al carrito', a: 'cart' }
         ]);
 }
 function _tWarranty() {
@@ -10883,5 +10929,57 @@ document.addEventListener('contextmenu', e => { if(e.target.tagName==='IMG') e.p
 })();
 </script>
 
-</body>
+
+<script id="mtje-quality-hardening">
+(function () {
+  'use strict';
+  function hardenImage(img) {
+    if (!img || img.tagName !== 'IMG') return;
+    if (!img.hasAttribute('loading') && !img.hasAttribute('fetchpriority')) img.loading = 'lazy';
+    if (!img.hasAttribute('decoding')) img.decoding = 'async';
+  }
+  function hardenLink(a) {
+    if (!a || a.tagName !== 'A') return;
+    if (a.target === '_blank') {
+      var rel = new Set((a.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+      rel.add('noopener');
+      rel.add('noreferrer');
+      a.setAttribute('rel', Array.from(rel).join(' '));
+    }
+  }
+  function initQualityLayer() {
+    var year = document.getElementById('current-year');
+    if (year) year.textContent = String(new Date().getFullYear());
+    document.querySelectorAll('img').forEach(hardenImage);
+    document.querySelectorAll('a[target="_blank"]').forEach(hardenLink);
+    if ('MutationObserver' in window) {
+      var observer = new MutationObserver(function (records) {
+        records.forEach(function (record) {
+          record.addedNodes.forEach(function (node) {
+            if (!node || node.nodeType !== 1) return;
+            if (node.tagName === 'IMG') hardenImage(node);
+            if (node.tagName === 'A') hardenLink(node);
+            if (node.querySelectorAll) {
+              node.querySelectorAll('img').forEach(hardenImage);
+              node.querySelectorAll('a[target="_blank"]').forEach(hardenLink);
+            }
+          });
+        });
+      });
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQualityLayer, { once: true });
+  } else {
+    initQualityLayer();
+  }
+})();
+</script>
+
+\n<div id="mtje-cookie-banner" class="mtje-cookie-banner" role="dialog" aria-labelledby="mtje-cookie-title" hidden><strong id="mtje-cookie-title">Privacidad y cookies</strong><p style="margin:7px 0 0;font-size:12px;line-height:1.55;color:#cbd5e1">Usamos almacenamiento necesario para que el sitio funcione y, solo si lo autorizas, seguimiento analítico para medir visitas y mejorar el servicio. <a href="#politica-cookies" onclick="mtjeOpenLegal('cookies');return false;" style="color:#93c5fd;text-decoration:underline">Ver Política de Cookies</a>.</p><div class="mtje-cookie-actions"><button type="button" class="mtje-cookie-primary" onclick="mtjeSetAnalyticsConsent(true)">Aceptar analítica</button><button type="button" class="mtje-cookie-secondary" onclick="mtjeSetAnalyticsConsent(false)">Rechazar analítica</button><button type="button" class="mtje-cookie-secondary" onclick="mtjeOpenLegal('cookies')">Ver detalles</button></div></div>\n<div id="mtje-legal-modal" class="mtje-legal-modal" role="dialog" aria-modal="true" aria-labelledby="mtje-legal-title" onclick="if(event.target===this)mtjeCloseLegal()"><article class="mtje-legal-card"><div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start"><div><h2 id="mtje-legal-title" style="margin:0 0 6px;font-size:24px"></h2><p id="mtje-legal-updated" style="margin:0;color:#64748b;font-size:12px"></p></div><button type="button" aria-label="Cerrar documento legal" onclick="mtjeCloseLegal()" style="border:0;background:transparent;font-size:26px;cursor:pointer">×</button></div><div id="mtje-legal-body" style="margin-top:20px;line-height:1.65;font-size:14px"></div></article></div>\n<script>
+(function(){
+const L={privacy:{t:'Política de Privacidad',b:`<h3>1. Responsable</h3><p><strong>Mundo Tecno J.E</strong>. Dirección publicada: <strong>Cruce de Manoguayabo #137, Plaza A &amp; R, Santo Domingo Oeste, República Dominicana</strong>. Teléfono: <strong>809-993-7908</strong>. Correo: <strong>mundotecnoje@gmail.com</strong>.</p><p>No se ha inventado un RNC: no aparece identificado en la información actualmente disponible del sitio.</p><h3>2. Datos</h3><p>Según la función utilizada podemos recibir nombre, teléfono, correo, dirección de entrega, datos de facturación que el cliente decida suministrar, información de pedidos/citas/soporte y datos técnicos. El tracker de visitas también puede tratar IP y datos técnicos, pero se mantiene desactivado hasta que el visitante acepte la analítica.</p><h3>3. Finalidades</h3><p>Gestionar pedidos, citas, soporte, delivery, facturación, comunicaciones solicitadas, seguridad y prevención de abuso. La analítica se utiliza únicamente si se autoriza.</p><h3>4. Consentimiento y derechos</h3><p>Cuando el tratamiento requiera consentimiento, se solicita de forma separada. La Ley 172-13 exige información previa clara sobre finalidad, responsable/destinatarios y derechos, y contempla consentimiento libre, expreso y consciente en los tratamientos sujetos a consentimiento. </p><h3>5. Proveedores</h3><p>El sitio utiliza Firebase/Google para autenticación, base de datos y almacenamiento, además de mapas y librerías externas. Esos proveedores pueden procesar datos técnicos necesarios para prestar sus servicios.</p><h3>6. Conservación y seguridad</h3><p>Los datos se conservarán el tiempo necesario para la relación comercial, obligaciones legales, reclamaciones y seguridad. Ningún sistema conectado a Internet ofrece riesgo cero.</p><h3>7. Solicitudes</h3><p>Para solicitar acceso, rectificación, supresión o retirada de un consentimiento cuando proceda: <strong>mundotecnoje@gmail.com</strong>. Puede pedirse verificación razonable de identidad.</p>`},terms:{t:'Términos y Condiciones',b:`<h3>1. Objeto</h3><p>Regulan el uso del sitio y las solicitudes de productos, servicios técnicos, citas y delivery de Mundo Tecno J.E.</p><h3>2. Información comercial</h3><p>Precios, disponibilidad, características, tiempos y condiciones deben verificarse antes de confirmar una compra. No deben presentarse como disponibles productos o servicios que no puedan suministrarse en las condiciones anunciadas.</p><h3>3. Pedidos</h3><p>Enviar un pedido constituye una solicitud. La aceptación definitiva puede depender de disponibilidad, datos del cliente, pago y entrega. Se emitirá el comprobante o factura que corresponda.</p><h3>4. Contra reembolso</h3><p>Cuando esta modalidad esté disponible, el cliente paga al recibir. Antes del despacho se confirmarán monto, dirección, teléfono, cobertura y costos de entrega. Si no está disponible para una dirección o pedido, se informará antes de despachar.</p><h3>5. Delivery</h3><p>El cliente debe proporcionar dirección y teléfono correctos. Las coordenadas se usan para facilitar la entrega cuando el cliente activa esa función.</p><h3>6. Garantías y reclamaciones</h3><p>Las garantías dependen del producto/servicio y de la normativa aplicable. El consumidor conserva los derechos reconocidos por la Ley 358-05; Pro Consumidor destaca el derecho a información clara, verificable y en español, comprobantes y garantía. </p><h3>7. Publicidad</h3><p>No se usarán reseñas ficticias ni afirmaciones de experiencia, resultados o volumen que no puedan respaldarse. La información comercial debe ser veraz, clara, suficiente y verificable. </p><h3>8. Propiedad intelectual</h3><p>Los logotipos, textos, código y fotografías propias pertenecen a sus titulares. Las imágenes de terceros deben utilizarse con licencia o permiso válido y respetando sus condiciones de atribución.</p><h3>9. Ley aplicable</h3><p>Se aplican las leyes de la República Dominicana, sin perjuicio de derechos irrenunciables del consumidor.</p>`},cookies:{t:'Política de Cookies y Tecnologías Similares',b:`<h3>1. Tecnologías utilizadas</h3><p>El sitio utiliza principalmente localStorage, sessionStorage e IndexedDB para carrito, preferencias, autenticación y sincronización. Esto no equivale necesariamente a cookies HTTP. También se cargan recursos externos como Firebase, mapas, fuentes y librerías.</p><h3>2. Analítica</h3><p>El tracker puede registrar IP, ciudad/región/país aproximados, ISP, navegador, sistema operativo, dispositivo, idioma, pantalla, referrer y actividad de sesión. <strong>No se inicia hasta que el visitante acepta la analítica.</strong></p><h3>3. Consentimiento</h3><p>En República Dominicana no debe asumirse automáticamente un régimen idéntico al europeo de consentimiento previo para cookies; no obstante, el tratamiento de datos personales y las obligaciones de información/consentimiento de la Ley 172-13 sí deben respetarse. Por prudencia, este sitio solicita autorización antes de activar analítica no esencial. Si se dirige a personas de la UE/EEE, debe realizarse una revisión específica de GDPR/ePrivacy.</p><h3>4. Preferencias</h3><p>La elección se guarda localmente. El usuario puede borrar los datos del sitio para restablecerla.</p>`},cod:{t:'Política de Contra Reembolso / Pago Contra Entrega',b:`<p>Contra reembolso significa que el cliente paga el importe confirmado al recibir el pedido, cuando Mundo Tecno J.E haya confirmado que esta modalidad está disponible para ese pedido y dirección.</p><h3>Condiciones</h3><ul><li>Confirmación previa del pedido.</li><li>Nombre, teléfono y dirección correctos.</li><li>Confirmación del monto antes de la entrega.</li><li>Comunicación previa de cualquier costo de delivery.</li><li>Conservación del comprobante.</li></ul><p>Esta política no limita los derechos del consumidor previstos por la normativa dominicana.</p>`}};
+window.mtjeOpenLegal=k=>{let d=L[k]||L.privacy;document.getElementById('mtje-legal-title').textContent=d.t;document.getElementById('mtje-legal-updated').textContent='Última actualización: 9 de noviembre de 2026';document.getElementById('mtje-legal-body').innerHTML=d.b;document.getElementById('mtje-legal-modal').classList.add('open')};window.mtjeCloseLegal=()=>document.getElementById('mtje-legal-modal').classList.remove('open');window.mtjeSetAnalyticsConsent=g=>{try{localStorage.setItem('mtje_cookie_analytics',g?'granted':'denied');localStorage.setItem('mtje_cookie_consent_at',new Date().toISOString());localStorage.setItem('mtje_cookie_consent_version',window.mtjeConsentVersion)}catch(e){}document.getElementById('mtje-cookie-banner').hidden=true;if(g)location.reload()};window.addEventListener('DOMContentLoaded',()=>{let v=null;try{v=localStorage.getItem('mtje_cookie_analytics')}catch(e){}if(!v)document.getElementById('mtje-cookie-banner').hidden=false;document.querySelectorAll('img').forEach(i=>{if(!i.hasAttribute('alt'))i.alt=i.id&&i.id.toLowerCase().includes('logo')?'Mundo Tecno J.E':(i.src&&i.src.includes('unsplash')?'Imagen de producto o referencia visual':'Imagen informativa')});document.querySelectorAll('button,a').forEach(e=>{if(!e.getAttribute('aria-label')&&!e.textContent.trim()&&e.title)e.setAttribute('aria-label',e.title)})});})();
+</script>\n</body>
 </html>
